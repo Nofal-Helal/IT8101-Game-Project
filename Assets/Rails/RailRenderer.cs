@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.Splines;
 
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(SplineContainer))]
@@ -63,10 +64,11 @@ public class RailRenderer : MonoBehaviour
     void Awake()
     {
         mesh = new Mesh();
-        plankMesh = AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Rails/rails.blend");
+        mesh.name = "Generated Track Mesh";
+        plankMesh = AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Rails/Plank.blend");
         rail2D = AssetDatabase.LoadAssetAtPath<Mesh2D>("Assets/Rails/Rail Cross Section.asset");
     }
-    // Start is called before the first frame update
+
     void Start()
     {
         UpdateMesh();
@@ -95,37 +97,41 @@ public class RailRenderer : MonoBehaviour
 
     public void UpdateMesh()
     {
+        if (plankMesh == null) return;
+
         mesh.Clear();
 
         CombineInstance[] combines;
+        SubMeshDescriptor planksSubMesh;
 
-        if (plankMesh == null)
+        int plankCount = Mathf.CeilToInt(plankSpacing * spline.GetLength()) + 1;
+        combines = new CombineInstance[plankCount + 2];
+        // Place planks along the spline
+        for (int i = 0; i < plankCount; i++)
         {
-            combines = new CombineInstance[2];
-        }
-        else
-        {
-            int plankCount = Mathf.CeilToInt(plankSpacing * spline.GetLength()) + 1;
-            combines = new CombineInstance[plankCount + 2];
-            // Place planks along the spline
-            for (int i = 0; i < plankCount; i++)
+            float3 position, tangent, upVector;
+            spline.Evaluate(i / (plankCount - 1f), out position, out tangent, out upVector);
+            Quaternion rot = Quaternion.LookRotation(tangent, upVector);
+
+            combines[i].mesh = new Mesh
             {
-                float3 position, tangent, upVector;
-                spline.Evaluate(i / (plankCount - 1f), out position, out tangent, out upVector);
-                Quaternion rot = Quaternion.LookRotation(tangent, upVector);
-
-                combines[i].mesh = new Mesh
-                {
-                    vertices = plankMesh.vertices,
-                    triangles = plankMesh.triangles,
-                    normals = plankMesh.normals,
-                    uv = plankMesh.uv,
-                };
-                combines[i].transform = Matrix4x4.TRS(position, rot, Vector3.one);
-            }
+                vertices = plankMesh.vertices,
+                triangles = plankMesh.triangles,
+                normals = plankMesh.normals,
+                uv = plankMesh.uv,
+            };
+            combines[i].transform = Matrix4x4.TRS(position, rot, Vector3.one);
         }
+
+        planksSubMesh = new SubMeshDescriptor(0, plankCount * plankMesh.triangles.Length)
+        {
+            firstVertex = 0,
+            vertexCount = plankCount * plankMesh.vertexCount,
+        };
+
 
         // Side Rails
+        SubMeshDescriptor railsSubMesh;
         {
             var (vertices, normals) = RailVerticesAndNormals(railWidth / 2f);
             combines[^2].mesh =
@@ -140,16 +146,26 @@ public class RailRenderer : MonoBehaviour
 
         {
             var (vertices, normals) = RailVerticesAndNormals(-railWidth / 2f);
+            var triangles = RailTriangles().ToArray();
             combines[^1].mesh = new Mesh
             {
                 vertices = vertices.ToArray(),
                 normals = normals.ToArray(),
-                triangles = RailTriangles().ToArray(),
+                triangles = triangles,
             };
             combines[^1].transform = Matrix4x4.identity;
+
+            railsSubMesh = new SubMeshDescriptor(planksSubMesh.indexCount, triangles.Length*2)
+            {
+                firstVertex = planksSubMesh.vertexCount,
+                vertexCount = vertices.Count()*2
+            };
         }
 
         mesh.CombineMeshes(combines);
+        mesh.subMeshCount = 2;
+        mesh.SetSubMesh(0, planksSubMesh);
+        mesh.SetSubMesh(1, railsSubMesh);
 
         GetComponent<MeshFilter>().sharedMesh = mesh;
     }
