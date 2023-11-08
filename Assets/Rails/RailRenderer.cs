@@ -65,8 +65,13 @@ public class RailRenderer : MonoBehaviour
     {
         mesh = new Mesh();
         mesh.name = "Generated Track Mesh";
+#if UNITY_EDITOR
         plankMesh = AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Rails/Plank.blend");
         rail2D = AssetDatabase.LoadAssetAtPath<Mesh2D>("Assets/Rails/Rail Cross Section.asset");
+#else
+        plankMesh = Resources.Load<Mesh>("Assets/Rails/Plank.blend");
+        rail2D = Resources.Load<Mesh2D>("Assets/Rails/Rail Cross Section.asset");
+#endif
     }
 
     void Start()
@@ -155,10 +160,10 @@ public class RailRenderer : MonoBehaviour
             };
             combines[^1].transform = Matrix4x4.identity;
 
-            railsSubMesh = new SubMeshDescriptor(planksSubMesh.indexCount, triangles.Length*2)
+            railsSubMesh = new SubMeshDescriptor(planksSubMesh.indexCount, triangles.Length * 2)
             {
                 firstVertex = planksSubMesh.vertexCount,
-                vertexCount = vertices.Count()*2
+                vertexCount = vertices.Count() * 2
             };
         }
 
