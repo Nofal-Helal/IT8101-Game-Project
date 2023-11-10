@@ -173,6 +173,7 @@ public class RailRenderer : MonoBehaviour
         mesh.SetSubMesh(1, railsSubMesh);
 
         GetComponent<MeshFilter>().sharedMesh = mesh;
+        // Debug.Log("Regenerated Mesh");
     }
 
     private (List<Vector3>, List<Vector3>) RailVerticesAndNormals(float offsetMagnitude)
