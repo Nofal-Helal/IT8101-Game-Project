@@ -1,10 +1,11 @@
 using UnityEngine;
 using System;
+using System.Collections;
 
 [System.Serializable]
 public class GunData
 {
-  public int maxAmmo;
+  public int magazine;
   public int baseDamage;
   public float reloadTime;
   public float fireRate;
@@ -12,6 +13,4 @@ public class GunData
   public float timeSinceLastShot;
   [HideInInspector]
   public bool reloading;
-  [HideInInspector]
-  public bool shooting;
 }

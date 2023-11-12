@@ -21,10 +21,10 @@ public class Player : MonoBehaviour
 
     void Update()
     {
-        Vector2 mouse = Mouse.current.delta.ReadValue();
+        // Vector2 mouse = Mouse.current.delta.value;
         // Aim Camera
-        rotY += mouse.x * cameraSensitivity;
-        rotX += mouse.y * cameraSensitivity;
+        rotY += Input.GetAxis("Mouse X") * cameraSensitivity;
+        rotX += Input.GetAxis("Mouse Y") * cameraSensitivity;
         rotX = ClampAngle(rotX, -85f, 85);
         rotY = ClampAngle(rotY, cartObject.transform.eulerAngles.y - 90f, cartObject.transform.eulerAngles.y + 90f);
         cameraObject.transform.eulerAngles = new Vector3(-rotX, rotY, 0);

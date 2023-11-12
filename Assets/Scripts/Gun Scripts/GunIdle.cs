@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class GunSway : MonoBehaviour
 {
-public float moveAmount = 0.02f; // Amount of sway movement
+    public float moveAmount = 0.005f; // Amount of sway movement
     public float moveSpeed = 2f; // Speed of the sway movement
 
     private Vector3 initialPosition;
