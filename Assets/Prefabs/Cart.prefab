@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5160767631746329184}
   - component: {fileID: 5342788529452761110}
+  - component: {fileID: 691917947633793681}
   m_Layer: 0
   m_Name: Cart
   m_TagString: Untagged
@@ -47,6 +48,27 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cameraSensitivity: 0.5
+--- !u!65 &691917947633793681
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890740364927588912}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.7235746, y: 2.0063396, z: 2.6762774}
+  m_Center: {x: -0.0083605945, y: 1.0731697, z: 0.028880954}
 --- !u!1 &3859723748605486624
 GameObject:
   m_ObjectHideFlags: 0
@@ -74,7 +96,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3859723748605486624}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.00000046286732, y: 2.13, z: -0.50999993}
+  m_LocalPosition: {x: 0, y: 2.13, z: -0.50999975}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

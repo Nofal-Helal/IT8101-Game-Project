@@ -5,7 +5,11 @@ using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
-    public float cameraSensitivity = 0.5f;
+    public float health = 20f;
+    public float maxHealth = 20f;
+
+
+    public float cameraSensitivity = 1f;
     private GameObject cameraObject;
     private GameObject cartObject;
     private float rotX, rotY;
