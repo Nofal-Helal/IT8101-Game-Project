@@ -2,10 +2,11 @@ using UnityEngine;
 using System;
 using System.Collections;
 
-[System.Serializable]
-public class GunData
+[CreateAssetMenu(fileName = "Gun", menuName = "Weapon/Gun")]
+public class GunData : ScriptableObject
 {
-  public int magazine;
+  public new string name;
+  public int maxAmmo;
   public int baseDamage;
   public float reloadTime;
   public float fireRate;
@@ -13,4 +14,6 @@ public class GunData
   public float timeSinceLastShot;
   [HideInInspector]
   public bool reloading;
+  [HideInInspector]
+  public int magazine;
 }

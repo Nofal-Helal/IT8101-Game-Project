@@ -7,12 +7,17 @@ using UnityEngine;
 
 public class GunLoadout : MonoBehaviour
 {
-    private List<GameObject> gunList;
-    private int weaponIndex;
+    public List<GameObject> gunList;
+    public int weaponIndex;
+    private Animator animator;
+    private bool switching;
     // Start is called before the first frame update
     void Start()
     {
         gunList = GetChildren(gameObject);
+        animator = gameObject.GetComponent<Animator>();
+        switching = false;
+
         if (gunList.Count == 0)
         {
             weaponIndex = -1;
@@ -25,38 +30,77 @@ public class GunLoadout : MonoBehaviour
         {
             gun.SetActive(false);
         }
-        setWeapon(gunList, 0);
+        gunList[0].SetActive(true);
+        StartCoroutine(Pullout());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (weaponIndex == -1)
+
+        if (!switching && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
         {
-            return;
-        }
-        float scrollInput = Input.GetAxis("Mouse ScrollWheel");
-        if (scrollInput > 0)
-        {
-            Debug.Log(scrollInput);
-            if (weaponIndex >= gunList.Count)
+            if (weaponIndex == -1)
             {
                 return;
             }
-            weaponIndex++;
-            setWeapon(gunList, weaponIndex);
-        }
-        if (scrollInput < 0)
-        {
-            if (weaponIndex <= 0)
+            float scrollInput = Input.GetAxis("Mouse ScrollWheel");
+
+            if (scrollInput > 0)
             {
-                return;
+                Debug.Log(scrollInput);
+                if (weaponIndex >= gunList.Count - 1)
+                {
+                    return;
+                }
+                weaponIndex++;
+                Debug.Log("hi +");
+                Debug.Log(weaponIndex);
+                Debug.Log(scrollInput);
+                StartCoroutine(Switch(gunList, weaponIndex));
             }
-            weaponIndex--;
-            Debug.Log("hi -");
-            Debug.Log(scrollInput);
-            setWeapon(gunList, weaponIndex);
+            if (scrollInput < 0)
+            {
+                Debug.Log(scrollInput);
+                if (weaponIndex <= 0)
+                {
+                    return;
+                }
+                weaponIndex--;
+                Debug.Log("hi -");
+                Debug.Log(weaponIndex);
+                Debug.Log(scrollInput);
+                StartCoroutine(Switch(gunList, weaponIndex));
+            }
         }
+    }
+    public IEnumerator Pullout()
+    {
+        switching = true;
+        animator.Play("Pullout");
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
+        switching = false;
+    }
+    public IEnumerator Switch(List<GameObject> gunList, int weaponIndex)
+    {
+        switching = true;
+        animator.Play("Switching");
+        yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length / 2);
+        SetWeapon(gunList, weaponIndex);
+        animator.Play("Pullout");
+        switching = false;
+    }
+
+    public void SetWeapon(List<GameObject> gunList, int weaponIndex)
+    {
+        for (int i = 0; i < gameObject.transform.childCount; i++)
+        {
+            if (i != weaponIndex)
+            {
+                gunList[i].SetActive(false);
+            }
+        }
+        gunList[weaponIndex].SetActive(true);
     }
     public List<GameObject> GetChildren(GameObject gameObject)
     {
@@ -69,21 +113,5 @@ public class GunLoadout : MonoBehaviour
             childrenList.Add(childGameObject);
         }
         return childrenList;
-    }
-    public void setWeapon(List<GameObject> gunList, int weaponIndex)
-    {
-        if (weaponIndex >= gunList.Count || weaponIndex < 0)
-        {
-            Debug.Log("NOPE");
-            return;
-        }
-        for (int i = 0; i < gameObject.transform.childCount; i++)
-        {
-            if (i != weaponIndex)
-            {
-                gunList[i].SetActive(false);
-            }
-        }
-        gunList[weaponIndex].SetActive(true);
     }
 }
