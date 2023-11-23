@@ -13,15 +13,14 @@ public class HUD : MonoBehaviour
     {
         loadout = GameObject.FindFirstObjectByType<GunLoadout>();
         hudElements = GameObject.FindObjectsByType<TextMeshProUGUI>(FindObjectsSortMode.None);
-
     }
 
     // Update is called once per frame
     void Update()
     {
+            currentWeapon = loadout.gunList[loadout.weaponIndex];
         if (loadout.gunList.Count > 0)
         {
-            currentWeapon = loadout.gunList[loadout.weaponIndex];
             hudElements[0].text = "Ammo: " + currentWeapon.GetComponent<Gun>().gunData.magazine;
         }
     }
