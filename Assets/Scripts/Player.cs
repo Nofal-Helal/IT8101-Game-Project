@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
         rotY += Input.GetAxis("Mouse X") * cameraSensitivity;
         rotX += Input.GetAxis("Mouse Y") * cameraSensitivity;
         rotX = ClampAngle(rotX, -85f, 85);
-        rotY = ClampAngle(rotY, cartObject.transform.eulerAngles.y - 90f, cartObject.transform.eulerAngles.y + 90f);
+        rotY = ClampAngle(rotY, cartObject.transform.eulerAngles.y - 120f, cartObject.transform.eulerAngles.y + 120f);
         cameraObject.transform.eulerAngles = new Vector3(-rotX, rotY, 0);
     }
 
