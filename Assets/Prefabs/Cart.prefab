@@ -33,7 +33,7 @@ Transform:
   - {fileID: 400242485226802726}
   - {fileID: 1384090705484081786}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5342788529452761110
 MonoBehaviour:
@@ -47,7 +47,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bea1e898c8f0dcd0aa3bee235c5c03bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cameraSensitivity: 0.5
+  health: 20
+  maxHealth: 20
 --- !u!65 &691917947633793681
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -81,6 +82,7 @@ GameObject:
   - component: {fileID: 4153548573550391377}
   - component: {fileID: 7943532883033923753}
   - component: {fileID: 7194920475390986318}
+  - component: {fileID: 1624118378782799087}
   m_Layer: 0
   m_Name: Player Camera
   m_TagString: MainCamera
@@ -96,7 +98,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3859723748605486624}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.13, z: -0.50999975}
+  m_LocalPosition: {x: 0.00000071525574, y: 2.13, z: -0.50999975}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -189,6 +191,20 @@ ParentConstraint:
   m_Sources:
   - sourceTransform: {fileID: 400242485226802726}
     weight: 1
+--- !u!114 &1624118378782799087
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3859723748605486624}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7a853fc8d4888758afbbe7eec110451, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraSensitivity: 0.2
+  cartObject: {fileID: 7223380704720846286}
 --- !u!1 &7223380704720846286
 GameObject:
   m_ObjectHideFlags: 0
