@@ -1,14 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using Unity.Mathematics;
-using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Splines;
 
+/// <summary>
+/// Procedural mesh generation for rail tracks
+/// </summary>
 [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer), typeof(SplineContainer))]
 [ExecuteInEditMode]
 public class RailRenderer : MonoBehaviour
@@ -45,7 +46,12 @@ public class RailRenderer : MonoBehaviour
     {
         get
         {
-            if (_splines != null) return _splines; else return GetComponent<SplineContainer>();
+            if (_splines != null) return _splines;
+            else
+            {
+                _splines = GetComponent<SplineContainer>();
+                return _splines;
+            }
         }
     }
 
