@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5160767631746329184}
   - component: {fileID: 5342788529452761110}
   - component: {fileID: 691917947633793681}
+  - component: {fileID: 1576644878131526351}
   m_Layer: 0
   m_Name: Cart
   m_TagString: Untagged
@@ -70,6 +71,36 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1.7235746, y: 2.0063396, z: 2.6762774}
   m_Center: {x: -0.0083605945, y: 1.0731697, z: 0.028880954}
+--- !u!114 &1576644878131526351
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1890740364927588912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: ee64fbd14e023fca488a92ef918c7624, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: gameplay
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &3859723748605486624
 GameObject:
   m_ObjectHideFlags: 0
@@ -214,7 +245,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 400242485226802726}
-  - component: {fileID: 5355637264495951417}
+  - component: {fileID: 2051400431190201841}
   m_Layer: 0
   m_Name: CartObject
   m_TagString: Untagged
@@ -238,7 +269,7 @@ Transform:
   m_Father: {fileID: 5160767631746329184}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5355637264495951417
+--- !u!114 &2051400431190201841
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -247,20 +278,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 7223380704720846286}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 29a074d529cf945029ef7cf40540c9df, type: 3}
+  m_Script: {fileID: 11500000, guid: 595c55aba2f096f958b876ad535a965a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_Target: {fileID: 0}
-  m_PlayOnAwake: 1
-  m_LoopMode: 1
-  m_Method: 1
-  m_Duration: 1
-  m_MaxSpeed: 1
-  m_EasingMode: 0
-  m_AlignmentMode: 1
-  m_ObjectForwardAxis: 2
-  m_ObjectUpAxis: 1
-  m_StartOffset: 0
+  railTrack: {fileID: 0}
+  speed: 0
+  obstacleStopDistance: 1
+  nextObstacle: {fileID: 0}
 --- !u!1001 &4218892548469480067
 PrefabInstance:
   m_ObjectHideFlags: 0

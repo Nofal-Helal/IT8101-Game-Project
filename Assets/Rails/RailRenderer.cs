@@ -69,8 +69,10 @@ public class RailRenderer : MonoBehaviour
 
     void Awake()
     {
-        mesh = new Mesh();
-        mesh.name = "Generated Track Mesh";
+        mesh = new Mesh
+        {
+            name = "Generated Track Mesh"
+        };
 #if UNITY_EDITOR
         plankMesh = AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Rails/Plank.blend");
         rail2D = AssetDatabase.LoadAssetAtPath<Mesh2D>("Assets/Rails/Rail Cross Section.asset");
@@ -100,12 +102,6 @@ public class RailRenderer : MonoBehaviour
             UpdateMesh();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-
     public void UpdateMesh()
     {
         if (plankMesh == null) return;
@@ -120,8 +116,7 @@ public class RailRenderer : MonoBehaviour
         // Place planks along the spline
         for (int i = 0; i < plankCount; i++)
         {
-            float3 position, tangent, upVector;
-            spline.Evaluate(i / (plankCount - 1f), out position, out tangent, out upVector);
+            spline.Evaluate(i / (plankCount - 1f), out float3 position, out float3 tangent, out float3 upVector);
             Quaternion rot = Quaternion.LookRotation(tangent, upVector);
 
             combines[i].mesh = new Mesh

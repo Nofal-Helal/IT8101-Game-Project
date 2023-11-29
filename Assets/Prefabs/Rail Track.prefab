@@ -230,11 +230,21 @@ MonoBehaviour:
     m_IntData:
       m_Data: []
     m_FloatData:
-      m_Data: []
+      m_Data:
+      - Key: speed
+        Value:
+          m_IndexUnit: 0
+          m_DefaultValue: 0
+          m_DataPoints: []
     m_Float4Data:
       m_Data: []
     m_ObjectData:
-      m_Data: []
+      m_Data:
+      - Key: obstacles
+        Value:
+          m_IndexUnit: 0
+          m_DefaultValue: {fileID: 0}
+          m_DataPoints: []
   m_Knots:
     m_KnotsLink: []
 --- !u!33 &5323865335004455468

@@ -1,4 +1,10 @@
+using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Controls;
 using UnityEngine.Splines;
 using UnityEngine.Splines.Interpolators;
 
@@ -10,6 +16,7 @@ public class RailFollower : MonoBehaviour
     public SplineContainer railTrack;
     Spline spline;
     SplineData<float> speedData;
+    SplineData<Object> obstacles;
 
     /// <summary>
     /// Current speed
@@ -19,6 +26,11 @@ public class RailFollower : MonoBehaviour
     /// Current linear distance along the rail track
     /// </summary>
     float distance;
+    /// <summary>
+    /// Distance away from obstacles to stop at
+    /// </summary>
+    public float obstacleStopDistance = 1;
+    public Obstacle nextObstacle;
 
     void Awake()
     {
@@ -32,7 +44,9 @@ public class RailFollower : MonoBehaviour
     {
         spline = railTrack.Spline;
         spline.TryGetFloatData("speed", out speedData);
+        spline.TryGetObjectData("obstacles", out obstacles);
 
+        nextObstacle = NextObstacle();
     }
 
     // Update is called once per frame
@@ -44,8 +58,44 @@ public class RailFollower : MonoBehaviour
 
         transform.SetPositionAndRotation(position, rotation);
 
-        // Get speed from spline data
-        speed = speedData.Evaluate(spline, distance, new LerpFloat { });
+        // if there is an obstacle and the cart is within obstacleStopDistance
+        if (nextObstacle && (nextObstacle.Distance - distance) < obstacleStopDistance)
+        {
+            speed = 0;
+        }
+        else
+        {
+            // Get speed from spline data
+            speed = speedData.Evaluate(spline, distance, new LerpFloat { });
+        }
+
         distance += speed * Time.deltaTime;
     }
+
+    // press o to remove obstacle
+    public void OnRemoveObstacle()
+    {
+        if (nextObstacle)
+        {
+            nextObstacle.OnDestroy();
+            Destroy(nextObstacle.gameObject);
+            nextObstacle = NextObstacle();
+        }
+    }
+
+    Obstacle NextObstacle()
+    {
+        if (obstacles.Count <= 0) return null;
+        return (Obstacle)obstacles.Evaluate(spline, distance, new NextObstacleInterpolator());
+    }
+
+    class NextObstacleInterpolator : IInterpolator<Object>
+    {
+        public Object Interpolate(Object from, Object to, float t)
+        {
+            if (t == 0) return from;
+            else return to;
+        }
+    }
+
 }
