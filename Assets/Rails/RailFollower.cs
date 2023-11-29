@@ -1,10 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
 using UnityEngine.Splines;
 using UnityEngine.Splines.Interpolators;
 
@@ -30,7 +24,7 @@ public class RailFollower : MonoBehaviour
     /// Distance away from obstacles to stop at
     /// </summary>
     public float obstacleStopDistance = 1;
-    public Obstacle nextObstacle;
+    Obstacle nextObstacle;
 
     void Awake()
     {
