@@ -8,25 +8,27 @@ using UnityEngine.Splines.Interpolators;
 public class RailFollower : MonoBehaviour
 {
     public SplineContainer railTrack;
-    Spline spline;
-    SplineData<float> speedData;
-    SplineData<Object> obstacles;
+    private Spline spline;
+    private SplineData<float> speedData;
+    private SplineData<Object> obstacles;
 
     /// <summary>
     /// Current speed
     /// </summary>
     public float speed;
+
     /// <summary>
     /// Current linear distance along the rail track
     /// </summary>
-    float distance;
+    public float distance = 0f;
+
     /// <summary>
     /// Distance away from obstacles to stop at
     /// </summary>
-    public float obstacleStopDistance = 1;
-    Obstacle nextObstacle;
+    public float obstacleStopDistance = 1f;
+    public Obstacle nextObstacle;
 
-    void Awake()
+    private void Awake()
     {
         if (railTrack == null)
         {
@@ -34,13 +36,13 @@ public class RailFollower : MonoBehaviour
         }
     }
 
-    void Start()
+    private void Start()
     {
         spline = railTrack.Spline;
         spline.TryGetFloatData("speed", out speedData);
         spline.TryGetObjectData("obstacles", out obstacles);
 
-        nextObstacle = NextObstacle();
+        nextObstacle = nextObstacle != null ? nextObstacle : NextObstacle();
     }
 
     // Update is called once per frame
@@ -79,7 +81,8 @@ public class RailFollower : MonoBehaviour
 
     Obstacle NextObstacle()
     {
-        if (obstacles.Count <= 0) return null;
+        if (obstacles.Count <= 0)
+            return null;
         return (Obstacle)obstacles.Evaluate(spline, distance, new NextObstacleInterpolator());
     }
 
@@ -87,9 +90,10 @@ public class RailFollower : MonoBehaviour
     {
         public Object Interpolate(Object from, Object to, float t)
         {
-            if (t == 0) return from;
-            else return to;
+            if (t == 0)
+                return from;
+            else
+                return to;
         }
     }
-
 }

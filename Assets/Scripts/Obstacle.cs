@@ -1,4 +1,3 @@
-using System;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -7,17 +6,19 @@ using Object = UnityEngine.Object;
 public class Obstacle : MonoBehaviour
 {
     public SplineContainer railTrack;
-    Spline spline;
-    SplineData<Object> splineData;
-    DataPoint<Object> dataPoint;
+    private Spline spline;
+    private SplineData<Object> splineData;
+    private DataPoint<Object> dataPoint;
+
+    // is the obstacle attached to a rail track
+    private bool attached = false;
 
     /// <summary>
     /// Distance along the spline
     /// </summary>
     public float Distance => dataPoint.Index;
 
-    // Start is called before the first frame update
-    public void Start()
+    private void OnEnable()
     {
         if (railTrack == null)
         {
@@ -28,42 +29,45 @@ public class Obstacle : MonoBehaviour
         spline = railTrack.Spline;
         splineData = spline.GetOrCreateObjectData("obstacles");
         AddDataPoint();
+        attached = true;
+    }
+
+    // Start is called before the first frame update
+    public void Start()
+    {
+        Debug.Assert(attached, "Obstacle has not attached to a rail track");
     }
 
     public void OnDestroy()
     {
-        splineData.RemoveDataPoint(dataPoint.Index);
+        _ = splineData.RemoveDataPoint(dataPoint.Index);
     }
-
 
     // Update is called once per frame
-    void Update()
-    {
-    }
+    // void Update() { }
 
     public void Nearest(out float3 nearest, out float t)
     {
         float3 point = transform.position - railTrack.transform.position;
-        SplineUtility.GetNearestPoint(spline, point, out nearest, out t);
+        _ = SplineUtility.GetNearestPoint(spline, point, out nearest, out t);
     }
 
     private void AddDataPoint()
     {
-        Nearest(out _, out var t);
-        var t_dist = SplineUtility.ConvertIndexUnit(spline, t, PathIndexUnit.Distance);
+        Nearest(out _, out float t);
+        float t_dist = SplineUtility.ConvertIndexUnit(spline, t, PathIndexUnit.Distance);
         dataPoint = new DataPoint<Object>(t_dist, this);
-        splineData.Add(dataPoint);
+        _ = splineData.Add(dataPoint);
     }
 
-    void OnDrawGizmos()
+    private void OnDrawGizmos()
     {
         if (railTrack)
         {
             spline ??= railTrack.Spline;
-            Nearest(out var nearest, out _);
+            Nearest(out float3 nearest, out _);
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(transform.position, (Vector3)nearest + railTrack.transform.position);
         }
     }
-
 }
