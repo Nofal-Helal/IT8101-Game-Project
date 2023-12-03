@@ -1,3 +1,4 @@
+using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
 using UnityEngine.Splines.Interpolators;
@@ -39,18 +40,22 @@ public class RailFollower : MonoBehaviour
     private void Start()
     {
         spline = railTrack.Spline;
-        spline.TryGetFloatData("speed", out speedData);
-        spline.TryGetObjectData("obstacles", out obstacles);
+        Debug.Assert(spline.TryGetFloatData("speed", out speedData));
+        Debug.Assert(spline.TryGetObjectData("obstacles", out obstacles));
 
         nextObstacle = nextObstacle != null ? nextObstacle : NextObstacle();
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        var t = spline.ConvertIndexUnit(distance, PathIndexUnit.Distance, PathIndexUnit.Normalized);
-        spline.Evaluate(t, out var position, out var tangent, out var upVector);
-        var rotation = Quaternion.LookRotation(tangent, upVector);
+        float t = spline.ConvertIndexUnit(
+            distance,
+            PathIndexUnit.Distance,
+            PathIndexUnit.Normalized
+        );
+        _ = spline.Evaluate(t, out float3 position, out float3 tangent, out float3 upVector);
+        Quaternion rotation = Quaternion.LookRotation(tangent, upVector);
 
         transform.SetPositionAndRotation(position, rotation);
 
@@ -79,21 +84,18 @@ public class RailFollower : MonoBehaviour
         }
     }
 
-    Obstacle NextObstacle()
+    private Obstacle NextObstacle()
     {
-        if (obstacles.Count <= 0)
-            return null;
-        return (Obstacle)obstacles.Evaluate(spline, distance, new NextObstacleInterpolator());
+        return obstacles.Count <= 0
+            ? null
+            : (Obstacle)obstacles.Evaluate(spline, distance, new NextObstacleInterpolator());
     }
 
-    class NextObstacleInterpolator : IInterpolator<Object>
+    private class NextObstacleInterpolator : IInterpolator<Object>
     {
         public Object Interpolate(Object from, Object to, float t)
         {
-            if (t == 0)
-                return from;
-            else
-                return to;
+            return t == 0 ? from : to;
         }
     }
 }
