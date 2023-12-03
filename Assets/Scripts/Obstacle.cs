@@ -1,3 +1,4 @@
+using System;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -17,6 +18,8 @@ public class Obstacle : MonoBehaviour
     /// Distance along the spline
     /// </summary>
     public float Distance => dataPoint.Index;
+
+    public Action OnStopAtObstacle = () => { };
 
     private void OnEnable()
     {

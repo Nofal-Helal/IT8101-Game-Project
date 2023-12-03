@@ -62,7 +62,7 @@ public class RailFollower : MonoBehaviour
         // if there is an obstacle and the cart is within obstacleStopDistance
         if (nextObstacle && (nextObstacle.Distance - distance) < obstacleStopDistance)
         {
-            speed = 0;
+            speed = Mathf.MoveTowards(speed, 0, Time.deltaTime * 5);
         }
         else
         {
@@ -81,6 +81,9 @@ public class RailFollower : MonoBehaviour
             nextObstacle.OnDestroy();
             Destroy(nextObstacle.gameObject);
             nextObstacle = NextObstacle();
+
+            // add speed to start moving again
+            if (speed == 0f) speed = 0.1f;
         }
     }
 
@@ -97,5 +100,22 @@ public class RailFollower : MonoBehaviour
         {
             return t == 0 ? from : to;
         }
+    }
+
+    // context menu option to reset the cart to the set distance along the track
+    [ContextMenu("Reset Positon on Track", false, 0)]
+    private void ResetPosition()
+    {
+        spline = railTrack.Spline;
+        float t = spline.ConvertIndexUnit(
+            distance,
+            PathIndexUnit.Distance,
+            PathIndexUnit.Normalized
+        );
+
+        _ = spline.Evaluate(t, out float3 position, out float3 tangent, out float3 upVector);
+        Quaternion rotation = Quaternion.LookRotation(tangent, upVector);
+
+        transform.SetPositionAndRotation(position, rotation);
     }
 }
