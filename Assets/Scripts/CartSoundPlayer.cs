@@ -15,6 +15,7 @@ public class CartSoundPlayer : MonoBehaviour
     }
 
 
+    AudioManager audioManager;
     RailFollower railFollower;
     public CartSound[] sounds;
     /// <summary>
@@ -24,6 +25,7 @@ public class CartSoundPlayer : MonoBehaviour
 
     void Start()
     {
+        audioManager = AudioManager.Instance;
         Assert.AreEqual("CartObject", transform.GetChild(0).name);
         railFollower = transform.GetChild(0).GetComponent<RailFollower>();
     }
@@ -37,6 +39,7 @@ public class CartSoundPlayer : MonoBehaviour
             if (speed >= sound.startSpeed - soundFade && speed <= sound.endSpeed + soundFade)
             {
                 if (!sound.source.isPlaying) sound.source.UnPause();
+
             }
             else
             {
@@ -50,8 +53,8 @@ public class CartSoundPlayer : MonoBehaviour
             else if (speed > sound.endSpeed)
                 volume = Mathf.InverseLerp(sound.endSpeed + soundFade, sound.endSpeed, speed);
 
-            // TODO: use audio manager for volume control instead of hardcoded value
-            sound.source.volume = 0.75f * volume;
+            // limit volume from the value set in AudioManager
+            sound.source.volume = audioManager.cartSrc.volume * volume;
         }
     }
 }
