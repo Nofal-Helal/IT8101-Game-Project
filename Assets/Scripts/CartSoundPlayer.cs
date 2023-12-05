@@ -54,7 +54,7 @@ public class CartSoundPlayer : MonoBehaviour
                 volume = Mathf.InverseLerp(sound.endSpeed + soundFade, sound.endSpeed, speed);
 
             // limit volume from the value set in AudioManager
-            sound.source.volume = audioManager.cartSrc.volume * volume;
+            //sound.source.volume = audioManager.cartSrc.volume * volume;
         }
     }
 }
