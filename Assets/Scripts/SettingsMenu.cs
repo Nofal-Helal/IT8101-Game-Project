@@ -23,6 +23,9 @@ public class SettingsMenu : MonoBehaviour
 
         updateInputButton(shootInputButton);
         updateInputButton(reloadInputButton);
+
+        AudioManager.Instance.PlayCart("Fast");
+        AudioManager.Instance.PlayCart("Slow");
     }
 
     T GetComponentByName<T>(string gameObjectName) where T : Component

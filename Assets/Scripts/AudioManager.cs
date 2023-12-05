@@ -5,109 +5,108 @@ using System;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager _Instance;
+    public static AudioManager Instance;
     public Sound[] cartSounds, monstersSounds, weaponsSounds;
-    public AudioSource cartSrc, monstersSrc, weaponsSrc;
+    public AudioSource[] cartSrcs, monstersSrcs, weaponsSrcs;
 
-    public static AudioManager Instance
-    {
-        get
-        {
-            if (_Instance != null) return _Instance;
-            else
-            {
-                GameObject prefab = Resources.Load("Audio Manager") as GameObject;
-                if (prefab == null || prefab.GetComponent<AudioManager>() == null)
-                {
-                    Debug.LogError("Prefab for audio manager is not found.");
-                }
-                else
-                {
-                    GameObject gameObject = Instantiate(prefab);
-                    DontDestroyOnLoad(gameObject);
-                    _Instance = gameObject.GetComponent<AudioManager>();
-                }
-
-                return _Instance;
-            }
-        }
-    }
-
-    private void Awake()
-    {
-        if (_Instance == null)
-        {
-            _Instance = this;
+    private void Awake(){
+        if(Instance == null){
+            Instance = this;
             DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
+        }else{
             Destroy(gameObject);
         }
     }
 
-    private Sound FindSound(Sound[] sounds, string name)
-    {
+    private Sound FindSound(Sound[] sounds, string name){
         Sound s = Array.Find(sounds, x => x.name == name);
 
         return s;
     }
 
-    public void PlayCart(string name)
+    public AudioSource PlayCart(string name)
     {
+        AudioSource openSource = cartSrcs[0];
         Sound s = FindSound(cartSounds, name);
-        if (s == null)
-        {
+        if(s == null){
             Debug.Log("Sound not found");
+        }else{
+            foreach (AudioSource source in cartSrcs)
+            {
+                if (!source.isPlaying)
+                {
+                    source.clip = s.clip;
+                    source.Play();
+                    openSource = source;
+                    break;
+                }
+            }
         }
-        else
-        {
-            cartSrc.clip = s.clip;
-            cartSrc.Play();
-        }
+        return openSource;
     }
 
-    public void PlayMonsters(string name)
+    public AudioSource PlayMonsters(string name)
     {
+        AudioSource openSource = monstersSrcs[0];
         Sound s = FindSound(monstersSounds, name);
-        if (s == null)
-        {
+        if(s == null){
             Debug.Log("Sound not found");
+        }else{
+            foreach (AudioSource source in monstersSrcs)
+            {
+                if (!source.isPlaying)
+                {
+                    source.clip = s.clip;
+                    source.Play();
+                    openSource = source;
+                    break;
+                }
+            }
         }
-        else
-        {
-            monstersSrc.clip = s.clip;
-            monstersSrc.Play();
-        }
+        return openSource;
     }
 
-    public void PlayWeapons(string name)
+    public AudioSource PlayWeapons(string name)
     {
+        AudioSource openSource = weaponsSrcs[0];
         Sound s = FindSound(weaponsSounds, name);
-        if (s == null)
-        {
+        if(s == null){
             Debug.Log("Sound not found");
+        }else{
+            
+            foreach (AudioSource source in weaponsSrcs)
+            {
+                if (!source.isPlaying)
+                {
+                    source.clip = s.clip;
+                    source.Play();
+                    openSource = source;
+                    break;
+                }
+            }
         }
-        else
+        return openSource;
+    }
+
+    public void CartVolume(float volume){
+        foreach (AudioSource source in cartSrcs)
         {
-            weaponsSrc.clip = s.clip;
-            weaponsSrc.Play();
+            source.volume = volume;
         }
     }
 
-    public void CartVolume(float volume)
-    {
-        cartSrc.volume = volume;
+    public void MonstersVolume(float volume){
+        foreach (AudioSource source in monstersSrcs)
+        {
+            source.volume = volume;
+        }
     }
 
-    public void MonstersVolume(float volume)
-    {
-        monstersSrc.volume = volume;
-    }
-
-    public void WeaponsVolume(float volume)
-    {
-        weaponsSrc.volume = volume;
+    public void WeaponsVolume(float volume){
+        foreach (AudioSource source in weaponsSrcs)
+        {
+            source.volume = volume;
+        }
     }
 
 
