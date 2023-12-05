@@ -15,6 +15,7 @@ public class SettingsMenu : MonoBehaviour
     private Canvas InputPanelMenu;
     private TextMeshProUGUI InputPanelTitle;
     private bool panelOpened = false;
+    public Slider _generalSlider, _cartSlider, _monstersSlider, _weaponsSlider;
 
     void Start(){
         shootInputButton = GetComponentByName<Button>("Shoot");
@@ -97,4 +98,26 @@ public class SettingsMenu : MonoBehaviour
             }
         }
     }
+
+    public void GeneralVolume(){
+        _cartSlider.value = _generalSlider.value;
+        _monstersSlider.value = _generalSlider.value;
+        _weaponsSlider.value = _generalSlider.value;
+        AudioManager.Instance.CartVolume(_generalSlider.value);
+        AudioManager.Instance.MonstersVolume(_generalSlider.value);
+        AudioManager.Instance.WeaponsVolume(_generalSlider.value);
+    }
+
+    public void CartVolume(){
+        AudioManager.Instance.CartVolume(_cartSlider.value);
+    }
+
+    public void MonstersVolume(){
+        AudioManager.Instance.MonstersVolume(_monstersSlider.value);
+    }
+
+    public void WeaponsVolume(){
+        AudioManager.Instance.WeaponsVolume(_weaponsSlider.value);
+    }
+
 }
