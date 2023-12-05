@@ -123,7 +123,7 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!43 &555372064
+--- !u!43 &165385730
 Mesh:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -366,10 +366,21 @@ PrefabInstance:
       propertyPath: m_Name
       value: mineshaft
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 171298cb5c16c10bb8ee181c7096e724, type: 3}
+      propertyPath: m_Layer
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 171298cb5c16c10bb8ee181c7096e724, type: 3}
+      propertyPath: m_StaticEditorFlags
+      value: 2147483647
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 171298cb5c16c10bb8ee181c7096e724, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1866493139}
   m_SourcePrefab: {fileID: 100100000, guid: 171298cb5c16c10bb8ee181c7096e724, type: 3}
 --- !u!1 &820086734
 GameObject:
@@ -412,6 +423,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 414472434066163533, guid: 0afc9d20e06e10d41bc51f04d49cbbbe, type: 3}
+      propertyPath: m_CullingMask.m_Bits
+      value: 183
+      objectReference: {fileID: 0}
     - target: {fileID: 426761643593017195, guid: 0afc9d20e06e10d41bc51f04d49cbbbe, type: 3}
       propertyPath: m_RootOrder
       value: 1
@@ -459,6 +474,10 @@ PrefabInstance:
     - target: {fileID: 559593797342072346, guid: 0afc9d20e06e10d41bc51f04d49cbbbe, type: 3}
       propertyPath: m_Name
       value: CartAndWeaponLoadout
+      objectReference: {fileID: 0}
+    - target: {fileID: 559593797342072346, guid: 0afc9d20e06e10d41bc51f04d49cbbbe, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2313961538988630765, guid: 0afc9d20e06e10d41bc51f04d49cbbbe, type: 3}
       propertyPath: distance
@@ -598,8 +617,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 4.4352922, y: 7.275227, z: 0.074943714}
-  m_Center: {x: -1.7176461, y: 3.1376102, z: 0.4625258}
+  m_Size: {x: 4.4352922, y: 7.2394247, z: 0.074943714}
+  m_Center: {x: -1.7176461, y: 3.1196947, z: 0.46252275}
 --- !u!4 &1236572593
 Transform:
   m_ObjectHideFlags: 0
@@ -608,7 +627,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1236572590}
   m_LocalRotation: {x: 0.7015314, y: 0, z: 0, w: 0.71263856}
-  m_LocalPosition: {x: 0.01, y: 1.18, z: 28.05}
+  m_LocalPosition: {x: 0.12, y: 1.74, z: 28.02}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6930,7 +6949,7 @@ PrefabInstance:
     - target: {fileID: 5323865335004455468, guid: 1bb02dd93a5f922708d925288cc3bce1, type: 3}
       propertyPath: m_Mesh
       value: 
-      objectReference: {fileID: 555372064}
+      objectReference: {fileID: 165385730}
     - target: {fileID: 7576266059950782649, guid: 1bb02dd93a5f922708d925288cc3bce1, type: 3}
       propertyPath: m_Name
       value: Rail Track
@@ -7178,3 +7197,30 @@ LightingSettings:
   m_PVRTiledBaking: 0
   m_NumRaysToShootPerTexel: -1
   m_RespectSceneVisibilityWhenBakingGI: 0
+--- !u!1 &1866493138 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 171298cb5c16c10bb8ee181c7096e724, type: 3}
+  m_PrefabInstance: {fileID: 771761678}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1866493139
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1866493138}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -7882891535493840640, guid: 171298cb5c16c10bb8ee181c7096e724, type: 3}
