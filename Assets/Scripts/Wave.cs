@@ -16,6 +16,7 @@ public struct WaveEnemies
 
 public class Wave : MonoBehaviour
 {
+    [NaughtyAttributes.Required]
     [Tooltip("The obstacle that starts this wave")]
     public Obstacle obstacle;
 

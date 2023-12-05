@@ -14,39 +14,46 @@ using UnityEngine.Splines;
 [ExecuteInEditMode]
 public class RailRenderer : MonoBehaviour
 {
-    [SerializeField] Mesh plankMesh;
+    public Mesh plankMesh;
 
     /// <summary>
     /// 2D Cross-section of a railing
     /// </summary>
-    [SerializeField] Mesh2D rail2D;
+    public Mesh2D rail2D;
 
     [Tooltip("Spacing between track planks")]
     [Range(0.4f, 2f)]
-    [SerializeField] float plankSpacing = 0.1f;
+    [NaughtyAttributes.OnValueChanged("UpdateMesh")]
+    public float plankSpacing = 0.1f;
 
     [Range(0.05f, 2f)]
     [Tooltip("Width of side railings")]
-    [SerializeField] float railWidth = 0.5f;
+    [NaughtyAttributes.OnValueChanged("UpdateMesh")]
+    public float railWidth = 0.5f;
 
     [Range(0.05f, 2f)]
     [Tooltip("Scale of side railings")]
-    [SerializeField] float railScale = 0.5f;
+    [NaughtyAttributes.OnValueChanged("UpdateMesh")]
+    public float railScale = 0.5f;
 
     [Range(0.01f, 5f)]
     [Tooltip("Detail level of side railing")]
-    [SerializeField] float railDetail = 2f;
+    [NaughtyAttributes.OnValueChanged("UpdateMesh")]
+    public float railDetail = 2f;
 
-    int RailSegments => Mathf.CeilToInt(railDetail * spline.GetLength());
+    private int RailSegments => Mathf.CeilToInt(railDetail * Spline.GetLength());
 
-    Mesh mesh;
+    private Mesh mesh;
 
-    SplineContainer _splines;
-    SplineContainer splines
+    private SplineContainer _splines;
+    private SplineContainer Splines
     {
         get
         {
-            if (_splines != null) return _splines;
+            if (_splines != null)
+            {
+                return _splines;
+            }
             else
             {
                 _splines = GetComponent<SplineContainer>();
@@ -55,24 +62,15 @@ public class RailRenderer : MonoBehaviour
         }
     }
 
-    Spline spline
+    private Spline Spline
     {
-        get
-        {
-            return splines.Spline;
-        }
-        set
-        {
-            splines.Spline = value;
-        }
+        get => Splines.Spline;
+        set => Splines.Spline = value;
     }
 
-    void Awake()
+    private void Awake()
     {
-        mesh = new Mesh
-        {
-            name = "Generated Track Mesh"
-        };
+        mesh = new Mesh { name = "Generated Track Mesh" };
 #if UNITY_EDITOR
         plankMesh = AssetDatabase.LoadAssetAtPath<Mesh>("Assets/Rails/Plank.blend");
         rail2D = AssetDatabase.LoadAssetAtPath<Mesh2D>("Assets/Rails/Rail Cross Section.asset");
@@ -82,41 +80,53 @@ public class RailRenderer : MonoBehaviour
 #endif
     }
 
-    void Start()
+    private void Start()
     {
         UpdateMesh();
     }
 
-    void OnEnable()
+    private void OnEnable()
     {
         Spline.Changed += OnSplineChanged;
     }
-    void OnDisable()
+
+    private void OnDisable()
     {
         Spline.Changed -= OnSplineChanged;
     }
 
     private void OnSplineChanged(Spline spline, int arg2, SplineModification modification)
     {
-        if (splines != null && spline == this.spline)
+        if (Splines != null && spline == Spline)
+        {
             UpdateMesh();
+        }
     }
 
+    [NaughtyAttributes.Button("Regenerate Mesh")]
     public void UpdateMesh()
     {
-        if (plankMesh == null) return;
+        if (plankMesh == null)
+        {
+            return;
+        }
 
         mesh.Clear();
 
         CombineInstance[] combines;
         SubMeshDescriptor planksSubMesh;
 
-        int plankCount = Mathf.CeilToInt(plankSpacing * spline.GetLength()) + 1;
+        int plankCount = Mathf.CeilToInt(plankSpacing * Spline.GetLength()) + 1;
         combines = new CombineInstance[plankCount + 2];
         // Place planks along the spline
         for (int i = 0; i < plankCount; i++)
         {
-            spline.Evaluate(i / (plankCount - 1f), out float3 position, out float3 tangent, out float3 upVector);
+            _ = Spline.Evaluate(
+                i / (plankCount - 1f),
+                out float3 position,
+                out float3 tangent,
+                out float3 upVector
+            );
             Quaternion rot = Quaternion.LookRotation(tangent, upVector);
 
             combines[i].mesh = new Mesh
@@ -135,18 +145,16 @@ public class RailRenderer : MonoBehaviour
             vertexCount = plankCount * plankMesh.vertexCount,
         };
 
-
         // Side Rails
         SubMeshDescriptor railsSubMesh;
         {
             var (vertices, normals) = RailVerticesAndNormals(railWidth / 2f);
-            combines[^2].mesh =
-             new Mesh
-             {
-                 vertices = vertices.ToArray(),
-                 normals = normals.ToArray(),
-                 triangles = RailTriangles().ToArray(),
-             };
+            combines[^2].mesh = new Mesh
+            {
+                vertices = vertices.ToArray(),
+                normals = normals.ToArray(),
+                triangles = RailTriangles().ToArray(),
+            };
             combines[^2].transform = Matrix4x4.identity;
         }
 
@@ -179,12 +187,11 @@ public class RailRenderer : MonoBehaviour
 
     private (List<Vector3>, List<Vector3>) RailVerticesAndNormals(float offsetMagnitude)
     {
-        List<Vector3> railVertices = new List<Vector3>();
-        List<Vector3> railNormals = new List<Vector3>();
+        List<Vector3> railVertices = new();
+        List<Vector3> railNormals = new();
         for (int ring = 0; ring < RailSegments; ring++)
         {
-            float3 position, tangent, upVector;
-            spline.Evaluate(ring / (RailSegments - 1f), out position, out tangent, out upVector);
+            Spline.Evaluate(ring / (RailSegments - 1f), out float3 position, out float3 tangent, out float3 upVector);
             position += railScale * upVector;
             Quaternion rot = Quaternion.LookRotation(tangent, upVector);
             Vector3 railOffset = Quaternion.AngleAxis(90, upVector) * tangent;
@@ -192,22 +199,22 @@ public class RailRenderer : MonoBehaviour
             railOffset *= offsetMagnitude;
             for (int i = 0; i < rail2D.vertices.Length; i++)
             {
-                railVertices.Add(railOffset + (Vector3)position + rot * (railScale * rail2D.vertices[i].position));
+                railVertices.Add(
+                    railOffset + (Vector3)position + rot * (railScale * rail2D.vertices[i].position)
+                );
                 railNormals.Add(rot * rail2D.vertices[i].normal);
             }
-
         }
         // caps
         {
             railVertices.AddRange(railVertices.TakeLast(8).Where((_, i) => i % 2 == 0));
             railVertices.AddRange(railVertices.Take(8).Where((_, i) => i % 2 == 0));
 
-            float3 position, tangent, upVector;
-            spline.Evaluate(1, out position, out tangent, out upVector);
+            Spline.Evaluate(1, out float3 position, out float3 tangent, out float3 upVector);
             Quaternion rot = Quaternion.LookRotation(tangent, upVector);
             railNormals.AddRange(Enumerable.Repeat(rot * new Vector3(0, 0, 1), 4));
 
-            spline.Evaluate(0, out position, out tangent, out upVector);
+            Spline.Evaluate(0, out position, out tangent, out upVector);
             rot = Quaternion.LookRotation(tangent, upVector);
             railNormals.AddRange(Enumerable.Repeat(rot * new Vector3(0, 0, -1), 4));
         }
@@ -217,7 +224,7 @@ public class RailRenderer : MonoBehaviour
 
     private List<int> RailTriangles()
     {
-        List<int> railTriangles = new List<int>();
+        List<int> railTriangles = new();
         for (int ring = 0; ring < RailSegments - 1; ring++)
         {
             int rootIndex = ring * rail2D.vertices.Length;
@@ -257,8 +264,6 @@ public class RailRenderer : MonoBehaviour
         railTriangles.Add(capVertsIndex + 3);
         railTriangles.Add(capVertsIndex + 0);
 
-
         return railTriangles;
     }
-
 }

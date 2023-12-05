@@ -6,7 +6,9 @@ using Object = UnityEngine.Object;
 
 public class Obstacle : MonoBehaviour
 {
+    [NaughtyAttributes.Required]
     public SplineContainer railTrack;
+
     private Spline spline;
     private SplineData<Object> splineData;
     private DataPoint<Object> dataPoint;

@@ -8,6 +8,7 @@ using UnityEngine.Splines.Interpolators;
 /// </summary>
 public class RailFollower : MonoBehaviour
 {
+    [NaughtyAttributes.Required]
     public SplineContainer railTrack;
     private Spline spline;
     private SplineData<float> speedData;
@@ -21,6 +22,7 @@ public class RailFollower : MonoBehaviour
     /// <summary>
     /// Current linear distance along the rail track
     /// </summary>
+    [NaughtyAttributes.OnValueChanged("ResetPosition")]
     public float distance = 0f;
 
     /// <summary>
@@ -83,7 +85,8 @@ public class RailFollower : MonoBehaviour
             nextObstacle = NextObstacle();
 
             // add speed to start moving again
-            if (speed == 0f) speed = 0.1f;
+            if (speed == 0f)
+                speed = 0.1f;
         }
     }
 
@@ -102,9 +105,9 @@ public class RailFollower : MonoBehaviour
         }
     }
 
-    // context menu option to reset the cart to the set distance along the track
-    [ContextMenu("Reset Positon on Track", false, 0)]
-    private void ResetPosition()
+    // inspector button to reset the cart to the set distance along the track
+    [NaughtyAttributes.Button]
+    public void ResetPosition()
     {
         spline = railTrack.Spline;
         float t = spline.ConvertIndexUnit(
