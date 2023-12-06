@@ -5,20 +5,49 @@ using System;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager Instance;
+    private static AudioManager _Instance;
     public Sound[] cartSounds, monstersSounds, weaponsSounds;
     public AudioSource[] cartSrcs, monstersSrcs, weaponsSrcs;
 
-    private void Awake(){
-        if(Instance == null){
-            Instance = this;
+    public static AudioManager Instance
+    {
+        get
+        {
+            if (_Instance != null) return _Instance;
+            else
+            {
+                GameObject prefab = Resources.Load("Audio Manager") as GameObject;
+                if (prefab == null || prefab.GetComponent<AudioManager>() == null)
+                {
+                    Debug.LogError("Prefab for audio manager is not found.");
+                }
+                else
+                {
+                    GameObject gameObject = Instantiate(prefab);
+                    DontDestroyOnLoad(gameObject);
+                    _Instance = gameObject.GetComponent<AudioManager>();
+                }
+
+                return _Instance;
+            }
+        }
+    }
+
+    private void Awake()
+    {
+        if (_Instance == null)
+        {
+            _Instance = this;
             DontDestroyOnLoad(gameObject);
-        }else{
+        }
+        else
+        {
             Destroy(gameObject);
         }
     }
 
-    private Sound FindSound(Sound[] sounds, string name){
+    private Sound FindSound(Sound[] sounds, string name)
+    {
         Sound s = Array.Find(sounds, x => x.name == name);
 
         return s;
@@ -28,7 +57,8 @@ public class AudioManager : MonoBehaviour
     {
         AudioSource openSource = cartSrcs[0];
         Sound s = FindSound(cartSounds, name);
-        if(s == null){
+        if (s == null)
+        {
             Debug.Log("Sound not found");
         }else{
             foreach (AudioSource source in cartSrcs)
@@ -49,7 +79,8 @@ public class AudioManager : MonoBehaviour
     {
         AudioSource openSource = monstersSrcs[0];
         Sound s = FindSound(monstersSounds, name);
-        if(s == null){
+        if (s == null)
+        {
             Debug.Log("Sound not found");
         }else{
             foreach (AudioSource source in monstersSrcs)
@@ -70,7 +101,8 @@ public class AudioManager : MonoBehaviour
     {
         AudioSource openSource = weaponsSrcs[0];
         Sound s = FindSound(weaponsSounds, name);
-        if(s == null){
+        if (s == null)
+        {
             Debug.Log("Sound not found");
         }else{
             
