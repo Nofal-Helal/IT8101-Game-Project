@@ -15,7 +15,6 @@ public class CartSoundPlayer : MonoBehaviour
     }
 
 
-    AudioManager audioManager;
     RailFollower railFollower;
     public CartSound[] sounds;
     /// <summary>
@@ -25,7 +24,6 @@ public class CartSoundPlayer : MonoBehaviour
 
     void Start()
     {
-        audioManager = AudioManager.Instance;
         Assert.AreEqual("CartObject", transform.GetChild(0).name);
         railFollower = transform.GetChild(0).GetComponent<RailFollower>();
     }
@@ -54,7 +52,7 @@ public class CartSoundPlayer : MonoBehaviour
                 volume = Mathf.InverseLerp(sound.endSpeed + soundFade, sound.endSpeed, speed);
 
             // limit volume from the value set in AudioManager
-            //sound.source.volume = audioManager.cartSrc.volume * volume;
+            sound.source.volume = SettingsMenu.cartVolume * volume;
         }
     }
 }
