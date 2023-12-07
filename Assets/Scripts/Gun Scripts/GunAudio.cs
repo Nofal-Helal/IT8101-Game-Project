@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Palmmedia.ReportGenerator.Core;
 using UnityEngine;
 
 public class GunAudio : MonoBehaviour
@@ -12,9 +13,16 @@ public class GunAudio : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        audioSource.volume = SettingsMenu.weaponsVolume;
         gunController = GetComponent<Gun>();
         gunController.OnShoot += PlayShootAudio;
         gunController.OnReload += PlayReloadAudio;
+    }
+
+    void OnDestroy()
+    {
+        gunController.OnShoot -= PlayShootAudio;
+        gunController.OnReload -= PlayReloadAudio;
     }
 
     private void PlayShootAudio()

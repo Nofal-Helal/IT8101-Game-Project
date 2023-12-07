@@ -1,0 +1,34 @@
+{
+    "name": "Gameplay",
+    "maps": [
+        {
+            "name": "gameplay",
+            "id": "c9d7b85d-4451-4357-851f-f278fae83fbc",
+            "actions": [
+                {
+                    "name": "Remove Obstacle",
+                    "type": "Button",
+                    "id": "77ae5290-f9ff-4ea8-a6c6-33c4a29e0fb4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "06a813e1-d754-41b5-9815-80972340aedd",
+                    "path": "<Keyboard>/o",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Remove Obstacle",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
