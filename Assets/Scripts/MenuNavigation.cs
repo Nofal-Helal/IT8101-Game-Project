@@ -9,6 +9,10 @@ public class MenuNavigation : MonoBehaviour
     {
         SceneManager.LoadScene(sceneName);
     }
+    public void showSomething(string InputValue){
+
+    }
+
     public void exitGame()
     {
         Application.Quit();

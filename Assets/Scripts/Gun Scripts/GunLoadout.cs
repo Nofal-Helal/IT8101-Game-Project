@@ -7,38 +7,41 @@ using UnityEngine;
 
 public class GunLoadout : MonoBehaviour
 {
+    [HideInInspector]
     public List<GameObject> gunList;
+    [HideInInspector]
     public int weaponIndex;
+    private GameObject currentGun;
     private Animator animator;
+    private bool isActive;
     private bool switching;
     // Start is called before the first frame update
     void Start()
     {
         gunList = GetChildren(gameObject);
-        animator = gameObject.GetComponent<Animator>();
-        switching = false;
-
         if (gunList.Count == 0)
         {
-            weaponIndex = -1;
-        }
-        else
-        {
-            weaponIndex = 0;
+            return;
         }
         foreach (GameObject gun in gunList)
         {
             gun.SetActive(false);
         }
-        gunList[0].SetActive(true);
+        weaponIndex = 0;
+        currentGun = gunList[weaponIndex];
+        currentGun.SetActive(true);
+        animator = gameObject.GetComponent<Animator>();
+        switching = false;
+        isActive = true;
         StartCoroutine(Pullout());
     }
 
     // Update is called once per frame
     void Update()
     {
+        isActive = currentGun.GetComponent<Gun>().gunData.reloading || currentGun.GetComponent<Gun>().gunData.shooting;
 
-        if (!switching && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle"))
+        if (!switching && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") && !(isActive))
         {
             if (weaponIndex == -1)
             {
@@ -48,28 +51,22 @@ public class GunLoadout : MonoBehaviour
 
             if (scrollInput > 0)
             {
-                Debug.Log(scrollInput);
                 if (weaponIndex >= gunList.Count - 1)
                 {
                     return;
                 }
                 weaponIndex++;
-                Debug.Log("hi +");
-                Debug.Log(weaponIndex);
-                Debug.Log(scrollInput);
+                currentGun = gunList[weaponIndex];
                 StartCoroutine(Switch(gunList, weaponIndex));
             }
             if (scrollInput < 0)
             {
-                Debug.Log(scrollInput);
                 if (weaponIndex <= 0)
                 {
                     return;
                 }
                 weaponIndex--;
-                Debug.Log("hi -");
-                Debug.Log(weaponIndex);
-                Debug.Log(scrollInput);
+                currentGun = gunList[weaponIndex];
                 StartCoroutine(Switch(gunList, weaponIndex));
             }
         }
@@ -109,7 +106,6 @@ public class GunLoadout : MonoBehaviour
         for (int i = 0; i < parent.childCount; i++)
         {
             GameObject childGameObject = parent.GetChild(i).gameObject;
-            Debug.Log(childGameObject.name);
             childrenList.Add(childGameObject);
         }
         return childrenList;

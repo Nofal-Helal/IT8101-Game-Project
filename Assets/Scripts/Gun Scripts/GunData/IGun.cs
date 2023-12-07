@@ -1,6 +1,6 @@
 using System.Collections;
 public interface IGun
 {
-  public void Shoot();
+  public IEnumerator Shoot();
   public IEnumerator Reload();
 }

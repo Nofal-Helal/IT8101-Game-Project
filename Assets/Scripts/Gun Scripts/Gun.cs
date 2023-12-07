@@ -1,26 +1,26 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
 public class Gun : MonoBehaviour, IGun
 {
     public GunData gunData;
     // private Animator animator;
+    public event Action OnShoot;
+    public event Action OnReload;
     void Start()
     {
         gunData.reloading = false;
+        gunData.shooting = false;
     }
     // Update is called once per frame
     void Update()
     {
-        if (gunData.timeSinceLastShot <= (1f / gunData.fireRate))
+        if (Input.GetMouseButton(0) && !gunData.shooting && !gunData.reloading)
         {
-            gunData.timeSinceLastShot += Time.deltaTime;
-        }
-        if (Input.GetMouseButton(0))
-        {
-            Shoot();
+            StartCoroutine(Shoot());
         }
 
         if ((Input.GetKeyDown(KeyCode.R) || gunData.magazine == 0) && !gunData.reloading)
@@ -28,21 +28,20 @@ public class Gun : MonoBehaviour, IGun
             StartCoroutine(Reload());
         }
     }
-    public void Shoot()
+    public IEnumerator Shoot()
     {
-        if (gunData.timeSinceLastShot <= (1.0f / gunData.fireRate) || gunData.reloading)
-        {
-            return;
-        }
         Debug.Log("Shooting");
+        gunData.shooting = true;
+        OnShoot?.Invoke();
         gunData.magazine -= 1;
-        gunData.timeSinceLastShot = 0;
-        Debug.Log(gunData.magazine);
+        yield return new WaitForSeconds(1f / gunData.fireRate);
+        gunData.shooting = false;
     }
     public IEnumerator Reload()
     {
         Debug.Log("Reloading");
         gunData.reloading = true;
+        OnReload?.Invoke();
         yield return new WaitForSeconds(gunData.reloadTime);
         Debug.Log("Done reloading");
         gunData.magazine = gunData.maxAmmo;
