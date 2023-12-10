@@ -13,6 +13,7 @@ public class RailFollower : MonoBehaviour
     private Spline spline;
     private SplineData<float> speedData;
     private SplineData<Object> obstacles;
+    private SplineData<Object> waves;
 
     /// <summary>
     /// Current speed
@@ -44,6 +45,7 @@ public class RailFollower : MonoBehaviour
         spline = railTrack.Spline;
         Debug.Assert(spline.TryGetFloatData("speed", out speedData));
         Debug.Assert(spline.TryGetObjectData("obstacles", out obstacles));
+        Debug.Assert(spline.TryGetObjectData("waves", out waves));
 
         nextObstacle = nextObstacle != null ? nextObstacle : NextObstacle();
     }
@@ -94,10 +96,15 @@ public class RailFollower : MonoBehaviour
     {
         return obstacles.Count <= 0
             ? null
-            : (Obstacle)obstacles.Evaluate(spline, distance, new NextObstacleInterpolator());
+            : (Obstacle)obstacles.Evaluate(spline, distance, new NextObjectInterpolator());
     }
 
-    private class NextObstacleInterpolator : IInterpolator<Object>
+    public Wave NextWave =>
+        waves.Count <= 0
+            ? null
+            : (Wave)waves.Evaluate(spline, distance, new NextObjectInterpolator());
+
+    public class NextObjectInterpolator : IInterpolator<Object>
     {
         public Object Interpolate(Object from, Object to, float t)
         {

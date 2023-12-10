@@ -10719,6 +10719,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   health: 20
   maxHealth: 20
+  nextWave: {fileID: 0}
 --- !u!65 &3890812820410092941
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -11655,7 +11656,7 @@ MonoBehaviour:
   railTrack: {fileID: 0}
   speed: 0
   distance: 0
-  obstacleStopDistance: 1
+  obstacleStopDistance: 2.5
   nextObstacle: {fileID: 0}
 --- !u!1 &6733161628850925756
 GameObject:

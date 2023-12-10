@@ -245,6 +245,11 @@ MonoBehaviour:
           m_IndexUnit: 0
           m_DefaultValue: {fileID: 0}
           m_DataPoints: []
+      - Key: waves
+        Value:
+          m_IndexUnit: 0
+          m_DefaultValue: {fileID: 0}
+          m_DataPoints: []
   m_Knots:
     m_KnotsLink: []
 --- !u!33 &5323865335004455468

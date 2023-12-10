@@ -1,9 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
-using UnityEngine.InputSystem;
 
 public class SettingsMenu : MonoBehaviour
 {
@@ -11,11 +8,10 @@ public class SettingsMenu : MonoBehaviour
     // TODO: update unity inputsystem input asset
     public static KeyCode shootInput = KeyCode.Mouse0;
     public static KeyCode reloadInput = KeyCode.R;
-    public static float 
-        masterVolume = 1f,
-        cartVolume = 1f,
-        weaponsVolume = 1f,
-        monstersVolume = 1f;
+    public static float masterVolume = 0.5f,
+        cartVolume = 0.5f,
+        weaponsVolume = 0.5f,
+        monstersVolume = 0.5f;
 
     private Button lastSelected;
     private Button shootInputButton;
@@ -23,7 +19,10 @@ public class SettingsMenu : MonoBehaviour
     private Canvas InputPanelMenu;
     private TextMeshProUGUI InputPanelTitle;
     private bool panelOpened = false;
-    public Slider _generalSlider, _cartSlider, _monstersSlider, _weaponsSlider;
+    public Slider _generalSlider,
+        _cartSlider,
+        _monstersSlider,
+        _weaponsSlider;
 
     void Start()
     {
@@ -34,7 +33,8 @@ public class SettingsMenu : MonoBehaviour
         updateInputButton(reloadInputButton);
     }
 
-    T GetComponentByName<T>(string gameObjectName) where T : Component
+    T GetComponentByName<T>(string gameObjectName)
+        where T : Component
     {
         GameObject foundObject = GameObject.Find(gameObjectName);
 
@@ -49,7 +49,9 @@ public class SettingsMenu : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("Component of type " + typeof(T) + " not found on " + gameObjectName);
+                Debug.LogWarning(
+                    "Component of type " + typeof(T) + " not found on " + gameObjectName
+                );
             }
         }
         else
@@ -140,5 +142,4 @@ public class SettingsMenu : MonoBehaviour
     {
         weaponsVolume = Mathf.Clamp01(_weaponsSlider.value);
     }
-
 }

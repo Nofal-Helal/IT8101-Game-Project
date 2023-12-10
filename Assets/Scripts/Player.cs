@@ -1,26 +1,32 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 
-
 public class Player : MonoBehaviour
 {
     public float health = 20f;
     public float maxHealth = 20f;
     private bool inWave;
     private RailFollower cartObject;
+    public Wave nextWave;
 
     private void Start()
     {
         Assert.AreEqual("CartObject", transform.GetChild(0).name);
         cartObject = transform.GetChild(0).GetComponent<RailFollower>();
+        nextWave ??= cartObject.NextWave;
     }
 
     private void Update()
     {
-        if (cartObject.speed == 0f) {
-            if (!inWave) {
+        if (!inWave && nextWave)
+        {
+            if (cartObject.distance >= nextWave.Distance)
+            {
                 inWave = true;
-                cartObject.nextObstacle?.OnStopAtObstacle();
+                nextWave.SpawnWave();
+                _ = cartObject.railTrack.Spline.TryGetObjectData("waves", out var waves);
+                _ = waves.RemoveDataPoint(nextWave.Distance);
+                nextWave = cartObject.NextWave;
             }
         }
     }
