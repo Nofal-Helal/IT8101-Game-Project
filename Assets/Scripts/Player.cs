@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
             if (cartObject.distance >= nextWave.Distance)
             {
                 inWave = true;
-                nextWave.SpawnWave();
+                nextWave.SpawnNextSubWave();
                 _ = cartObject.railTrack.Spline.TryGetObjectData("waves", out var waves);
                 _ = waves.RemoveDataPoint(nextWave.Distance);
                 nextWave = cartObject.NextWave;

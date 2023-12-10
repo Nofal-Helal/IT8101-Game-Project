@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
@@ -21,6 +23,12 @@ public struct EnemySpawner
     [Tooltip("Number of enemies of that type to spawn")]
     [NaughtyAttributes.AllowNesting]
     public int count;
+
+    /// <summary>
+    /// instances of the spawned enemies
+    /// </summary>
+    [NonSerialized]
+    public List<GameObject> enemies;
 }
 
 [Serializable]
@@ -32,10 +40,21 @@ public struct EnemyActivator
 }
 
 [Serializable]
-public struct SubWave
+public class SubWave
 {
+    [Tooltip(
+        "Start this subwave after all enemies in the previous wave are defeated. If false start after certain time."
+    )]
     [NaughtyAttributes.AllowNesting]
-    public WaveType type;
+    public bool startAfterPrevious = true;
+
+    [Tooltip("Time to wait to start this sub-wave after the previous wave started.")]
+    [NaughtyAttributes.HideIf("startAfterPrevious")]
+    [NaughtyAttributes.AllowNesting]
+    public float waitTime;
+
+    [NaughtyAttributes.AllowNesting]
+    public WaveType type = WaveType.EnemyActivator;
 
     [NaughtyAttributes.ShowIf("IsSpawner")]
     [NaughtyAttributes.AllowNesting]
@@ -45,8 +64,8 @@ public struct SubWave
     [NaughtyAttributes.AllowNesting]
     public EnemyActivator activator;
 
-    public readonly bool IsSpawner => type == WaveType.EnemySpawner;
-    public readonly bool IsActivator => type == WaveType.EnemyActivator;
+    public bool IsSpawner => type == WaveType.EnemySpawner;
+    public bool IsActivator => type == WaveType.EnemyActivator;
 }
 
 public class Wave : MonoBehaviour
@@ -61,6 +80,10 @@ public class Wave : MonoBehaviour
     public float offset = -10f;
 
     public SubWave[] subWaves;
+    private int currentSubWave = 0;
+    private bool isCountingDown;
+    private float waitTime;
+    private bool HasNextSubWave => subWaves != null && currentSubWave < subWaves.Length;
 
     private new BoxCollider collider;
     private DataPoint<UnityEngine.Object> dataPoint;
@@ -82,10 +105,12 @@ public class Wave : MonoBehaviour
         /* obstacle.OnStopAtObstacle = () => SpawnWave(); */
 
         foreach (SubWave subWave in subWaves)
+        {
             if (subWave.type == WaveType.EnemyActivator)
             {
                 ActivateEnemies(subWave.activator, false);
             }
+        }
     }
 
     private void AttachToRailTrack()
@@ -96,10 +121,11 @@ public class Wave : MonoBehaviour
         _ = waveData.Add(dataPoint);
     }
 
-    public void SpawnWave()
+    public void SpawnNextSubWave()
     {
-        foreach (SubWave subWave in subWaves)
+        if (HasNextSubWave)
         {
+            SubWave subWave = subWaves[currentSubWave];
             switch (subWave.type)
             {
                 case WaveType.EnemySpawner:
@@ -109,6 +135,54 @@ public class Wave : MonoBehaviour
                     ActivateEnemies(subWave.activator);
                     break;
             }
+            currentSubWave += 1;
+
+            // if next wave needs waiting time, start the countdown
+            if (currentSubWave < subWaves.Length)
+            {
+                SubWave nextSubwave = subWaves[currentSubWave];
+                if (!nextSubwave.startAfterPrevious)
+                {
+                    isCountingDown = true;
+                    waitTime = nextSubwave.waitTime;
+                }
+            }
+        }
+    }
+
+    // Update is called once per frame
+    private void Update()
+    {
+        if (isCountingDown) // assumes there is a next sub-wave
+        {
+            waitTime -= Time.deltaTime;
+            if (waitTime <= 0f)
+            {
+                isCountingDown = false;
+                SpawnNextSubWave();
+            }
+        }
+        else if (currentSubWave != 0 && HasNextSubWave)
+        {
+            // assumes the next wave needs to check for enemies from the previous wave
+            SubWave nextSubwave = subWaves[currentSubWave - 1];
+            IEnumerable<GameObject> enemies =
+                nextSubwave.type == WaveType.EnemyActivator
+                    ? nextSubwave.activator.enemies
+                    : nextSubwave.type == WaveType.EnemySpawner
+                        ? nextSubwave.spawner.enemies
+                        : null;
+
+            /* if (Input.GetKeyDown(KeyCode.A)) */
+            /* { */
+            /*     var t = enemies.First(e => e != null); */
+            /*     Destroy(t); */
+            /* } */
+
+            if (enemies.All(e => e == null))
+            {
+                SpawnNextSubWave();
+            }
         }
     }
 
@@ -116,7 +190,10 @@ public class Wave : MonoBehaviour
     {
         foreach (GameObject enemy in activator.enemies)
         {
-            enemy.SetActive(active);
+            if (enemy)
+            {
+                enemy.SetActive(active);
+            }
         }
     }
 
@@ -135,7 +212,8 @@ public class Wave : MonoBehaviour
             Vector3? position = PlaceEnemy(initialPosition);
             if (position.HasValue)
             {
-                _ = Instantiate(spawner.enemy, position.Value, Quaternion.identity);
+                GameObject enemy = Instantiate(spawner.enemy, position.Value, Quaternion.identity);
+                spawner.enemies.Add(enemy);
                 spawned += 1;
             }
         }
@@ -162,9 +240,6 @@ public class Wave : MonoBehaviour
             ? raycastHit.point
             : null;
     }
-
-    // Update is called once per frame
-    /* private void Update() { } */
 
     // Editor only functions
     private void UpdateSplinePosition()
