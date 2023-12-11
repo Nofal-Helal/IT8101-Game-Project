@@ -16,16 +16,20 @@ public class CartSoundPlayer : MonoBehaviour
 
 
     RailFollower railFollower;
-    public CartSound[] sounds;
+
     /// <summary>
     /// Amount of overlap between sounds in speed units
     /// </summary>
     public float soundFade = 0.25f;
+    public CartSound[] sounds;
+    public AudioSource crashAudioSource;
+    private bool playedCrashSound;
 
     void Start()
     {
         Assert.AreEqual("CartObject", transform.GetChild(0).name);
         railFollower = transform.GetChild(0).GetComponent<RailFollower>();
+        crashAudioSource.volume *= SettingsMenu.cartVolume;
     }
 
     // Update is called once per frame
@@ -37,7 +41,6 @@ public class CartSoundPlayer : MonoBehaviour
             if (speed >= sound.startSpeed - soundFade && speed <= sound.endSpeed + soundFade)
             {
                 if (!sound.source.isPlaying) sound.source.UnPause();
-
             }
             else
             {
@@ -53,6 +56,19 @@ public class CartSoundPlayer : MonoBehaviour
 
             // limit volume from the value set in AudioManager
             sound.source.volume = SettingsMenu.cartVolume * volume;
+        }
+
+        if (speed < Mathf.Epsilon)
+        {
+            if (!playedCrashSound)
+            {
+                playedCrashSound = true;
+                crashAudioSource.Play();
+            }
+        }
+        else
+        {
+            playedCrashSound = false;
         }
     }
 }
