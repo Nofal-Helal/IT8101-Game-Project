@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.Assertions;
 
 public class Player : MonoBehaviour
@@ -8,12 +9,17 @@ public class Player : MonoBehaviour
     private bool inWave;
     private RailFollower cartObject;
     public Wave nextWave;
+    public float secondsToRemoveObstacle = 2f;
+    private bool removingObstacle;
+    private float obstacleProgress = 0f;
+    private CircularBar circularBar;
 
     private void Start()
     {
         Assert.AreEqual("CartObject", transform.GetChild(0).name);
         cartObject = transform.GetChild(0).GetComponent<RailFollower>();
         nextWave ??= cartObject.NextWave;
+        circularBar = FindObjectOfType<CircularBar>();
     }
 
     private void Update()
@@ -29,13 +35,38 @@ public class Player : MonoBehaviour
                 nextWave = cartObject.NextWave;
             }
         }
+
+        if (removingObstacle)
+        {
+            obstacleProgress += Time.deltaTime;
+            circularBar.progress = obstacleProgress / secondsToRemoveObstacle;
+
+            if (obstacleProgress >= secondsToRemoveObstacle)
+            {
+                cartObject.OnRemoveObstacle();
+                inWave = false; // TODO: Maybe set it to false when the wave actually ends
+                obstacleProgress = 0f;
+                removingObstacle = false;
+            }
+        }
     }
 
-    // TODO: Bettor obstacle removal input
-    // press o to remove obstacle
-    private void OnRemoveObstacle()
+    // hold o to remove obstacle
+    public void OnRemoveObstacle(InputAction.CallbackContext ctx)
     {
-        cartObject.OnRemoveObstacle();
-        inWave = false;
+        // button is pressed while cart is stopped
+        if (ctx.performed && cartObject.speed == 0)
+        {
+            removingObstacle = true;
+            circularBar.progress = obstacleProgress;
+            circularBar.target = cartObject.nextObstacle != null ? cartObject.nextObstacle.transform : null;
+        }
+
+        // button is released
+        if (ctx.canceled)
+        {
+            removingObstacle = false;
+            circularBar.target = null;
+        }
     }
 }
