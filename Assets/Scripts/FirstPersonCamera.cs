@@ -7,6 +7,8 @@ public class FirstPersonCamera : MonoBehaviour
 {
     public float cameraSensitivity = 0.25f;
     public GameObject cartObject;
+    [Range(0f, 180f)]
+    public float rotationRange = 120f;
     private float rotX, rotY;
 
 
@@ -24,7 +26,7 @@ public class FirstPersonCamera : MonoBehaviour
         rotY += mouseDelta.x * cameraSensitivity;
         rotX += mouseDelta.y * cameraSensitivity;
         rotX = ClampAngle(rotX, -85f, 85);
-        rotY = ClampAngle(rotY, cartObject.transform.eulerAngles.y - 120f, cartObject.transform.eulerAngles.y + 120f);
+        rotY = ClampAngle(rotY, cartObject.transform.eulerAngles.y - rotationRange, cartObject.transform.eulerAngles.y + rotationRange);
         this.transform.eulerAngles = new Vector3(-rotX, rotY, 0);
     }
 

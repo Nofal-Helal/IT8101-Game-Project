@@ -21,6 +21,8 @@ public class Obstacle : MonoBehaviour
     /// </summary>
     public float Distance => dataPoint.Index;
 
+    public bool IsVisible => GetComponent<Renderer>().isVisible;
+
     public Action OnStopAtObstacle = () => { };
 
     private void OnEnable()

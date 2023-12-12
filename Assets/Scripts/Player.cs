@@ -1,6 +1,6 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Assertions;
+using UnityEngine.InputSystem;
 
 public class Player : MonoBehaviour
 {
@@ -47,6 +47,7 @@ public class Player : MonoBehaviour
                 inWave = false; // TODO: Maybe set it to false when the wave actually ends
                 obstacleProgress = 0f;
                 removingObstacle = false;
+                circularBar.visible = false;
             }
         }
     }
@@ -55,18 +56,23 @@ public class Player : MonoBehaviour
     public void OnRemoveObstacle(InputAction.CallbackContext ctx)
     {
         // button is pressed while cart is stopped
-        if (ctx.performed && cartObject.speed == 0)
+        if (
+            ctx.performed
+            && cartObject.speed == 0
+            && cartObject.nextObstacle != null
+            && cartObject.nextObstacle.IsVisible
+        )
         {
             removingObstacle = true;
+            circularBar.visible = true;
             circularBar.progress = obstacleProgress;
-            circularBar.target = cartObject.nextObstacle != null ? cartObject.nextObstacle.transform : null;
+            circularBar.target = cartObject.nextObstacle.transform;
         }
 
         // button is released
         if (ctx.canceled)
         {
             removingObstacle = false;
-            circularBar.target = null;
         }
     }
 }

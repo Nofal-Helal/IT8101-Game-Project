@@ -5,6 +5,7 @@ public class CircularBar : MonoBehaviour
 {
     public Transform target;
     public float progress;
+    public bool visible;
     private RawImage rawImage;
 
     void Start()
@@ -16,7 +17,7 @@ public class CircularBar : MonoBehaviour
 
     void Update()
     {
-        if (target != null)
+        if (visible && target != null)
         {
             rawImage.enabled = true;
             transform.position = Camera.main.WorldToScreenPoint(target.position + new Vector3(0,1,0));
