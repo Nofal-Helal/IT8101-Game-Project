@@ -7,7 +7,6 @@ using UnityEngine;
 public class Gun : MonoBehaviour, IGun
 {
     public GunData gunData;
-    // private Animator animator;
     public event Action OnShoot;
     public event Action OnReload;
     void Start()
