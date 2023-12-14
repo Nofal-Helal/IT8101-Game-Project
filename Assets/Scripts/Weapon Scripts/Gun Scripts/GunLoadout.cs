@@ -39,7 +39,14 @@ public class GunLoadout : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        isActive = currentGun.GetComponent<Gun>().gunData.reloading || currentGun.GetComponent<Gun>().gunData.shooting;
+        if (currentGun.GetComponent<Gun>() != null)
+        {
+            isActive = currentGun.GetComponent<Gun>().gunData.reloading || currentGun.GetComponent<Gun>().gunData.shooting;
+        }
+        else if (currentGun.GetComponent<Projectile>() != null)
+        {
+            isActive = currentGun.GetComponent<Projectile>().gunData.reloading || currentGun.GetComponent<Projectile>().gunData.shooting;
+        }
 
         if (!switching && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") && !(isActive))
         {
