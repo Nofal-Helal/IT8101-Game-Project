@@ -7,6 +7,10 @@ TagManager:
   - Gun
   - Loadout
   - Effect
+  - FxTemporaire
+  - Ground
+  - Zombie
+  - Enemy
   layers:
   - Default
   - TransparentFX
