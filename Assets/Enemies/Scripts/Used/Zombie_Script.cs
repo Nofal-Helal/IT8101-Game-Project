@@ -5,6 +5,7 @@ public class ZombieScript : BaseUniversal
     public float zombieSpeed = 2f;
     public float playerProximityDistance = 5f;
     public bool isPlayerCloseLogSent;
+    public float attackDelay = 2f;
     //public Animator animator;
 
     private new void Start()
@@ -43,7 +44,14 @@ public class ZombieScript : BaseUniversal
         {
             base.AttackPlayer(playerScript);
             timeSinceLastAttack = 0f;
+            Invoke("ResetAttack", attackDelay);
         }
+    }
+    protected void ResetAttack()
+    {
+        isPlayerCloseLogSent = false;
+        UpdateAnimatorParameters();
+        TriggerRunAnimation();
     }
 
     protected override void TakeDamage(float damage)
@@ -82,7 +90,7 @@ public class ZombieScript : BaseUniversal
                     Debug.Log("Player is close to the zombie! Attacking...");
                     isPlayerCloseLogSent = true;
                     UpdateAnimatorParameters();  // Call this when the player is close
-                    TriggerAttackAnimation();   // Call this when the player is close
+                    TriggerRunAnimation();   // Call this when the player is close
                 }
             }
 
@@ -111,7 +119,7 @@ public class ZombieScript : BaseUniversal
 
     }
 
-    private void TriggerAttackAnimation()
+    private void TriggerRunAnimation()
     {
         animator.SetTrigger("RunTrigger"); // Replace with your actual trigger name
     }
