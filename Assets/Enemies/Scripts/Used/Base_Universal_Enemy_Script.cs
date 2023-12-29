@@ -20,6 +20,15 @@ public class BaseUniversal : MonoBehaviour
     protected Animator animator;
     public bool isPlayerClose = false;
 
+    protected virtual void Start()
+    {
+        animator = GetComponent<Animator>();
+        if(animator == null)
+        {
+            Debug.LogError("Animation component not found");
+        }
+    }
+
     protected virtual void Update()
     {
         timeSinceLastAttack += Time.deltaTime;
@@ -73,12 +82,18 @@ public class BaseUniversal : MonoBehaviour
 
     private void UpdateAnimatorParameters()
     {
-        animator.SetBool("isPlayerCloseLogSent", isPlayerClose);
+        if(animator != null)
+        {
+            animator.SetBool("isPlayerCloseLogSent", isPlayerClose);
+        }
     }
 
     private void TriggerAttackAnimation()
     {
+        if(animator != null)
+        {
         animator.SetTrigger("Attack 1"); // Replace with your actual trigger name
+        }
     }
 
 

@@ -1,10 +1,11 @@
 using UnityEngine;
 
-public class ZombieScript : BaseUniversal
+public class SkeletonScript : BaseUniversal
 {
-    public float zombieSpeed = 2f;
+    public float skeletonSpeed = 2f;
     public float playerProximityDistance = 5f;
     public bool isPlayerCloseLogSent;
+    public float attackDelay = 2f;
     //public Animator animator;
 
     private new void Start()
@@ -32,7 +33,7 @@ public class ZombieScript : BaseUniversal
 
     protected override void MoveTowardsPlayer(Vector3 playerPosition)
     {
-        transform.position = Vector3.MoveTowards(transform.position, playerPosition, zombieSpeed * Time.deltaTime);
+        transform.position = Vector3.MoveTowards(transform.position, playerPosition, skeletonSpeed * Time.deltaTime);
         transform.LookAt(playerPosition);
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
@@ -43,7 +44,14 @@ public class ZombieScript : BaseUniversal
         {
             base.AttackPlayer(playerScript);
             timeSinceLastAttack = 0f;
+            Invoke("ResetAttack", attackDelay);
         }
+    }
+    protected void ResetAttack()
+    {
+        isPlayerCloseLogSent = false;
+        UpdateAnimatorParameters();
+        TriggerRunAnimation();
     }
 
     protected override void TakeDamage(float damage)
@@ -74,7 +82,7 @@ public class ZombieScript : BaseUniversal
                     Debug.Log("I'm gonna bite ya!");
                     isPlayerCloseLogSent = true;
                     UpdateAnimatorParameters();
-                    TriggerBiteAnimation();
+                    TriggerAttackAnimation();
                 }
                 else
                 {
@@ -82,7 +90,7 @@ public class ZombieScript : BaseUniversal
                     Debug.Log("Player is close to the zombie! Attacking...");
                     isPlayerCloseLogSent = true;
                     UpdateAnimatorParameters();  // Call this when the player is close
-                    TriggerAttackAnimation();   // Call this when the player is close
+                    TriggerRunAnimation();   // Call this when the player is close
                 }
             }
 
@@ -107,21 +115,21 @@ public class ZombieScript : BaseUniversal
     private void UpdateAnimatorParameters()
     {
         animator.SetBool("isPlayerCloseLogSent", isPlayerCloseLogSent);
-        animator.SetBool("BiteTrigger", isPlayerCloseLogSent);
+        animator.SetBool("AttackTrigger", isPlayerCloseLogSent);
 
     }
 
-    private void TriggerAttackAnimation()
+    private void TriggerRunAnimation()
     {
-        animator.SetTrigger("RunTrigger"); // Replace with your actual trigger name
+        animator.SetTrigger("WalkTrigger"); // Replace with your actual trigger name
     }
 
     private void TriggerIdleAnimation()
     {
         animator.SetTrigger("IdleTrigger"); // Replace with your actual trigger name
     }
-    private void TriggerBiteAnimation()
+    private void TriggerAttackAnimation()
     {
-        animator.SetTrigger("BiteTrigger");
+        animator.SetTrigger("AttackTrigger");
     }
 }
