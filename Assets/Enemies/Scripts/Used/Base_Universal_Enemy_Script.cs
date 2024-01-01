@@ -1,8 +1,9 @@
-using System.ComponentModel.Design;
+using System.Collections;
 using UnityEngine;
 
 public class BaseUniversal : MonoBehaviour
 {
+    // Basic attributes
     protected bool isAlive = true;
     public float health = 100f;
     public float speed = 1f;
@@ -12,15 +13,16 @@ public class BaseUniversal : MonoBehaviour
     public float attackSpeed = 1f;
     public float attackCooldown = 1f;
     public float timeSinceLastAttack;
-    //protected float rotationSpeed = 5f;
     public bool isAttacking = false;
 
+    // References
     public test_player_movement_script player;
     protected Animator animator;
     public bool isPlayerCloseLogSent = false;
     private float playerProximityDistance;
     private float originalAttackRange;
 
+    // Initialization
     protected virtual void Start()
     {
         animator = GetComponent<Animator>();
@@ -31,6 +33,7 @@ public class BaseUniversal : MonoBehaviour
         originalAttackRange = attackRange;
     }
 
+    // Update logic
     protected virtual void Update()
     {
         timeSinceLastAttack += Time.deltaTime;
@@ -40,6 +43,7 @@ public class BaseUniversal : MonoBehaviour
         }
     }
 
+    // Handle player proximity
     public virtual void HandlePlayerProximity(GameObject player)
     {
         if (player.CompareTag("Player"))
@@ -108,6 +112,7 @@ public class BaseUniversal : MonoBehaviour
         }
     }
 
+    // Move towards the player
     public virtual void MoveTowardsPlayer(Vector3 playerPosition)
     {
         transform.position = Vector3.MoveTowards(transform.position, playerPosition, speed * Time.deltaTime);
@@ -115,6 +120,7 @@ public class BaseUniversal : MonoBehaviour
         transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
     }
 
+    // Attack the player
     protected virtual void AttackPlayer(test_player_movement_script playerScript)
     {
         if (isAlive && playerScript != null && CanAttack())
@@ -125,10 +131,14 @@ public class BaseUniversal : MonoBehaviour
                 isPlayerCloseLogSent = true;
                 UpdateAnimatorParameters();
                 TriggerAttackAnimation("");
+
+                // Call DealDamage with the damage parameter
+                DealDamage(damage);
             }
         }
     }
 
+    // Finish the attack
     public virtual void FinishAttack()
     {
         isAttacking = false;
@@ -137,11 +147,13 @@ public class BaseUniversal : MonoBehaviour
         TriggerRunAnimation("");
     }
 
+    // Check if the enemy can attack
     public bool CanAttack()
     {
         return timeSinceLastAttack >= attackCooldown;
     }
 
+    // Take damage from an external source
     public virtual void TakeDamage(float damage)
     {
         health -= damage;
@@ -153,11 +165,13 @@ public class BaseUniversal : MonoBehaviour
         }
     }
 
+    // Check if the enemy is alive
     public bool IsAlive()
     {
         return isAlive;
     }
 
+    // Update animator parameters
     public virtual void UpdateAnimatorParameters()
     {
         if (animator != null)
@@ -166,6 +180,7 @@ public class BaseUniversal : MonoBehaviour
         }
     }
 
+    // Trigger the attack animation
     public virtual void TriggerAttackAnimation(string AttackTrigger)
     {
         if (animator != null && isAlive)
@@ -175,6 +190,7 @@ public class BaseUniversal : MonoBehaviour
         }
     }
 
+    // Trigger the run animation
     public virtual void TriggerRunAnimation(string RunTrigger)
     {
         if (animator != null)
@@ -183,6 +199,7 @@ public class BaseUniversal : MonoBehaviour
         }
     }
 
+    // Trigger the idle animation
     public virtual void TriggerIdleAnimation(string IdleTrigger)
     {
         if (animator != null)
@@ -190,7 +207,7 @@ public class BaseUniversal : MonoBehaviour
             animator.SetTrigger(IdleTrigger);
         }
     }
-
+    //Trigger the death animation
     public virtual void TriggerDeathAnimation(string DeathTrigger)
     {
         if (animator != null)
@@ -199,14 +216,32 @@ public class BaseUniversal : MonoBehaviour
         }
     }
 
+    // Initiates the die process by marking the entity as not alive and triggering the death animation.
     protected virtual void Die()
     {
         isAlive = false;
+        UpdateAnimatorParameters();
+        TriggerDeathAnimation("DeathTrigger");
+        HandleDeathAnimationEnd();
+    }
+    // Handles the end of the death animation by starting a coroutine with a specified delay before executing the actual die logic.
+    public virtual void HandleDeathAnimationEnd()
+    {
+        StartCoroutine(DieAfterDelay(5f));
+    }
+
+    // Coroutine: Introduces a delay specified by 'delaySeconds' using WaitForSeconds,
+    // and then executes the actual die logic by setting 'isAlive' to false and destroying the game object.
+    private IEnumerator DieAfterDelay(float delaySeconds)
+    {
+        yield return new WaitForSeconds(delaySeconds);
+
+        // Actual die logic after waiting
         Destroy(gameObject);
     }
 
     // Animation event function called when the attack animation deals damage
-    public virtual void DealDamage()
+    public virtual void DealDamage(float damage)
     {
         GameObject player = FindPlayer();
         if (player != null)
@@ -218,12 +253,15 @@ public class BaseUniversal : MonoBehaviour
             }
         }
     }
+
+    // Check if the player is in attack range
     public virtual bool IsPlayerInRange(Vector3 playerPosition)
     {
-        // Implement the logic to check if the player is in range
         float distanceToPlayer = Vector3.Distance(transform.position, playerPosition);
         return distanceToPlayer <= attackRange;
     }
+
+    // Find the player object in the scene
     private GameObject FindPlayer()
     {
         return GameObject.FindGameObjectWithTag("Player");

@@ -2,68 +2,109 @@ using NaughtyAttributes;
 using System.Collections;
 using UnityEngine;
 
-// SkeletonScript inherits from the BaseUniversal class
-public class SkeletonScript : BaseUniversal
+public class BatEnemyScript : BaseUniversal
 {
-    // Public variables exposed in the Unity Editor
+    // Proximity distance to detect the player
     public float playerProximityDistance;
+
+    // Delay before attacking after detecting the player
     public float attackDelay = 2f;
+
+    // Duration of the attack animation
     public float attackAnimationLength = 1.5f;
+
+    // Flag to check if the bat is colliding with the player
     private bool isCollidingWithPlayer = false;
 
-    // Start is called before the first frame update
+    // Height at which the bat hovers
+    private float hoverHeight = 5f;
+
+    // Maximum height the bat can reach
+    private float maxHeight = 10f;
+
+    // Force applied to keep the bat hovering
+    public float hoverForce = 10f;
+
+    // Rigidbody component of the bat
+    private Rigidbody rb;
+
+    // Initialization
     private new void Start()
     {
-        // Call the Start method of the base class
-        base.Start();
         isPlayerCloseLogSent = false;
         animator = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody>();
 
         // Check if the Animator component is present
         if (animator == null)
         {
             Debug.LogError("Animator component not found on the object or its children.");
         }
+
+        // Set rigidbody properties
+        if (rb != null)
+        {
+            rb.mass = 1f;
+            rb.drag = 0.5f;
+            rb.angularDrag = 0.5f;
+        }
     }
 
     // Update is called once per frame
     protected override void Update()
     {
-        // Call the Update method of the base class
         base.Update();
         if (isAlive)
         {
             GameObject player = FindPlayer();
             if (player != null)
             {
-                // Check and handle player proximity
                 HandlePlayerProximity(player);
             }
         }
+        if (isAlive)
+        {
+            HoverInAir();
+        }
     }
 
-    // Method to handle player attack
+    // Apply a constant force upward to keep the bat hovering
+    private void HoverInAir()
+    {
+        if (rb != null)
+        {
+            rb.AddForce(Vector3.up * hoverForce, ForceMode.Force);
+
+            // Limit the height of the bat
+            Vector3 clampedPosition = transform.position;
+            clampedPosition.y = Mathf.Clamp(clampedPosition.y, hoverHeight, maxHeight);
+            transform.position = clampedPosition;
+        }
+    }
+
+    // Attack the player
     protected override void AttackPlayer(test_player_movement_script playerScript)
     {
         if (timeSinceLastAttack >= attackCooldown)
         {
-            // Call the AttackPlayer method of the base class
             base.AttackPlayer(playerScript);
             timeSinceLastAttack = 0f;
             animator.SetTrigger("AttackTrigger");
 
             // Apply damage after attackDelay
             StartCoroutine(WaitForAttack(playerScript));
+
+            // Call DealDamage with the damage parameter
+            DealDamage(damage);
         }
     }
 
-    // Coroutine to wait for the attack to occur
+    // Coroutine to wait for the attackDelay before initiating the attack
     IEnumerator WaitForAttack(test_player_movement_script playerScript)
     {
-        // Wait for the attackDelay
         yield return new WaitForSeconds(attackDelay);
 
-        // Check if still attacking and player is within attack range
+        // Check if still attacking and player is within attack range and colliding
         if (isAttacking && IsPlayerInRange(playerScript.transform.position) && isCollidingWithPlayer)
         {
             // Player is in range, initiate attack
@@ -71,7 +112,7 @@ public class SkeletonScript : BaseUniversal
             Debug.Log("Attack animation triggered");
 
             // Wait for the duration of the attack animation
-            yield return new WaitForSeconds(attackAnimationLength); // Adjust with the actual length of your attack animation
+            yield return new WaitForSeconds(attackAnimationLength);
 
             // Finish the attack
             FinishAttack();
@@ -81,7 +122,7 @@ public class SkeletonScript : BaseUniversal
         ResetAttack();
     }
 
-    // Method to reset the attack state
+    // Reset the attack state
     protected void ResetAttack()
     {
         Debug.Log("ResetAttack");
@@ -89,45 +130,47 @@ public class SkeletonScript : BaseUniversal
         isPlayerCloseLogSent = false;
         isCollidingWithPlayer = false;
         UpdateAnimatorParameters();
-        TriggerRunAnimation("WalkTrigger");
+        TriggerRunAnimation();
     }
 
-    // Method to finish the attack
+    // Finish the attack
     public override void FinishAttack()
     {
-        Debug.Log("Finished attacking, time to chillax");
+        Debug.Log("Finished attacking, time to fly away");
         isPlayerCloseLogSent = false;
         isAttacking = false;
         UpdateAnimatorParameters();
         animator.ResetTrigger("AttackTrigger");
-        TriggerRunAnimation("WalkTrigger");
+        TriggerRunAnimation();
     }
 
-    // Method to handle taking damage
+    // Take damage
     public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
     }
 
-    // Method to handle death
+    // Handle death
     protected override void Die()
     {
         if (health <= 0 && isAlive)
         {
             TriggerDeathAnimation("DeathTrigger");
             Debug.Log("OOF");
+            isAlive = false;
+            rb.useGravity = true; // Enable gravity to let the bat fall
+            //Base Death Method
+            base.Die();
         }
-        //Base Death Method
-        base.Die();
     }
 
-    // Method to find the player in the scene
+    // Find the player in the scene
     private GameObject FindPlayer()
     {
         return GameObject.FindGameObjectWithTag("Player");
     }
 
-    // Method to handle player proximity
+    // Handle player proximity and initiate actions accordingly
     public override void HandlePlayerProximity(GameObject player)
     {
         if (player.gameObject.tag == "Player")
@@ -138,7 +181,7 @@ public class SkeletonScript : BaseUniversal
             {
                 if (!isPlayerCloseLogSent)
                 {
-                    Debug.Log("Player is close to the zombie! Chasing...");
+                    Debug.Log("Player is close to the bat! Flying towards...");
                     isPlayerCloseLogSent = true;
                     UpdateAnimatorParameters();
                 }
@@ -155,15 +198,15 @@ public class SkeletonScript : BaseUniversal
                 }
                 else
                 {
-                    // Player is not close enough for attack, keep chasing
-                    TriggerRunAnimation("WalkTrigger");
+                    // Player is not close enough for attack, keep flying
+                    TriggerRunAnimation();
                 }
             }
             else
             {
                 if (isPlayerCloseLogSent)
                 {
-                    Debug.Log("Player is not close to the zombie. Going into idle.");
+                    Debug.Log("Player is not close to the bat. Going into idle.");
                     isPlayerCloseLogSent = false;
                     UpdateAnimatorParameters();
                     TriggerIdleAnimation("IdleTrigger");
@@ -182,7 +225,7 @@ public class SkeletonScript : BaseUniversal
         }
     }
 
-    // Method called when a collision occurs
+    // Handle collision with player
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Player"))
@@ -190,7 +233,7 @@ public class SkeletonScript : BaseUniversal
             test_player_movement_script playerScript = collision.gameObject.GetComponent<test_player_movement_script>();
             if (playerScript != null && playerScript.IsAlive())
             {
-                // Player collided with the skeleton, initiate attack
+                // Player collided with the bat, initiate attack
                 isAttacking = true;
                 isCollidingWithPlayer = true;
                 AttackPlayer(playerScript);
@@ -198,38 +241,24 @@ public class SkeletonScript : BaseUniversal
         }
     }
 
-    // Method to deal damage to the player
-    public override void DealDamage(float damage)
-    {
-        GameObject player = FindPlayer();
-        if (player != null)
-        {
-            test_player_movement_script playerScript = player.GetComponent<test_player_movement_script>();
-            if (playerScript != null && playerScript.IsAlive() && IsPlayerInRange(player.transform.position))
-            {
-                playerScript.TakeDamage(damage);
-            }
-        }
-    }
-
-    // Method to update animator parameters
+    // Update animator parameters
     public override void UpdateAnimatorParameters()
     {
         if (animator != null)
         {
             animator.SetBool("isPlayerCloseLogSent", isPlayerCloseLogSent);
-            animator.SetBool("AttackTrigger", isAttacking);
+            animator.SetBool("AttackTrigger", isAttacking); // Update the AttackTrigger with isAttacking
         }
     }
 
-    // Method to trigger run animation
+    // Trigger the run animation
     private void TriggerRunAnimation()
     {
         animator.ResetTrigger("AttackTrigger"); // Reset the AttackTrigger
-        animator.SetTrigger("WalkTrigger");
+        animator.SetTrigger("FlyTrigger");
     }
 
-    // Method to trigger idle animation
+    // Trigger the idle animation
     public override void TriggerIdleAnimation(string triggerName)
     {
         animator.SetTrigger("IdleTrigger");

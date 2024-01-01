@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 19c9889196ffca04ea23fedef7a21f3e
+guid: 818628585c49ea840a62111d34a630a4
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -33,11 +33,11 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Zombie|ZombieBite
-      takeName: Zombie|ZombieBite
-      internalID: -4071365283672075268
+      name: BatArmature|Bat_Attack
+      takeName: BatArmature|Bat_Attack
+      internalID: -4931789197307264134
       firstFrame: 0
-      lastFrame: 122
+      lastFrame: 21
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -62,11 +62,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Zombie|ZombieCrawl
-      takeName: Zombie|ZombieCrawl
-      internalID: 3277375567933014942
+      name: BatArmature|Bat_Attack2
+      takeName: BatArmature|Bat_Attack2
+      internalID: 6798196322625840709
       firstFrame: 0
-      lastFrame: 123
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -91,11 +91,40 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Zombie|ZombieIdle
-      takeName: Zombie|ZombieIdle
-      internalID: -7089130101838655937
+      name: BatArmature|Bat_Death
+      takeName: BatArmature|Bat_Death
+      internalID: -5200130379853124148
       firstFrame: 0
-      lastFrame: 134
+      lastFrame: 29
+      wrapMode: 0
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
+      loop: 0
+      hasAdditiveReferencePose: 0
+      loopTime: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      events: []
+      transformMask: []
+      maskType: 3
+      maskSource: {instanceID: 0}
+      additiveReferencePoseFrame: 0
+    - serializedVersion: 16
+      name: BatArmature|Bat_Flying
+      takeName: BatArmature|Bat_Flying
+      internalID: -8588731844908120542
+      firstFrame: 0
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -120,40 +149,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: Zombie|ZombieRun
-      takeName: Zombie|ZombieRun
-      internalID: -4714910368162768161
+      name: BatArmature|Bat_Hit
+      takeName: BatArmature|Bat_Hit
+      internalID: 3507104242674810391
       firstFrame: 0
-      lastFrame: 20
-      wrapMode: 0
-      orientationOffsetY: 0
-      level: 0
-      cycleOffset: 0
-      loop: 0
-      hasAdditiveReferencePose: 0
-      loopTime: 1
-      loopBlend: 0
-      loopBlendOrientation: 0
-      loopBlendPositionY: 0
-      loopBlendPositionXZ: 0
-      keepOriginalOrientation: 0
-      keepOriginalPositionY: 1
-      keepOriginalPositionXZ: 0
-      heightFromFeet: 0
-      mirror: 0
-      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
-      curves: []
-      events: []
-      transformMask: []
-      maskType: 3
-      maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
-    - serializedVersion: 16
-      name: Zombie|ZombieWalk
-      takeName: Zombie|ZombieWalk
-      internalID: 8585225960974154761
-      firstFrame: 0
-      lastFrame: 96
+      lastFrame: 30
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -222,8 +222,7 @@ ModelImporter:
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
-  referencedClips:
-  - 649b4300b04e997489ab306e2c980243
+  referencedClips: []
   importAnimation: 1
   humanDescription:
     serializedVersion: 3

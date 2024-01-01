@@ -1,113 +1,126 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class test_player_movement_script : MonoBehaviour
 {
+    // Player movement parameters
     public float speed = 5f;
-    public float mouseSensitivity = 5f;
+
+    // Player health parameters
     public float maxHealth = 100f;
-    public float playerHealth;
+    private float currentHealth;
+
+    // Player damage parameters
     public float playerDamage = 20f;
+
+    // Danger distance to detect nearby enemies
     public float dangerDistance = 5f;
+
+    // Attack delay for handling damage over time
     public float attackDelay = 2f;
+
+    // Player alive state
     public bool isAlive = true;
-    private List<GameObject> detectedEnemies = new List<GameObject>();
+
+    // Health bar UI
     public HealthBar healthbar;
 
+    // Reference to the HUD script
+    public HUDScript hudScript;
+
+    // Flag to track if the player is being attacked
     private bool isAttacked = false;
 
+    // Start is called before the first frame update
     void Start()
     {
-        playerHealth = maxHealth;
+        currentHealth = maxHealth;
         healthbar.SetMaxHealth(maxHealth);
+        hudScript = GameObject.FindObjectOfType<HUDScript>();
+        UpdateHUD();  // Call UpdateHUD at the start to set the initial HUD value
     }
 
+    // Update is called once per frame
     void Update()
-{
-    // Debug.Log("Update is called from the player script");
-    if (playerHealth > 0f)
     {
-        HandleMovementInput();
-
-        // Check for nearby enemies using Physics
-        if (CheckForNearbyEnemies())
+        if (currentHealth > 0f)
         {
-            HandleDanger();
-        }
-    }
-}
+            HandleMovementInput();
 
-void HandleDanger()
-{
-    // Apply damage over time if an enemy is detected and the player is being attacked
-    TakeDamageOverTime();
-}
-
-void TakeDamageOverTime()
-{
-    playerHealth -= Time.deltaTime * 10f;
-    healthbar.SetHealth(playerHealth);
-    if (playerHealth <= 0)
-    {
-        isAlive = false;
-        Die();
-    }
-}
-
-bool CheckForNearbyEnemies()
-{
-    Collider[] colliders = Physics.OverlapSphere(transform.position, dangerDistance);
-
-    foreach (var collider in colliders)
-    {
-        // Check if the collider has the "Enemy" tag
-        if (collider.CompareTag("Enemy"))
-        {
-            BaseUniversal enemyScript = collider.gameObject.GetComponent<BaseUniversal>();
-
-            // Check if the enemy has the BaseUniversal component and is alive
-            if (enemyScript != null && enemyScript.IsAlive())
+            // Check for nearby enemies using Physics
+            if (CheckForNearbyEnemies())
             {
-                // Calculate the distance to the enemy here
-                float distanceToEnemy = Vector3.Distance(transform.position, enemyScript.transform.position);
-
-                // Play the attack animation
-                enemyScript.UpdateAnimatorParameters();
-                enemyScript.TriggerAttackAnimation("BiteTrigger");
-
-                // Apply damage if the player is still alive and the enemy is within range
-                if (IsAlive() && distanceToEnemy <= enemyScript.AttackRange)
-                {
-                    TakeDamage(enemyScript.damage);
-                }
-
-                return true; // Player is in danger
+                HandleDanger();
             }
         }
     }
 
-    return false; // Player is not in danger
-}
+    // Handle danger by applying damage over time
+    void HandleDanger()
+    {
+        TakeDamageOverTime();
+    }
 
+    // Apply damage over time
+    void TakeDamageOverTime()
+    {
+        currentHealth -= Time.deltaTime * 10f;
+        currentHealth = Mathf.Max(currentHealth, 0f);
+        healthbar.SetHealth(currentHealth);
+        UpdateHUD();
 
+        if (currentHealth <= 0)
+        {
+            isAlive = false;
+            Die();
+        }
+    }
+
+    // Check for nearby enemies within the danger distance
+    bool CheckForNearbyEnemies()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, dangerDistance);
+
+        foreach (var collider in colliders)
+        {
+            if (collider.CompareTag("Enemy"))
+            {
+                BaseUniversal enemyScript = collider.gameObject.GetComponent<BaseUniversal>();
+
+                if (enemyScript != null && enemyScript.IsAlive())
+                {
+                    float distanceToEnemy = Vector3.Distance(transform.position, enemyScript.transform.position);
+
+                    enemyScript.UpdateAnimatorParameters();
+                    enemyScript.TriggerAttackAnimation("BiteTrigger");
+
+                    if (IsAlive() && distanceToEnemy <= enemyScript.AttackRange)
+                    {
+                        TakeDamage(enemyScript.damage);
+                    }
+
+                    return true; // Player is in danger
+                }
+            }
+        }
+
+        return false; // Player is not in danger
+    }
+
+    // Coroutine to wait for the attack animation and apply damage
     IEnumerator WaitForAttackAnimation(BaseUniversal enemyScript, float distanceToEnemy)
     {
-        // Wait for the attack animation to finish
         yield return new WaitForSeconds(attackDelay);
 
-        // Check if the player is still alive, the enemy is within range, and the player is being attacked
         if (IsAlive() && distanceToEnemy <= enemyScript.AttackRange && isAttacked)
         {
-            // Apply damage
             TakeDamageOverTime();
         }
 
-        // Reset the attacked flag
         isAttacked = false;
     }
 
+    // Handle player movement based on input
     public void HandleMovementInput()
     {
         float horizontal = Input.GetAxis("Horizontal");
@@ -117,31 +130,31 @@ bool CheckForNearbyEnemies()
         transform.Translate(movement * speed * Time.deltaTime);
     }
 
+    // Handle player attack
     public void HandleAttack()
     {
-        Debug.Log("HandleAttack");
-        if (playerHealth > 0f)
+        if (currentHealth > 0f)
         {
             TakeDamage(playerDamage);
         }
     }
 
+    // Apply damage to the player
     public void TakeDamage(float damage)
     {
-        playerHealth -= damage;
+        currentHealth -= damage;
+        currentHealth = Mathf.Max(currentHealth, 0f);
+        healthbar.SetHealth(currentHealth);
+        UpdateHUD();
 
-        playerHealth = Mathf.Max(playerHealth, 0f);
-
-        healthbar.SetHealth(playerHealth);
-
-        Debug.Log(playerHealth);
-        if (playerHealth <= 0)
+        if (currentHealth <= 0)
         {
             isAlive = false;
             Die();
         }
     }
 
+    // Handle collision with enemy to apply damage
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
@@ -154,13 +167,24 @@ bool CheckForNearbyEnemies()
         }
     }
 
+    // Handle player death
     public void Die()
     {
         Destroy(gameObject);
     }
 
+    // Check if the player is alive
     public bool IsAlive()
     {
         return isAlive;
+    }
+
+    // Update the HUD with current health
+    private void UpdateHUD()
+    {
+        if (hudScript != null)
+        {
+            hudScript.UpdateHealth((int)currentHealth);
+        }
     }
 }
