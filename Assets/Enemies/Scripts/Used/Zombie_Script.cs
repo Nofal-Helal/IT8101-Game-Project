@@ -1,17 +1,20 @@
+using NaughtyAttributes;
+using System.Collections;
 using UnityEngine;
 
 public class ZombieScript : BaseUniversal
 {
-    public float zombieSpeed = 2f;
     public float playerProximityDistance = 5f;
-    public bool isPlayerCloseLogSent;
+
+    public float attackAnimationLength = 1.5f;
     public float attackDelay = 2f;
-    //public Animator animator;
+    private float originalAttackRange;
 
     private new void Start()
     {
         isPlayerCloseLogSent = false;
-        animator = GetComponent<Animator>(); // Add this line
+        animator = GetComponent<Animator>();
+        originalAttackRange = attackRange;
         if (animator == null)
         {
             Debug.LogError("Animator component not found on the object or its children.");
@@ -31,37 +34,63 @@ public class ZombieScript : BaseUniversal
         }
     }
 
-    protected override void MoveTowardsPlayer(Vector3 playerPosition)
-    {
-        transform.position = Vector3.MoveTowards(transform.position, playerPosition, zombieSpeed * Time.deltaTime);
-        transform.LookAt(playerPosition);
-        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
-    }
-
     protected override void AttackPlayer(test_player_movement_script playerScript)
     {
         if (timeSinceLastAttack >= attackCooldown)
         {
             base.AttackPlayer(playerScript);
             timeSinceLastAttack = 0f;
-            Invoke("ResetAttack", attackDelay);
+            isAttacking = true;
+            StartCoroutine(WaitForAttack(playerScript));
         }
     }
-    protected void ResetAttack()
+
+    IEnumerator WaitForAttack(test_player_movement_script playerScript)
     {
-        isPlayerCloseLogSent = false;
-        UpdateAnimatorParameters();
-        TriggerRunAnimation();
+        yield return new WaitForSeconds(attackDelay);
+
+        if (isAttacking && IsPlayerInRange(playerScript.transform.position))
+        {
+            TriggerAttackAnimation("BiteTrigger");
+            AttackPlayer(playerScript);
+
+            yield return new WaitForSeconds(attackAnimationLength);
+
+            FinishAttack();
+        }
+
+        ResetAttack();
     }
 
-    protected override void TakeDamage(float damage)
+    private void ResetAttack()
+    {
+        isAttacking = false;
+        isPlayerCloseLogSent = false;
+        UpdateAnimatorParameters();
+        TriggerRunAnimation("RunTrigger");
+        attackRange = originalAttackRange;
+    }
+
+    public override void FinishAttack()
+    {
+        base.FinishAttack();
+        Invoke("ResetAttack", 0.5f);
+    }
+
+    public override void TakeDamage(float damage)
     {
         base.TakeDamage(damage);
     }
 
     protected override void Die()
     {
-        base.Die();
+        if (health <= 0 && isAlive)
+        {
+            TriggerDeathAnimation("DeathTrigger");
+            Debug.Log("OOF");
+            isAlive = false;
+            base.Die();
+        }
     }
 
     private GameObject FindPlayer()
@@ -69,67 +98,73 @@ public class ZombieScript : BaseUniversal
         return GameObject.FindGameObjectWithTag("Player");
     }
 
-    private void HandlePlayerProximity(GameObject player)
+    public override void HandlePlayerProximity(GameObject player)
     {
-        float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-
-        if (distanceToPlayer <= playerProximityDistance)
+        if (player.CompareTag("Player"))
         {
-            if (!isPlayerCloseLogSent)
+            float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
+
+            if (distanceToPlayer <= playerProximityDistance)
             {
-                if (distanceToPlayer <= attackRange)
+                if (!isPlayerCloseLogSent)
                 {
-                    Debug.Log("I'm gonna bite ya!");
-                    isPlayerCloseLogSent = true;
-                    UpdateAnimatorParameters();
-                    TriggerBiteAnimation();
+                    if (distanceToPlayer <= attackRange)
+                    {
+                        Debug.Log("I'm gonna bite ya!");
+                        isPlayerCloseLogSent = true;
+                        UpdateAnimatorParameters();
+                        TriggerAttackAnimation("BiteTrigger");
+                        AttackPlayer(player.GetComponent<test_player_movement_script>());
+                    }
+                    else
+                    {
+                        Debug.Log("Player is close to the zombie! Attacking...");
+                        isPlayerCloseLogSent = true;
+                        UpdateAnimatorParameters();
+                        TriggerRunAnimation("RunTrigger");
+                    }
                 }
-                else
+
+                MoveTowardsPlayer(player.transform.position);
+            }
+            else
+            {
+                if (isPlayerCloseLogSent)
                 {
-                    // Log message only once when the player becomes close
-                    Debug.Log("Player is close to the zombie! Attacking...");
-                    isPlayerCloseLogSent = true;
-                    UpdateAnimatorParameters();  // Call this when the player is close
-                    TriggerRunAnimation();   // Call this when the player is close
+                    Debug.Log("Player is not close to the zombie. Going into idle.");
+                    isPlayerCloseLogSent = false;
+                    UpdateAnimatorParameters();
+                    TriggerIdleAnimation("IdleTrigger");
+                    isAttacking = false;
                 }
             }
-
-            MoveTowardsPlayer(player.transform.position);
-            // Implement attack logic
-            AttackPlayer(player.GetComponent<test_player_movement_script>());
-
         }
         else
         {
-            // Player is not close
             if (isPlayerCloseLogSent)
             {
-                // Log message only once when the player is not close
-                Debug.Log("Player is not close to the zombie. Going into idle.");
+                Debug.Log("Enemy: Player is not close. Going into idle.");
                 isPlayerCloseLogSent = false;
-                UpdateAnimatorParameters();  // Call this when the player is not close
-                TriggerIdleAnimation();
+                UpdateAnimatorParameters();
+                TriggerIdleAnimation("IdleTrigger");
             }
         }
     }
-    private void UpdateAnimatorParameters()
-    {
-        animator.SetBool("isPlayerCloseLogSent", isPlayerCloseLogSent);
-        animator.SetBool("BiteTrigger", isPlayerCloseLogSent);
 
+    public override void UpdateAnimatorParameters()
+    {
+        if (animator != null)
+        {
+            animator.SetBool("isPlayerCloseLogSent", isPlayerCloseLogSent);
+            animator.SetBool("BiteTrigger", isAttacking);
+        }
     }
 
-    private void TriggerRunAnimation()
+    public override void TriggerAttackAnimation(string attackTrigger)
     {
-        animator.SetTrigger("RunTrigger"); // Replace with your actual trigger name
-    }
-
-    private void TriggerIdleAnimation()
-    {
-        animator.SetTrigger("IdleTrigger"); // Replace with your actual trigger name
-    }
-    private void TriggerBiteAnimation()
-    {
-        animator.SetTrigger("BiteTrigger");
+        if (isAlive && animator != null)
+        {
+            animator.SetTrigger(attackTrigger);
+        }
     }
 }
