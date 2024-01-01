@@ -13,7 +13,7 @@ public class GunAudio : MonoBehaviour
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
-        audioSource.volume = SettingsMenu.weaponsVolume;
+        audioSource.volume = Global.weaponsVolume;
         gunController = GetComponent<Gun>();
         gunController.OnShoot += PlayShootAudio;
         gunController.OnReload += PlayReloadAudio;

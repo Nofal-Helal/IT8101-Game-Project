@@ -9,20 +9,22 @@ public class Gun : MonoBehaviour, IGun
     public GunData gunData;
     public event Action OnShoot;
     public event Action OnReload;
+    GameInputActions.GameplayActions inputActions;
     void Start()
     {
         gunData.reloading = false;
         gunData.shooting = false;
+        inputActions = Global.inputActions.gameplay;
     }
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButton(0) && !gunData.shooting && !gunData.reloading)
+        if (inputActions.Shoot.IsPressed() && !gunData.shooting && !gunData.reloading)
         {
             StartCoroutine(Shoot());
         }
 
-        if ((Input.GetKeyDown(KeyCode.R) || gunData.magazine == 0) && !gunData.reloading)
+        if ((inputActions.Reload.IsPressed() || gunData.magazine == 0) && !gunData.reloading)
         {
             StartCoroutine(Reload());
         }

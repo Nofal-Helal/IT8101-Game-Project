@@ -29,7 +29,7 @@ public class CartSoundPlayer : MonoBehaviour
     {
         Assert.AreEqual("CartObject", transform.GetChild(0).name);
         railFollower = transform.GetChild(0).GetComponent<RailFollower>();
-        crashAudioSource.volume *= SettingsMenu.cartVolume;
+        crashAudioSource.volume *= Global.cartVolume;
     }
 
     // Update is called once per frame
@@ -55,7 +55,7 @@ public class CartSoundPlayer : MonoBehaviour
                 volume = Mathf.InverseLerp(sound.endSpeed + soundFade, sound.endSpeed, speed);
 
             // limit volume from the value set in AudioManager
-            sound.source.volume = SettingsMenu.cartVolume * volume;
+            sound.source.volume = Global.cartVolume * volume;
         }
 
         if (speed < Mathf.Epsilon)
