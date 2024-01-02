@@ -32,16 +32,26 @@ public class BaseUniversal : MonoBehaviour
         }
         originalAttackRange = attackRange;
     }
-
+    
     // Update logic
     protected virtual void Update()
     {
-        timeSinceLastAttack += Time.deltaTime;
+        if (isAttacking)
+        {
+            // Check if the player is close and is in attack range
+            if (isPlayerCloseLogSent && IsPlayerInRange(player.transform.position))
+            {
+                // Apply damage to the player
+                player.TakeDamage(damage * Time.deltaTime);
+            }
+        }
+
         if (animator != null)
         {
             animator.SetBool("isAttacking", isAttacking);
         }
     }
+
 
     // Handle player proximity
     public virtual void HandlePlayerProximity(GameObject player)
@@ -249,6 +259,19 @@ public class BaseUniversal : MonoBehaviour
             test_player_movement_script playerScript = player.GetComponent<test_player_movement_script>();
             if (playerScript != null && playerScript.IsAlive() && IsPlayerInRange(player.transform.position))
             {
+                playerScript.TakeDamage(damage);
+            }
+        }
+    }
+    // Handle collision with player to apply damage
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            test_player_movement_script playerScript = collision.gameObject.GetComponent<test_player_movement_script>();
+            if (playerScript != null && playerScript.IsAlive())
+            {
+                // Call TakeDamage method of the player
                 playerScript.TakeDamage(damage);
             }
         }

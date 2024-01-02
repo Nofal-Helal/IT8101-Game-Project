@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using YourGameNamespace;
 
 public class test_player_movement_script : MonoBehaviour
 {
@@ -31,6 +32,9 @@ public class test_player_movement_script : MonoBehaviour
     // Flag to track if the player is being attacked
     private bool isAttacked = false;
 
+    // Flag to track if the player is in contact with an enemy
+    private bool isPlayerInContactWithEnemy = false;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -46,25 +50,13 @@ public class test_player_movement_script : MonoBehaviour
         if (currentHealth > 0f)
         {
             HandleMovementInput();
-
-            // Check for nearby enemies using Physics
-            if (CheckForNearbyEnemies())
-            {
-                HandleDanger();
-            }
         }
     }
 
-    // Handle danger by applying damage over time
-    void HandleDanger()
+    // Apply damage over time when in contact with an enemy
+    void TakeDamageOverTime(float damage)
     {
-        TakeDamageOverTime();
-    }
-
-    // Apply damage over time
-    void TakeDamageOverTime()
-    {
-        currentHealth -= Time.deltaTime * 10f;
+        currentHealth -= Time.deltaTime * damage;
         currentHealth = Mathf.Max(currentHealth, 0f);
         healthbar.SetHealth(currentHealth);
         UpdateHUD();
@@ -76,45 +68,36 @@ public class test_player_movement_script : MonoBehaviour
         }
     }
 
-    // Check for nearby enemies within the danger distance
-    bool CheckForNearbyEnemies()
+    // OnCollisionStay is called once per frame for every collider/rigidbody that is touching rigidbody/collider
+    void OnCollisionStay(Collision collision)
     {
-        Collider[] colliders = Physics.OverlapSphere(transform.position, dangerDistance);
-
-        foreach (var collider in colliders)
+        if (collision.gameObject.CompareTag("Enemy"))
         {
-            if (collider.CompareTag("Enemy"))
-            {
-                BaseUniversal enemyScript = collider.gameObject.GetComponent<BaseUniversal>();
+            isPlayerInContactWithEnemy = true;
+            BaseUniversal enemyScript = collision.gameObject.GetComponent<BaseUniversal>();
 
-                if (enemyScript != null && enemyScript.IsAlive())
-                {
-                    float distanceToEnemy = Vector3.Distance(transform.position, enemyScript.transform.position);
-
-                    enemyScript.UpdateAnimatorParameters();
-                    enemyScript.TriggerAttackAnimation("BiteTrigger");
-
-                    if (IsAlive() && distanceToEnemy <= enemyScript.AttackRange)
-                    {
-                        TakeDamage(enemyScript.damage);
-                    }
-
-                    return true; // Player is in danger
-                }
-            }
+            // Apply damage over time when in contact with an enemy
+            TakeDamageOverTime(enemyScript.damage);
         }
-
-        return false; // Player is not in danger
     }
 
-    // Coroutine to wait for the attack animation and apply damage
+    // OnCollisionExit is called when this collider/rigidbody has stopped touching another rigidbody/collider
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Enemy"))
+        {
+            isPlayerInContactWithEnemy = false;
+        }
+    }
+
+    // Coroutine to wait for the attack animation and apply damage over time
     IEnumerator WaitForAttackAnimation(BaseUniversal enemyScript, float distanceToEnemy)
     {
         yield return new WaitForSeconds(attackDelay);
 
         if (IsAlive() && distanceToEnemy <= enemyScript.AttackRange && isAttacked)
         {
-            TakeDamageOverTime();
+            // TakeDamageOverTime(); // You can uncomment this line if needed
         }
 
         isAttacked = false;
@@ -154,7 +137,6 @@ public class test_player_movement_script : MonoBehaviour
         }
     }
 
-    // Handle collision with enemy to apply damage
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Enemy"))
@@ -162,6 +144,7 @@ public class test_player_movement_script : MonoBehaviour
             BaseUniversal enemyScript = collision.gameObject.GetComponent<BaseUniversal>();
             if (enemyScript != null && enemyScript.IsAlive())
             {
+                // Call TakeDamage method of the enemy
                 enemyScript.TakeDamage(playerDamage);
             }
         }
