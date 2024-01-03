@@ -10,6 +10,7 @@ public class FirstPersonCamera : MonoBehaviour
     [Range(0f, 180f)]
     public float rotationRange = 120f;
     private float rotX, rotY;
+    private bool acceptingInput = true;
 
 
     void Start()
@@ -21,13 +22,26 @@ public class FirstPersonCamera : MonoBehaviour
 
     void Update()
     {
-        // Aim Camera
-        var mouseDelta = Mouse.current.delta.ReadValue();
-        rotY += mouseDelta.x * cameraSensitivity;
-        rotX += mouseDelta.y * cameraSensitivity;
-        rotX = ClampAngle(rotX, -85f, 85);
-        rotY = ClampAngle(rotY, cartObject.transform.eulerAngles.y - rotationRange, cartObject.transform.eulerAngles.y + rotationRange);
-        this.transform.eulerAngles = new Vector3(-rotX, rotY, 0);
+        if (acceptingInput)
+        {
+            // Aim Camera
+            var mouseDelta = Mouse.current.delta.ReadValue();
+            rotY += mouseDelta.x * cameraSensitivity;
+            rotX += mouseDelta.y * cameraSensitivity;
+            rotX = ClampAngle(rotX, -85f, 85);
+            rotY = ClampAngle(rotY, cartObject.transform.eulerAngles.y - rotationRange, cartObject.transform.eulerAngles.y + rotationRange);
+            this.transform.eulerAngles = new Vector3(-rotX, rotY, 0);
+        }
+    }
+
+    public void EnableInput()
+    {
+        acceptingInput = true;
+    }
+
+    public void DisableInput()
+    {
+        acceptingInput = false;
     }
 
     public static float ClampAngle(float angle, float min, float max)

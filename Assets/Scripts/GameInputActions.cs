@@ -35,6 +35,24 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": ""Hold(duration=1.401298E-45)"",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Shoot"",
+                    ""type"": ""Button"",
+                    ""id"": ""ab2bf720-9abd-4a8a-9609-fb3d65c64e87"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": ""Hold(duration=1.401298E-45)"",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Reload"",
+                    ""type"": ""Button"",
+                    ""id"": ""48448c91-2da1-49a0-a069-26c1968836b3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -48,6 +66,28 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Remove Obstacle"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""fc4b9780-e2c0-4b08-ac78-3f90b31d36ee"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Shoot"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9dc72a3f-c248-49f0-8453-75dc01d5048a"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Reload"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -57,6 +97,8 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         // gameplay
         m_gameplay = asset.FindActionMap("gameplay", throwIfNotFound: true);
         m_gameplay_RemoveObstacle = m_gameplay.FindAction("Remove Obstacle", throwIfNotFound: true);
+        m_gameplay_Shoot = m_gameplay.FindAction("Shoot", throwIfNotFound: true);
+        m_gameplay_Reload = m_gameplay.FindAction("Reload", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -119,11 +161,15 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_gameplay;
     private List<IGameplayActions> m_GameplayActionsCallbackInterfaces = new List<IGameplayActions>();
     private readonly InputAction m_gameplay_RemoveObstacle;
+    private readonly InputAction m_gameplay_Shoot;
+    private readonly InputAction m_gameplay_Reload;
     public struct GameplayActions
     {
         private @GameInputActions m_Wrapper;
         public GameplayActions(@GameInputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @RemoveObstacle => m_Wrapper.m_gameplay_RemoveObstacle;
+        public InputAction @Shoot => m_Wrapper.m_gameplay_Shoot;
+        public InputAction @Reload => m_Wrapper.m_gameplay_Reload;
         public InputActionMap Get() { return m_Wrapper.m_gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -136,6 +182,12 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @RemoveObstacle.started += instance.OnRemoveObstacle;
             @RemoveObstacle.performed += instance.OnRemoveObstacle;
             @RemoveObstacle.canceled += instance.OnRemoveObstacle;
+            @Shoot.started += instance.OnShoot;
+            @Shoot.performed += instance.OnShoot;
+            @Shoot.canceled += instance.OnShoot;
+            @Reload.started += instance.OnReload;
+            @Reload.performed += instance.OnReload;
+            @Reload.canceled += instance.OnReload;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -143,6 +195,12 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @RemoveObstacle.started -= instance.OnRemoveObstacle;
             @RemoveObstacle.performed -= instance.OnRemoveObstacle;
             @RemoveObstacle.canceled -= instance.OnRemoveObstacle;
+            @Shoot.started -= instance.OnShoot;
+            @Shoot.performed -= instance.OnShoot;
+            @Shoot.canceled -= instance.OnShoot;
+            @Reload.started -= instance.OnReload;
+            @Reload.performed -= instance.OnReload;
+            @Reload.canceled -= instance.OnReload;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -163,5 +221,7 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
     public interface IGameplayActions
     {
         void OnRemoveObstacle(InputAction.CallbackContext context);
+        void OnShoot(InputAction.CallbackContext context);
+        void OnReload(InputAction.CallbackContext context);
     }
 }

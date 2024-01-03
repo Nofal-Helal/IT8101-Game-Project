@@ -20,6 +20,7 @@ public class Player : MonoBehaviour
         cartObject = transform.GetChild(0).GetComponent<RailFollower>();
         nextWave ??= cartObject.NextWave;
         circularBar = FindObjectOfType<CircularBar>();
+        GetComponent<PlayerInput>().actions = Global.inputActions.asset;
     }
 
     private void Update()

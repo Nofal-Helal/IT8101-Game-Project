@@ -6,12 +6,6 @@ public class SettingsMenu : MonoBehaviour
 {
     // TODO: store and load settings (persistence)
     // TODO: update unity inputsystem input asset
-    public static KeyCode shootInput = KeyCode.Mouse0;
-    public static KeyCode reloadInput = KeyCode.R;
-    public static float masterVolume = 0.5f,
-        cartVolume = 0.5f,
-        weaponsVolume = 0.5f,
-        monstersVolume = 0.5f;
 
     private Button lastSelected;
     private Button shootInputButton;
@@ -67,12 +61,12 @@ public class SettingsMenu : MonoBehaviour
         TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
         if (button.gameObject.name == "Shoot")
         {
-            buttonText.text = "Shoot: " + shootInput;
+            buttonText.text = "Shoot: " + Global.shootInput;
             shootInputButton = button;
         }
         else if (button.gameObject.name == "Reload")
         {
-            buttonText.text = "Reload: " + reloadInput;
+            buttonText.text = "Reload: " + Global.reloadInput;
             reloadInputButton = button;
         }
     }
@@ -81,11 +75,11 @@ public class SettingsMenu : MonoBehaviour
     {
         if (lastSelected.gameObject.name == "Shoot")
         {
-            shootInput = selectedInput;
+            Global.shootInput = selectedInput;
         }
         else if (lastSelected.gameObject.name == "Reload")
         {
-            reloadInput = selectedInput;
+            Global.reloadInput = selectedInput;
         }
         updateInputButton(lastSelected);
         InputPanelMenu.gameObject.SetActive(false);
@@ -122,24 +116,24 @@ public class SettingsMenu : MonoBehaviour
 
     public void GeneralVolume()
     {
-        masterVolume = Mathf.Clamp01(_generalSlider.value);
-        _cartSlider.value = masterVolume;
-        _monstersSlider.value = masterVolume;
-        _weaponsSlider.value = masterVolume;
+        Global.masterVolume = Mathf.Clamp01(_generalSlider.value);
+        _cartSlider.value = Global.masterVolume;
+        _monstersSlider.value = Global.masterVolume;
+        _weaponsSlider.value = Global.masterVolume;
     }
 
     public void CartVolume()
     {
-        cartVolume = Mathf.Clamp01(_cartSlider.value);
+        Global.cartVolume = Mathf.Clamp01(_cartSlider.value);
     }
 
     public void MonstersVolume()
     {
-        monstersVolume = Mathf.Clamp01(_monstersSlider.value);
+        Global.monstersVolume = Mathf.Clamp01(_monstersSlider.value);
     }
 
     public void WeaponsVolume()
     {
-        weaponsVolume = Mathf.Clamp01(_weaponsSlider.value);
+        Global.weaponsVolume = Mathf.Clamp01(_weaponsSlider.value);
     }
 }
