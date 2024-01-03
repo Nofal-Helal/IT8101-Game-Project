@@ -75,4 +75,15 @@ public class Player : MonoBehaviour
             removingObstacle = false;
         }
     }
+    public void TakeDamage(float damageAmount) {
+        health -= damageAmount;
+        if (health <= 0)
+        {
+            Die();
+        }
+    }
+    public void Die(){
+        Debug.Log("You've died. Unlucky.");
+        Destroy(gameObject);
+    }
 }

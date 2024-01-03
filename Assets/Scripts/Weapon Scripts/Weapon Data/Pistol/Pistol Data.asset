@@ -13,13 +13,17 @@ MonoBehaviour:
   m_Name: Pistol Data
   m_EditorClassIdentifier: 
   name: Pistol
+  weaponType: 1
   maxAmmo: 12
   reloadTime: 1.5
   fireRate: 3
-  shortRange: 9
-  midRange: 5
-  longRange: 4
+  shortRangeDistance: 10
+  shortRangeDamage: 5
+  midRangeDistance: 20
+  midRangeDamage: 3
+  longRangeDistance: 30
+  longRangeDamage: 2
   gunIdlePosition: {fileID: 2655988077585873504, guid: 98c420a754c13a048917017911dc8cf4, type: 2}
-  timeSinceLastShot: 0.33335638
   reloading: 0
+  shooting: 0
   magazine: 12

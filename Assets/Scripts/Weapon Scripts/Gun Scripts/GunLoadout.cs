@@ -11,7 +11,8 @@ public class GunLoadout : MonoBehaviour
     public List<GameObject> gunList;
     [HideInInspector]
     public int weaponIndex;
-    private GameObject currentGun;
+    [HideInInspector]
+    public GameObject currentGun;
     private Animator animator;
     private bool isActive;
     private bool switching;

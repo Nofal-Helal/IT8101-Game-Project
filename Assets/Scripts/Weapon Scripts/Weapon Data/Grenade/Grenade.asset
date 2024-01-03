@@ -17,9 +17,12 @@ MonoBehaviour:
   maxAmmo: 1
   reloadTime: 0
   fireRate: 0.2
-  shortRange: 30
-  midRange: 10
-  longRange: 5
+  shortRangeDistance: 5
+  shortRangeDamage: 15
+  midRangeDistance: 15
+  midRangeDamage: 5
+  longRangeDistance: 30
+  longRangeDamage: 2
   gunIdlePosition: {fileID: 2655988077585873504, guid: d6710a8727b52374c8c02b42f70f566e, type: 2}
   reloading: 0
   shooting: 0

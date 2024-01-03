@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
@@ -45,5 +46,17 @@ public class Gun : MonoBehaviour, IGun
         Debug.Log("Done reloading");
         gunData.magazine = gunData.maxAmmo;
         gunData.reloading = false;
+    }
+    public float GetDamageValue(float distance)
+    {
+        if (distance >= gunData.longRangeDistance)
+        {
+            return gunData.longRangeDamage;
+        }
+        if (distance <= gunData.shortRangeDistance)
+        {
+            return gunData.shortRangeDamage;
+        }
+        return gunData.midRangeDamage;
     }
 }

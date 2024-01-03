@@ -11,10 +11,13 @@ public class GunData : ScriptableObject
   public int maxAmmo;
   public float reloadTime;
   public float fireRate;
-  [Header("Damage")]
-  public int shortRange;
-  public int midRange;
-  public int longRange;
+  [Header("Range Info")]
+  public float shortRangeDistance;
+  public int shortRangeDamage;
+  public int midRangeDistance;
+  public int midRangeDamage;
+  public int longRangeDistance;
+  public int longRangeDamage;
   [Header("In Game Data")]
   public Preset gunIdlePosition;
   [HideInInspector]

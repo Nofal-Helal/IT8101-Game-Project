@@ -100,6 +100,7 @@ GameObject:
   - component: {fileID: 4692852216022129060}
   - component: {fileID: 7256777384662088602}
   - component: {fileID: 5517526665415971702}
+  - component: {fileID: 6303300849739253037}
   m_Layer: 6
   m_Name: AK47
   m_TagString: Gun
@@ -346,6 +347,19 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &6303300849739253037
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2642075643440537452}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b23ea02b4b498c4f84d46c8f4e1b49c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  distance: 1000
 --- !u!1 &5985953990292501847
 GameObject:
   m_ObjectHideFlags: 0

@@ -13,13 +13,17 @@ MonoBehaviour:
   m_Name: AK47 Data
   m_EditorClassIdentifier: 
   name: AK47
+  weaponType: 0
   maxAmmo: 30
   reloadTime: 2
   fireRate: 7
-  shortRange: 12
-  midRange: 8
-  longRange: 5
+  shortRangeDistance: 10
+  shortRangeDamage: 10
+  midRangeDistance: 20
+  midRangeDamage: 7
+  longRangeDistance: 30
+  longRangeDamage: 5
   gunIdlePosition: {fileID: 2655988077585873504, guid: e8863a201517c0943a6acec1c9cbb360, type: 2}
-  timeSinceLastShot: 0.1444844
   reloading: 0
-  magazine: 25
+  shooting: 0
+  magazine: 24
