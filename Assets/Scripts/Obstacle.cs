@@ -8,6 +8,7 @@ public class Obstacle : MonoBehaviour
 {
     [NaughtyAttributes.Required]
     public SplineContainer railTrack;
+    public float offset = 0f;
 
     private Spline spline;
     private SplineData<Object> splineData;
@@ -63,6 +64,7 @@ public class Obstacle : MonoBehaviour
     {
         Nearest(out _, out float t);
         float t_dist = SplineUtility.ConvertIndexUnit(spline, t, PathIndexUnit.Distance);
+        t_dist += offset;
         dataPoint = new DataPoint<Object>(t_dist, this);
         _ = splineData.Add(dataPoint);
     }
@@ -72,9 +74,13 @@ public class Obstacle : MonoBehaviour
         if (railTrack)
         {
             spline ??= railTrack.Spline;
-            Nearest(out float3 nearest, out _);
+            Nearest(out _, out float t);
+            float t_dist = spline.ConvertIndexUnit(t, PathIndexUnit.Normalized, PathIndexUnit.Distance);
+            t_dist += offset;
+            float3 position = spline.EvaluatePosition(spline.ConvertIndexUnit(t_dist, PathIndexUnit.Distance, PathIndexUnit.Normalized));
             Gizmos.color = Color.yellow;
-            Gizmos.DrawLine(transform.position, (Vector3)nearest + railTrack.transform.position);
+            Gizmos.DrawLine(transform.position, (Vector3)position + railTrack.transform.position);
+            Gizmos.DrawSphere((Vector3)position + railTrack.transform.position, 0.1f);
         }
     }
 }

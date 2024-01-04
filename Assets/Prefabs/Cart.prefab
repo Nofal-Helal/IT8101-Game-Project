@@ -181,6 +181,7 @@ MonoBehaviour:
   health: 20
   maxHealth: 20
   nextWave: {fileID: 0}
+  secondsToRemoveObstacle: 2
 --- !u!65 &691917947633793681
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -522,6 +523,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraSensitivity: 0.2
   cartObject: {fileID: 7223380704720846286}
+  rotationRange: 180
 --- !u!1 &5129368644038634789
 GameObject:
   m_ObjectHideFlags: 0
@@ -990,8 +992,9 @@ MonoBehaviour:
   railTrack: {fileID: 0}
   speed: 0
   distance: 0
-  obstacleStopDistance: 2.5
+  obstacleStopDistance: 2.8
   nextObstacle: {fileID: 0}
+  bumpBack: -2
 --- !u!1001 &4218892548469480067
 PrefabInstance:
   m_ObjectHideFlags: 0

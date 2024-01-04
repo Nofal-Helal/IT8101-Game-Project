@@ -58,6 +58,7 @@ public class CartSoundPlayer : MonoBehaviour
             sound.source.volume = Global.cartVolume * volume;
         }
 
+        // Play crash sound on impact
         if (speed < Mathf.Epsilon)
         {
             if (!playedCrashSound)
