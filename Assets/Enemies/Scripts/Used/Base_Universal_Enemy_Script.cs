@@ -14,9 +14,13 @@ public class BaseUniversal : MonoBehaviour
     public float attackCooldown = 1f;
     public float timeSinceLastAttack;
     public bool isAttacking = false;
+    // Gold is the currency you get when you kill an enemy.
+    public int goldDropAmount = 20;
+    // A "score" is a value you get when you hit an enemy.
+    public int scoreAmount = 5;
 
     // References
-    public test_player_movement_script player;
+    private Player player;
     protected Animator animator;
     public bool isPlayerCloseLogSent = false;
     private float playerProximityDistance;
@@ -30,12 +34,14 @@ public class BaseUniversal : MonoBehaviour
         {
             Debug.LogError("Animation component not found");
         }
+        player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         originalAttackRange = attackRange;
     }
 
     // Update logic
     protected virtual void Update()
     {
+        Debug.Log(player.gameObject.name);
         if (isAttacking)
         {
             // Check if the player is close and is in attack range
@@ -131,11 +137,11 @@ public class BaseUniversal : MonoBehaviour
     }
 
     // Attack the player
-    protected virtual void AttackPlayer(test_player_movement_script playerScript)
+    protected virtual void AttackPlayer(Player playerScript)
     {
         if (isAlive && playerScript != null && CanAttack())
         {
-            if (playerScript.IsAlive())
+            if (playerScript.isAlive())
             {
                 timeSinceLastAttack = 0f;
                 isPlayerCloseLogSent = true;
@@ -167,7 +173,8 @@ public class BaseUniversal : MonoBehaviour
     public virtual void TakeDamage(float damage)
     {
         health -= damage;
-
+        player.score += scoreAmount;
+        Debug.Log(health);
         if (health <= 0)
         {
             Die();
@@ -230,6 +237,8 @@ public class BaseUniversal : MonoBehaviour
     protected virtual void Die()
     {
         isAlive = false;
+        player.gold += goldDropAmount;
+        Debug.Log(player.gold);
         UpdateAnimatorParameters();
         TriggerDeathAnimation("DeathTrigger");
         HandleDeathAnimationEnd();
@@ -256,8 +265,8 @@ public class BaseUniversal : MonoBehaviour
         GameObject player = FindPlayer();
         if (player != null)
         {
-            test_player_movement_script playerScript = player.GetComponent<test_player_movement_script>();
-            if (playerScript != null && playerScript.IsAlive() && IsPlayerInRange(player.transform.position))
+            Player playerScript = player.GetComponent<Player>();
+            if (playerScript != null && playerScript.isAlive() && IsPlayerInRange(player.transform.position))
             {
                 playerScript.TakeDamage(damage);
             }
@@ -268,8 +277,8 @@ public class BaseUniversal : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            test_player_movement_script playerScript = collision.gameObject.GetComponent<test_player_movement_script>();
-            if (playerScript != null && playerScript.IsAlive())
+            Player playerScript = collision.gameObject.GetComponent<Player>();
+            if (playerScript != null && playerScript.isAlive())
             {
                 // Call TakeDamage method of the player
                 playerScript.TakeDamage(damage);

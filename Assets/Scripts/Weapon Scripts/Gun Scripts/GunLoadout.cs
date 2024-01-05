@@ -107,6 +107,14 @@ public class GunLoadout : MonoBehaviour
         }
         gunList[weaponIndex].SetActive(true);
     }
+
+    // It takes in a weapon name as a string
+    // because the value is coming from Shop UI button
+    public void AddToLoadout(string weaponName)
+    {
+        Debug.Log("yuh bought me some " + weaponName);
+    }
+
     public List<GameObject> GetChildren(GameObject gameObject)
     {
         List<GameObject> childrenList = new List<GameObject>();

@@ -53,6 +53,33 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Open Pause Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""a31da796-7e54-4e09-9a64-f8a527d77951"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Interact"",
+                    ""type"": ""Button"",
+                    ""id"": ""701b09aa-56f7-4448-8e23-284b814a5594"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Close Menu"",
+                    ""type"": ""Button"",
+                    ""id"": ""5d6bc385-0d62-4697-8a5d-8c5ab4d5e605"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -88,6 +115,39 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
                     ""action"": ""Reload"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9f8a3205-7b41-4080-a439-bd8a79e8eca2"",
+                    ""path"": ""<Keyboard>/escape"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Open Pause Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c9e40527-a8fe-4451-9fa1-68453d6d9bc1"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Interact"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""300556d1-0e93-4ca6-a5a9-edae4ec984c7"",
+                    ""path"": ""<Keyboard>/b"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Close Menu"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -99,6 +159,9 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         m_gameplay_RemoveObstacle = m_gameplay.FindAction("Remove Obstacle", throwIfNotFound: true);
         m_gameplay_Shoot = m_gameplay.FindAction("Shoot", throwIfNotFound: true);
         m_gameplay_Reload = m_gameplay.FindAction("Reload", throwIfNotFound: true);
+        m_gameplay_OpenPauseMenu = m_gameplay.FindAction("Open Pause Menu", throwIfNotFound: true);
+        m_gameplay_Interact = m_gameplay.FindAction("Interact", throwIfNotFound: true);
+        m_gameplay_CloseMenu = m_gameplay.FindAction("Close Menu", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -163,6 +226,9 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
     private readonly InputAction m_gameplay_RemoveObstacle;
     private readonly InputAction m_gameplay_Shoot;
     private readonly InputAction m_gameplay_Reload;
+    private readonly InputAction m_gameplay_OpenPauseMenu;
+    private readonly InputAction m_gameplay_Interact;
+    private readonly InputAction m_gameplay_CloseMenu;
     public struct GameplayActions
     {
         private @GameInputActions m_Wrapper;
@@ -170,6 +236,9 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         public InputAction @RemoveObstacle => m_Wrapper.m_gameplay_RemoveObstacle;
         public InputAction @Shoot => m_Wrapper.m_gameplay_Shoot;
         public InputAction @Reload => m_Wrapper.m_gameplay_Reload;
+        public InputAction @OpenPauseMenu => m_Wrapper.m_gameplay_OpenPauseMenu;
+        public InputAction @Interact => m_Wrapper.m_gameplay_Interact;
+        public InputAction @CloseMenu => m_Wrapper.m_gameplay_CloseMenu;
         public InputActionMap Get() { return m_Wrapper.m_gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -188,6 +257,15 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @Reload.started += instance.OnReload;
             @Reload.performed += instance.OnReload;
             @Reload.canceled += instance.OnReload;
+            @OpenPauseMenu.started += instance.OnOpenPauseMenu;
+            @OpenPauseMenu.performed += instance.OnOpenPauseMenu;
+            @OpenPauseMenu.canceled += instance.OnOpenPauseMenu;
+            @Interact.started += instance.OnInteract;
+            @Interact.performed += instance.OnInteract;
+            @Interact.canceled += instance.OnInteract;
+            @CloseMenu.started += instance.OnCloseMenu;
+            @CloseMenu.performed += instance.OnCloseMenu;
+            @CloseMenu.canceled += instance.OnCloseMenu;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -201,6 +279,15 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
             @Reload.started -= instance.OnReload;
             @Reload.performed -= instance.OnReload;
             @Reload.canceled -= instance.OnReload;
+            @OpenPauseMenu.started -= instance.OnOpenPauseMenu;
+            @OpenPauseMenu.performed -= instance.OnOpenPauseMenu;
+            @OpenPauseMenu.canceled -= instance.OnOpenPauseMenu;
+            @Interact.started -= instance.OnInteract;
+            @Interact.performed -= instance.OnInteract;
+            @Interact.canceled -= instance.OnInteract;
+            @CloseMenu.started -= instance.OnCloseMenu;
+            @CloseMenu.performed -= instance.OnCloseMenu;
+            @CloseMenu.canceled -= instance.OnCloseMenu;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -223,5 +310,8 @@ public partial class @GameInputActions: IInputActionCollection2, IDisposable
         void OnRemoveObstacle(InputAction.CallbackContext context);
         void OnShoot(InputAction.CallbackContext context);
         void OnReload(InputAction.CallbackContext context);
+        void OnOpenPauseMenu(InputAction.CallbackContext context);
+        void OnInteract(InputAction.CallbackContext context);
+        void OnCloseMenu(InputAction.CallbackContext context);
     }
 }

@@ -44,7 +44,7 @@ public class Rat_Script : BaseUniversal
     }
 
     // Attack the player
-    protected override void AttackPlayer(test_player_movement_script playerScript)
+    protected override void AttackPlayer(Player playerScript)
     {
         if (timeSinceLastAttack >= attackCooldown)
         {
@@ -58,7 +58,7 @@ public class Rat_Script : BaseUniversal
     }
 
     // Coroutine to wait for the attackDelay before initiating the attack
-    IEnumerator WaitForAttack(test_player_movement_script playerScript)
+    IEnumerator WaitForAttack(Player playerScript)
     {
         // Wait for the attackDelay
         yield return new WaitForSeconds(attackDelay);
@@ -152,7 +152,7 @@ public class Rat_Script : BaseUniversal
                 {
                     // Player is close enough, initiate attack
                     isAttacking = true; // Set isAttacking to true
-                    StartCoroutine(WaitForAttack(player.GetComponent<test_player_movement_script>()));
+                    StartCoroutine(WaitForAttack(player.GetComponent<Player>()));
                     TriggerAttackAnimation("AttackTrigger");
                 }
                 else if (isAttacking && !IsPlayerInRange(player.transform.position))
@@ -195,8 +195,8 @@ public class Rat_Script : BaseUniversal
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            test_player_movement_script playerScript = collision.gameObject.GetComponent<test_player_movement_script>();
-            if (playerScript != null && playerScript.IsAlive())
+            Player playerScript = collision.gameObject.GetComponent<Player>();
+            if (playerScript != null && playerScript.isAlive())
             {
                 // Player collided with the rat, initiate attack
                 isAttacking = true;

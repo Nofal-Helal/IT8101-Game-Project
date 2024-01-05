@@ -55,7 +55,7 @@ public class ZombieScript : BaseUniversal
     }
 
     // Method to attack the player
-    protected override void AttackPlayer(test_player_movement_script playerScript)
+    protected override void AttackPlayer(Player playerScript)
     {
         // Check if enough time has passed since the last attack
         if (timeSinceLastAttack >= attackCooldown)
@@ -78,7 +78,7 @@ public class ZombieScript : BaseUniversal
     }
     //Coroutines are commonly employed for tasks that require waiting for a specific duration or certain events to happen.
     // Coroutine to wait for the attack sequence to finish
-    IEnumerator WaitForAttack(test_player_movement_script playerScript)
+    IEnumerator WaitForAttack(Player playerScript)
     {
         // Wait for the specified delay before initiating the attack
         yield return new WaitForSeconds(attackDelay);
@@ -183,7 +183,7 @@ public class ZombieScript : BaseUniversal
                         isPlayerCloseLogSent = true;
                         UpdateAnimatorParameters();
                         TriggerAttackAnimation("BiteTrigger");
-                        AttackPlayer(player.GetComponent<test_player_movement_script>());
+                        AttackPlayer(player.GetComponent<Player>());
                     }
                     // If the player is close but not within attack range, log a chase message
                     else

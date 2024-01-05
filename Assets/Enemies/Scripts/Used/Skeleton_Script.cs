@@ -16,9 +16,9 @@ public class SkeletonScript : BaseUniversal
     {
         // Call the Start method of the base class
         base.Start();
+        base.goldDropAmount = 50;
         isPlayerCloseLogSent = false;
         animator = GetComponent<Animator>();
-
         // Check if the Animator component is present
         if (animator == null)
         {
@@ -43,7 +43,7 @@ public class SkeletonScript : BaseUniversal
     }
 
     // Method to handle player attack
-    protected override void AttackPlayer(test_player_movement_script playerScript)
+    protected override void AttackPlayer(Player playerScript)
     {
         if (timeSinceLastAttack >= attackCooldown)
         {
@@ -58,7 +58,7 @@ public class SkeletonScript : BaseUniversal
     }
 
     // Coroutine to wait for the attack to occur
-    IEnumerator WaitForAttack(test_player_movement_script playerScript)
+    IEnumerator WaitForAttack(Player playerScript)
     {
         // Wait for the attackDelay
         yield return new WaitForSeconds(attackDelay);
@@ -150,7 +150,7 @@ public class SkeletonScript : BaseUniversal
                 {
                     // Player is close enough, initiate attack
                     isAttacking = true; // Set isAttacking to true
-                    StartCoroutine(WaitForAttack(player.GetComponent<test_player_movement_script>()));
+                    StartCoroutine(WaitForAttack(player.GetComponent<Player>()));
                     TriggerAttackAnimation("AttackTrigger");
                 }
                 else
@@ -187,8 +187,8 @@ public class SkeletonScript : BaseUniversal
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            test_player_movement_script playerScript = collision.gameObject.GetComponent<test_player_movement_script>();
-            if (playerScript != null && playerScript.IsAlive())
+            Player playerScript = collision.gameObject.GetComponent<Player>();
+            if (playerScript != null && playerScript.isAlive())
             {
                 // Player collided with the skeleton, initiate attack
                 isAttacking = true;

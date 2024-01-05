@@ -5,7 +5,11 @@ using UnityEngine.InputSystem;
 public class Player : MonoBehaviour
 {
     public float health = 20f;
-    public float maxHealth = 20f;
+    public int score = 0;
+    public int gold = 0;
+    public int healthIncreaseLevel = 0;
+    public int damageBoostLevel = 0;
+    public float maxHealth = 100f;
     private bool inWave;
     private RailFollower cartObject;
     public Wave nextWave;
@@ -17,7 +21,9 @@ public class Player : MonoBehaviour
     private void Start()
     {
         Assert.AreEqual("CartObject", transform.GetChild(0).name);
-        cartObject = transform.GetChild(0).GetComponent<RailFollower>();
+        // The 1/3 value here is arbitrary, but I chose it so it when the player reaches the highest level it doubles his health
+        maxHealth = maxHealth * (1 + (1 / 3) * healthIncreaseLevel);
+        cartObject = GetComponentInChildren<RailFollower>();
         nextWave ??= cartObject.NextWave;
         circularBar = FindObjectOfType<CircularBar>();
         GetComponent<PlayerInput>().actions = Global.inputActions.asset;
@@ -76,15 +82,22 @@ public class Player : MonoBehaviour
             removingObstacle = false;
         }
     }
-    public void TakeDamage(float damageAmount) {
+    public void TakeDamage(float damageAmount)
+    {
         health -= damageAmount;
         if (health <= 0)
         {
             Die();
         }
     }
-    public void Die(){
+    public void Die()
+    {
         Debug.Log("You've died. Unlucky.");
         Destroy(gameObject);
+    }
+
+    public bool isAlive()
+    {
+        return health > 0f;
     }
 }
