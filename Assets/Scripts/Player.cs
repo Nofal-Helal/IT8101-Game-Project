@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
+using UnityEngine.Playables;
 
 public class Player : MonoBehaviour
 {
@@ -17,6 +18,7 @@ public class Player : MonoBehaviour
     private bool removingObstacle;
     private float obstacleProgress = 0f;
     private CircularBar circularBar;
+    private PlayableDirector playableDirector;
 
     private void Start()
     {
@@ -26,11 +28,13 @@ public class Player : MonoBehaviour
         cartObject = GetComponentInChildren<RailFollower>();
         nextWave ??= cartObject.NextWave;
         circularBar = FindObjectOfType<CircularBar>();
+        playableDirector = GameObject.Find("MolemanCutscene").GetComponent<PlayableDirector>();
         GetComponent<PlayerInput>().actions = Global.inputActions.asset;
     }
 
     private void Update()
     {
+        if (Input.GetKeyDown(KeyCode.A)) { playableDirector.Play(); }
         if (!inWave && nextWave)
         {
             if (cartObject.distance >= nextWave.Distance)

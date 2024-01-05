@@ -10220,6 +10220,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   target: {fileID: 0}
   progress: 0
+  visible: 0
 --- !u!1 &2236371765596912193
 GameObject:
   m_ObjectHideFlags: 0
@@ -21420,6 +21421,10 @@ PrefabInstance:
     - target: {fileID: 5160767631746329184, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7703446834039427999, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
+      propertyPath: m_Volume
+      value: 0.893
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

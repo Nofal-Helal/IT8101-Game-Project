@@ -31,6 +31,8 @@ public class RailFollower : MonoBehaviour
     /// </summary>
     public float obstacleStopDistance = 1f;
     public Obstacle nextObstacle;
+    private bool bump = false;
+    public float bumpBack = -2f;
 
     private void Awake()
     {
@@ -66,7 +68,20 @@ public class RailFollower : MonoBehaviour
         // if there is an obstacle and the cart is within obstacleStopDistance
         if (nextObstacle && (nextObstacle.Distance - distance) < obstacleStopDistance)
         {
-            speed = Mathf.MoveTowards(speed, 0, Time.deltaTime * 5);
+            if (speed >= 0 && speed <= -bumpBack / 2f && !bump)
+            {
+                bump = true;
+                speed = bumpBack;
+            }
+
+            if (bump)
+            {
+                speed = Mathf.MoveTowards(speed, 0, Time.deltaTime * 5);
+            }
+            else
+            {
+                speed = Mathf.MoveTowards(speed, -bumpBack / 2f, Time.deltaTime * 5);
+            }
         }
         else
         {
@@ -89,6 +104,7 @@ public class RailFollower : MonoBehaviour
             // add speed to start moving again
             if (speed == 0f)
                 speed = 0.1f;
+            bump = false;
         }
     }
 
