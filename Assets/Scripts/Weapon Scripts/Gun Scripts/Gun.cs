@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
 public class Gun : MonoBehaviour, IGun
@@ -35,6 +33,11 @@ public class Gun : MonoBehaviour, IGun
         gunData.shooting = true;
         OnShoot?.Invoke();
         gunData.magazine -= 1;
+
+        bool hit = Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hitInfo, 100f, 1 << 8);
+        if (hit) DealDamage(hitInfo);
+        if (hit) Debug.Log("Dist: " + hitInfo.distance);
+
         yield return new WaitForSeconds(1f / gunData.fireRate);
         gunData.shooting = false;
     }
@@ -47,5 +50,23 @@ public class Gun : MonoBehaviour, IGun
         Debug.Log("Done reloading");
         gunData.magazine = gunData.maxAmmo;
         gunData.reloading = false;
+    }
+
+    public void DealDamage(RaycastHit hitInfo)
+    {
+        float damage = hitInfo.distance switch
+        {
+            float distance when distance >= 22f => gunData.longRange,
+            float distance when distance >= 11f => gunData.midRange,
+            float distance when distance >= 0f => gunData.shortRange,
+            _ => 0
+        };
+
+        // TODO: make work with all enemies
+        if (hitInfo.rigidbody.TryGetComponent(out Moleman moleman))
+        {
+            moleman.TakeDamage(damage);
+        }
+
     }
 }

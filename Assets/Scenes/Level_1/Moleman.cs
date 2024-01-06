@@ -14,8 +14,8 @@ public class Moleman : MonoBehaviour
         Retreat,
     }
     public State state = State.RangedAttack;
-    public float maxHealth = 100;
-    public float health = 80;
+    public float maxHealth = 1000;
+    public float health = 800;
     public float runSpeed = 3;
     public float meleeAttackRange = 5.7f;
     public float jumpTime = 0.95f;
@@ -108,7 +108,7 @@ public class Moleman : MonoBehaviour
         {
             animator.SetTrigger("Throw");
             // TODO: throw rock
-            Debug.Log("HYaaaaaaaah");
+            // Debug.Log("HYaaaaaaaah");
             cooldown = attackCooldown;
         }
         cooldown -= Time.deltaTime;
@@ -129,15 +129,17 @@ public class Moleman : MonoBehaviour
     void MeleeAttackUpdate()
     {
         float distanceToPlayer = Vector3.Distance(transform.position, cart.position);
-        if (damageCounter > 10f)
+        if (damageCounter > 40f)
         {
+            navMeshAgent.isStopped = true;
+            animator.SetTrigger("EndRun");
             ChangeState(State.Retreat);
         }
         if (distanceToPlayer <= meleeAttackRange)
         {
             navMeshAgent.isStopped = true;
             animator.SetTrigger("Punch");
-            // TODO: Deal damage
+            player.TakeDamage(1f);
             ChangeState(State.Retreat);
         }
     }
@@ -162,6 +164,7 @@ public class Moleman : MonoBehaviour
                 navMeshAgent.isStopped = false;
                 navMeshAgent.destination = cart.position;
                 animator.SetTrigger("Run");
+                damageCounter = 0;
                 break;
             case State.Retreat:
                 StartCoroutine(JumpBack());
@@ -212,6 +215,14 @@ public class Moleman : MonoBehaviour
         if (timeInState >= 4 * (jumpTime + 0.84444444f + dodgeCooldown) && inSpot == 1)
         {
             ChangeState(State.MeleeAttack);
+        }
+    }
+
+    public void TakeDamage(float damage) {
+        health -= damage;
+        damageCounter += damage;
+        if (health <= 0) {
+            /// TODO: DIE
         }
     }
 

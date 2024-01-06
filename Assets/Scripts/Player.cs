@@ -80,4 +80,13 @@ public class Player : MonoBehaviour
             removingObstacle = false;
         }
     }
+
+    public void TakeDamage(float damage)
+    {
+        health -= damage;
+        if (health <= 0)
+        {
+            // TODO: Game over
+        }
+    }
 }
