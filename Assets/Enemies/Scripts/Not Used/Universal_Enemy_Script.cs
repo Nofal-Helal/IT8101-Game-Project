@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace YourGameNamespace
 {
-    public class Enemy : MonoBehaviour
+    public class Enemy : MonoBehaviour, IDamageTaker
     {
         public float health = 100f;
         public float speed = 1f;
@@ -119,7 +119,7 @@ namespace YourGameNamespace
             }
         }
 
-        public void TakeDamage(float damageAmount)
+        void IDamageTaker.TakeDamage(float damageAmount)
         {
             health -= damageAmount;
 

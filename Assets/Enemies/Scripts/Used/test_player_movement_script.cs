@@ -145,7 +145,7 @@ public class test_player_movement_script : MonoBehaviour
             if (enemyScript != null && enemyScript.IsAlive())
             {
                 // Call TakeDamage method of the enemy
-                enemyScript.TakeDamage(playerDamage);
+                ((IDamageTaker)enemyScript).TakeDamage(playerDamage);
             }
         }
     }

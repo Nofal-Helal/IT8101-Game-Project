@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class BaseUniversal : MonoBehaviour
+public class BaseUniversal : MonoBehaviour, IDamageTaker
 {
     // Basic attributes
     protected bool isAlive = true;
@@ -47,7 +47,7 @@ public class BaseUniversal : MonoBehaviour
             if (isPlayerCloseLogSent && IsPlayerInRange(player.transform.position))
             {
                 // Apply damage to the player
-                player.TakeDamage(damage * Time.deltaTime);
+                ((IDamageTaker)player).TakeDamage(damage * Time.deltaTime);
             }
         }
 
@@ -169,7 +169,7 @@ public class BaseUniversal : MonoBehaviour
     }
 
     // Take damage from an external source
-    public virtual void TakeDamage(float damage)
+    public void TakeDamage(float damage)
     {
         health -= damage;
         player.score += scoreAmount;
@@ -267,7 +267,7 @@ public class BaseUniversal : MonoBehaviour
             Player playerScript = player.GetComponent<Player>();
             if (playerScript != null && playerScript.isAlive() && IsPlayerInRange(player.transform.position))
             {
-                playerScript.TakeDamage(damage);
+                ((IDamageTaker)playerScript).TakeDamage(damage);
             }
         }
     }
@@ -280,7 +280,7 @@ public class BaseUniversal : MonoBehaviour
             if (playerScript != null && playerScript.isAlive())
             {
                 // Call TakeDamage method of the player
-                playerScript.TakeDamage(damage);
+                ((IDamageTaker)playerScript).TakeDamage(damage);
             }
         }
     }

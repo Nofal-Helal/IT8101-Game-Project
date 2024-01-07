@@ -146,10 +146,8 @@ public class BatEnemyScript : BaseUniversal
     }
 
     // Take damage
-    public override void TakeDamage(float damage)
-    {
-        base.TakeDamage(damage);
-    }
+    // implemented in base
+    // void IDamageTaker.TakeDamage(float damage) { }
 
     // Handle death
     protected override void Die()

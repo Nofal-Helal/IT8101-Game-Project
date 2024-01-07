@@ -3,7 +3,7 @@ using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageTaker
 {
     public float health = 20f;
     public int score = 0;
@@ -88,7 +88,7 @@ public class Player : MonoBehaviour
             removingObstacle = false;
         }
     }
-    public void TakeDamage(float damageAmount)
+    void IDamageTaker.TakeDamage(float damageAmount)
     {
         health -= damageAmount;
         if (health <= 0)

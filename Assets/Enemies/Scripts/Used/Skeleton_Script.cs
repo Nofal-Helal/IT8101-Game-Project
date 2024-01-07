@@ -103,11 +103,9 @@ public class SkeletonScript : BaseUniversal
         TriggerRunAnimation("WalkTrigger");
     }
 
-    // Method to handle taking damage
-    public override void TakeDamage(float damage)
-    {
-        base.TakeDamage(damage);
-    }
+    // Take damage
+    // implemented in base
+    // void IDamageTaker.TakeDamage(float damage) { }
 
     // Method to handle death
     protected override void Die()

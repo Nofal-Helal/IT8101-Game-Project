@@ -47,15 +47,20 @@ public class CameraRaycast : MonoBehaviour
             // Please make sure that the GameObject that has the collider has the tag Enemy
             if (hitInfo.collider.CompareTag("Enemy"))
             {
-                Debug.Log("The enemy should be getting shot !!!");
-                BaseUniversal enemy = hitInfo.collider.gameObject.GetComponent<BaseUniversal>();
+                // Debug.Log("The enemy should be getting shot !!!");
                 var distanceToEnemy = Vector3.Distance(ray.origin, hitInfo.point);
                 // The 1/3 value here is arbitrary, but I chose it so it when the player reaches the highest level it doubles his damage output
                 float damageBoostMultiplier = 1f + (1f / 3f * player.damageBoostLevel);
 
-                Debug.Log(gunController.GetDamageValue(distanceToEnemy));
-                Debug.Log(gunController.GetDamageValue(distanceToEnemy) * damageBoostMultiplier);
-                enemy.TakeDamage(gunController.GetDamageValue(distanceToEnemy) * damageBoostMultiplier);
+                // Debug.Log(gunController.GetDamageValue(distanceToEnemy));
+                // Debug.Log(gunController.GetDamageValue(distanceToEnemy) * damageBoostMultiplier);
+
+                float damage = gunController.GetDamageValue(distanceToEnemy) * damageBoostMultiplier;
+
+                if (hitInfo.collider.gameObject.TryGetComponent(out IDamageTaker enemy))
+                {
+                    enemy.TakeDamage(damage);
+                }
             }
         };
     }

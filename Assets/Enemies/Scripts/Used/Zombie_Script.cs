@@ -128,12 +128,9 @@ public class ZombieScript : BaseUniversal
         Invoke("ResetAttack", 0.5f);
     }
 
-    // Method to handle taking damage
-    public override void TakeDamage(float damage)
-    {
-        // Call the base class TakeDamage method
-        base.TakeDamage(damage);
-    }
+    // Take damage
+    // implemented in base
+    // void IDamageTaker.TakeDamage(float damage) { }
 
     // Method called when the zombie dies
     protected override void Die()
