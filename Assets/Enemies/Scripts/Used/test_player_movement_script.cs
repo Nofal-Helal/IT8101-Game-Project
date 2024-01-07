@@ -33,7 +33,7 @@ public class test_player_movement_script : MonoBehaviour
     private bool isAttacked = false;
 
     // Flag to track if the player is in contact with an enemy
-    private bool isPlayerInContactWithEnemy = false;
+    // private bool isPlayerInContactWithEnemy = false;
 
     // Start is called before the first frame update
     void Start()
@@ -73,7 +73,7 @@ public class test_player_movement_script : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            isPlayerInContactWithEnemy = true;
+            // isPlayerInContactWithEnemy = true;
             BaseUniversal enemyScript = collision.gameObject.GetComponent<BaseUniversal>();
 
             // Apply damage over time when in contact with an enemy
@@ -86,7 +86,7 @@ public class test_player_movement_script : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Enemy"))
         {
-            isPlayerInContactWithEnemy = false;
+            // isPlayerInContactWithEnemy = false;
         }
     }
 

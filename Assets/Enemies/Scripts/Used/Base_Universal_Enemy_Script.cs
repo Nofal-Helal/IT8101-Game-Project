@@ -23,8 +23,8 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     private Player player;
     protected Animator animator;
     public bool isPlayerCloseLogSent = false;
-    private float playerProximityDistance;
-    private float originalAttackRange;
+    public float playerProximityDistance;
+    protected float originalAttackRange;
 
     // Initialization
     protected virtual void Start()

@@ -56,6 +56,7 @@ public class Moleman : MonoBehaviour, IDamageTaker
 
         // Debug only
         animator.Play("Idle");
+        // Global.inputActions.gameplay.RemoveObstacle.Disable(); // disable removing the obstacle in the boss fight
     }
 
     void Update()
@@ -224,8 +225,12 @@ public class Moleman : MonoBehaviour, IDamageTaker
         damageCounter += damage;
         if (health <= 0)
         {
-            /// TODO: DIE
+            Die();
         }
+    }
+
+    void Die() {
+        cart.GetComponent<RailFollower>().OnRemoveObstacle();
     }
 
 }

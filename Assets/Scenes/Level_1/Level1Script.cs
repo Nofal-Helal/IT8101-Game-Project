@@ -46,6 +46,7 @@ public class Level1Script : MonoBehaviour
         cutsceneCamera.gameObject.SetActive(false);
         firstPersonCamera.EnableInput();
         Global.inputActions.Enable();
+        Global.inputActions.gameplay.RemoveObstacle.Disable(); // disable removing the obstacle in the boss fight
         moleman.animator.Play("Idle");
     }
 

@@ -5,7 +5,8 @@ using UnityEngine;
 public class ZombieScript : BaseUniversal
 {
     // Proximity distance to detect the player
-    public float playerProximityDistance = 5f;
+    // in base
+    // public float playerProximityDistance = 5f;
 
     // Duration of the attack animation
     public float attackAnimationLength = 1.5f;
@@ -14,7 +15,8 @@ public class ZombieScript : BaseUniversal
     public float attackDelay = 2f;
 
     // Original attack range to reset after an attack
-    private float originalAttackRange;
+    // in base
+    // private float originalAttackRange;
 
     // Initialization at the start of the script
     private new void Start()

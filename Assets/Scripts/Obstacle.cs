@@ -22,7 +22,25 @@ public class Obstacle : MonoBehaviour
     /// </summary>
     public float Distance => dataPoint.Index;
 
-    public bool IsVisible => GetComponent<Renderer>().isVisible;
+    public bool IsVisible
+    {
+        get
+        {
+
+            if (TryGetComponent(out Renderer renderer))
+            {
+                return renderer.isVisible;
+            }
+            else if (GetComponentInChildren<Renderer>() is Renderer renderer1)
+            {
+                return renderer1.isVisible;
+            }
+            else
+            {
+                return false;
+            }
+        }
+    }
 
     public Action OnStopAtObstacle = () => { };
 

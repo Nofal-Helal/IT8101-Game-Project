@@ -67,7 +67,6 @@ public class Player : MonoBehaviour, IDamageTaker
     // hold o to remove obstacle
     public void OnRemoveObstacle(InputAction.CallbackContext ctx)
     {
-        Debug.Log("am i even here?");
         // button is pressed while cart is stopped
         if (
             ctx.performed

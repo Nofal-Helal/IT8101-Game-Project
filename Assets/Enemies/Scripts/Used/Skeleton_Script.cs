@@ -6,7 +6,7 @@ using UnityEngine;
 public class SkeletonScript : BaseUniversal
 {
     // Public variables exposed in the Unity Editor
-    public float playerProximityDistance;
+    // public float playerProximityDistance;
     public float attackDelay = 2f;
     public float attackAnimationLength = 1.5f;
     private bool isCollidingWithPlayer = false;
