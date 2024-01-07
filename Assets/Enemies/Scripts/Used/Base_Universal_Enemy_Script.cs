@@ -172,6 +172,7 @@ public class BaseUniversal : MonoBehaviour
     public virtual void TakeDamage(float damage)
     {
         health -= damage;
+        Debug.Log(health);
         player.score += scoreAmount;
         Debug.Log(health);
         if (health <= 0)

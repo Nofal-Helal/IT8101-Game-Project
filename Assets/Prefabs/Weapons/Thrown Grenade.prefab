@@ -134,7 +134,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 1.5
+  m_Radius: 10
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5321001453380468173
 GameObject:
@@ -264,7 +264,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   timeTillExplosion: 2
+  explosionEffect: {fileID: 100006, guid: a49596ebf788acd4ab1281bffea444b1, type: 3}
   projectileData: {fileID: 11400000, guid: 81d5ed1e0c590df4e82f5b34d59241d2, type: 2}
+  explosionClip: {fileID: 8300000, guid: c2153dcd0edd22f40bdebf613271bae7, type: 3}
   detectedEnemies: []
 --- !u!135 &7873549576988862215
 SphereCollider:
