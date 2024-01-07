@@ -32,17 +32,21 @@ public class Level1Script : MonoBehaviour
         StartCoroutine(TweenCamera());
     }
 
+    public void CutscenePart2()
+    {
+        if (molemanObstacle)
+        {
+            cartObject.OnRemoveObstacle();
+        }
+    }
+
     public void CutsceneEnd()
     {
         gunView.SetActive(true);
         cutsceneCamera.gameObject.SetActive(false);
         firstPersonCamera.EnableInput();
         Global.inputActions.Enable();
-
-        // remove obstacle used for first part of cutscene
-        if (molemanObstacle) {
-            cartObject.OnRemoveObstacle();
-        }
+        moleman.animator.Play("Idle");
     }
 
     private IEnumerator TweenCamera()

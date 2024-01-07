@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
             ctx.performed
             && cartObject.speed == 0
             && cartObject.nextObstacle != null
-        && cartObject.nextObstacle.IsVisible
+            && cartObject.nextObstacle.IsVisible
         )
         {
             removingObstacle = true;
