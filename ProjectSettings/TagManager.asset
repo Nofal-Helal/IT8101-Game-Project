@@ -12,6 +12,8 @@ TagManager:
   - Zombie
   - Enemy
   - player
+  - ShopMenu
+  - Shopkeeper
   layers:
   - Default
   - TransparentFX

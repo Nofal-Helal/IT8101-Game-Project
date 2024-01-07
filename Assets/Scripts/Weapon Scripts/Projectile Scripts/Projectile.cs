@@ -30,4 +30,16 @@ public class Projectile : MonoBehaviour
         gameObject.transform.localScale = new Vector3(1, 1, 1);
         gunData.shooting = false;
     }
+    public float GetDamageValue(float distance)
+    {
+        if (distance >= gunData.longRangeDistance)
+        {
+            return gunData.longRangeDamage;
+        }
+        if (distance <= gunData.shortRangeDistance)
+        {
+            return gunData.shortRangeDamage;
+        }
+        return gunData.midRangeDamage;
+    }
 }

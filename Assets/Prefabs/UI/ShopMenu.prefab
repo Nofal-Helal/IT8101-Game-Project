@@ -200,7 +200,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Pistol
+  m_text: 'Pistol: 0 Gold'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -732,6 +732,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72088c3fac227494baa88c935e479985, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  goldAmountText: {fileID: 0}
+  AK47Button: {fileID: 0}
+  PistolButton: {fileID: 0}
+  GrenadeButton: {fileID: 0}
+  DamageBoostButton: {fileID: 0}
+  HealthIncreaseButton: {fileID: 0}
 --- !u!1 &3666523480428320244
 GameObject:
   m_ObjectHideFlags: 0
@@ -962,8 +968,8 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 2173120062345390051}
   - {fileID: 5882849519379123934}
+  - {fileID: 2173120062345390051}
   - {fileID: 5068627640612656438}
   m_Father: {fileID: 948973529253681326}
   m_RootOrder: -1
@@ -1103,7 +1109,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Grenade
+  m_text: 'Grenade: 25 Gold'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1238,7 +1244,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: AK47
+  m_text: 'AK47: 30 Gold'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

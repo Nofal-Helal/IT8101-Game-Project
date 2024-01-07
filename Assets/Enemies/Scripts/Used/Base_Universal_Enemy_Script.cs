@@ -41,7 +41,6 @@ public class BaseUniversal : MonoBehaviour
     // Update logic
     protected virtual void Update()
     {
-        Debug.Log(player.gameObject.name);
         if (isAttacking)
         {
             // Check if the player is close and is in attack range

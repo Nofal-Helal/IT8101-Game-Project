@@ -20,40 +20,11 @@ public class SettingsMenu : MonoBehaviour
 
     void Start()
     {
-        shootInputButton = GetComponentByName<Button>("Shoot");
-        reloadInputButton = GetComponentByName<Button>("Reload");
+        shootInputButton = ComponentUtils.GetComponentByName<Button>("Shoot");
+        reloadInputButton = ComponentUtils.GetComponentByName<Button>("Reload");
 
         updateInputButton(shootInputButton);
         updateInputButton(reloadInputButton);
-    }
-
-    T GetComponentByName<T>(string gameObjectName)
-        where T : Component
-    {
-        GameObject foundObject = GameObject.Find(gameObjectName);
-
-        if (foundObject != null)
-        {
-            // Access the component by type after finding the GameObject
-            T component = foundObject.GetComponent<T>();
-
-            if (component != null)
-            {
-                return component;
-            }
-            else
-            {
-                Debug.LogWarning(
-                    "Component of type " + typeof(T) + " not found on " + gameObjectName
-                );
-            }
-        }
-        else
-        {
-            Debug.LogWarning("GameObject '" + gameObjectName + "' not found");
-        }
-
-        return null;
     }
 
     public void updateInputButton(Button button)
@@ -87,8 +58,8 @@ public class SettingsMenu : MonoBehaviour
 
     public void changeInputPanel(Button clickedButton)
     {
-        InputPanelMenu = GetComponentByName<Canvas>("InputPanelMenu");
-        InputPanelTitle = GetComponentByName<TextMeshProUGUI>("InputPanelTitle");
+        InputPanelMenu = ComponentUtils.GetComponentByName<Canvas>("InputPanelMenu");
+        InputPanelTitle = ComponentUtils.GetComponentByName<TextMeshProUGUI>("InputPanelTitle");
         lastSelected = clickedButton;
         InputPanelTitle.text = clickedButton.gameObject.name + " Input";
         panelOpened = true;
@@ -135,5 +106,36 @@ public class SettingsMenu : MonoBehaviour
     public void WeaponsVolume()
     {
         Global.weaponsVolume = Mathf.Clamp01(_weaponsSlider.value);
+    }
+}
+
+public class ComponentUtils : MonoBehaviour
+{
+    public static T GetComponentByName<T>(string gameObjectName) where T : Component
+    {
+        GameObject foundObject = GameObject.Find(gameObjectName);
+
+        if (foundObject != null)
+        {
+            // Access the component by type after finding the GameObject
+            T component = foundObject.GetComponent<T>();
+
+            if (component != null)
+            {
+                return component;
+            }
+            else
+            {
+                Debug.LogWarning(
+                    "Component of type " + typeof(T) + " not found on " + gameObjectName
+                );
+            }
+        }
+        else
+        {
+            Debug.LogWarning("GameObject '" + gameObjectName + "' not found");
+        }
+
+        return null;
     }
 }

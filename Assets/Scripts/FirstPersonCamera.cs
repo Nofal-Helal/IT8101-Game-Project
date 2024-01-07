@@ -10,8 +10,7 @@ public class FirstPersonCamera : MonoBehaviour
     [Range(0f, 180f)]
     public float rotationRange = 120f;
     private float rotX, rotY;
-    private bool acceptingInput = true;
-
+    public bool acceptingInput = true;
 
     void Start()
     {

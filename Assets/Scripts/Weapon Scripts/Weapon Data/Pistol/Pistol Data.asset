@@ -15,6 +15,7 @@ MonoBehaviour:
   name: Pistol
   weaponType: 1
   maxAmmo: 12
+  cost: 0
   reloadTime: 1.5
   fireRate: 3
   shortRangeDistance: 10

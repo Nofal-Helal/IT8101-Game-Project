@@ -15,6 +15,7 @@ MonoBehaviour:
   name: AK47
   weaponType: 0
   maxAmmo: 30
+  cost: 30
   reloadTime: 2
   fireRate: 7
   shortRangeDistance: 10
@@ -25,5 +26,5 @@ MonoBehaviour:
   longRangeDamage: 5
   gunIdlePosition: {fileID: 2655988077585873504, guid: e8863a201517c0943a6acec1c9cbb360, type: 2}
   reloading: 0
-  shooting: 0
-  magazine: 24
+  shooting: 1
+  magazine: 12

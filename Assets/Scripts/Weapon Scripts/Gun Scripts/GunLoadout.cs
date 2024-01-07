@@ -110,9 +110,17 @@ public class GunLoadout : MonoBehaviour
 
     // It takes in a weapon name as a string
     // because the value is coming from Shop UI button
-    public void AddToLoadout(string weaponName)
+    public void AddToLoadout(GameObject weapon)
     {
-        Debug.Log("yuh bought me some " + weaponName);
+        if (gunList.Find(weapon => weapon.transform.name == weapon.transform.name))
+        {
+            Debug.Log("You already have this weapon");
+            return;
+        }
+        GameObject newWeapon = Instantiate(weapon, gameObject.transform);
+        newWeapon.SetActive(false);
+        // Resets the list
+        gunList = GetChildren(gameObject);
     }
 
     public List<GameObject> GetChildren(GameObject gameObject)

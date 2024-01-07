@@ -15,6 +15,7 @@ MonoBehaviour:
   name: Grenade
   weaponType: 2
   maxAmmo: 1
+  cost: 25
   reloadTime: 0
   fireRate: 0.2
   shortRangeDistance: 5

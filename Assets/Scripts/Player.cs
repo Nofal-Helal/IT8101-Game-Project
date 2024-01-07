@@ -24,17 +24,17 @@ public class Player : MonoBehaviour
     {
         Assert.AreEqual("CartObject", transform.GetChild(0).name);
         // The 1/3 value here is arbitrary, but I chose it so it when the player reaches the highest level it doubles his health
-        maxHealth = maxHealth * (1 + (1 / 3) * healthIncreaseLevel);
+        maxHealth = maxHealth * (1f + (1f / 3f) * healthIncreaseLevel);
         cartObject = GetComponentInChildren<RailFollower>();
         nextWave ??= cartObject.NextWave;
         circularBar = FindObjectOfType<CircularBar>();
-        playableDirector = GameObject.Find("MolemanCutscene").GetComponent<PlayableDirector>();
+        // playableDirector = GameObject.Find("MolemanCutscene").GetComponent<PlayableDirector>();
         GetComponent<PlayerInput>().actions = Global.inputActions.asset;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.A)) { playableDirector.Play(); }
+        // if (Input.GetKeyDown(KeyCode.A)) { playableDirector.Play(); }
         if (!inWave && nextWave)
         {
             if (cartObject.distance >= nextWave.Distance)
@@ -49,6 +49,7 @@ public class Player : MonoBehaviour
 
         if (removingObstacle)
         {
+            Debug.Log("yuh breaking shit");
             obstacleProgress += Time.deltaTime;
             circularBar.progress = obstacleProgress / secondsToRemoveObstacle;
 
@@ -66,12 +67,13 @@ public class Player : MonoBehaviour
     // hold o to remove obstacle
     public void OnRemoveObstacle(InputAction.CallbackContext ctx)
     {
+        Debug.Log("am i even here?");
         // button is pressed while cart is stopped
         if (
             ctx.performed
             && cartObject.speed == 0
             && cartObject.nextObstacle != null
-            && cartObject.nextObstacle.IsVisible
+        && cartObject.nextObstacle.IsVisible
         )
         {
             removingObstacle = true;
@@ -93,6 +95,12 @@ public class Player : MonoBehaviour
         {
             Die();
         }
+    }
+    // This function is used to set the new value of the maxHealth after
+    // the health increase upgrade is bought.
+    public void IncreaseMaxHealth()
+    {
+        maxHealth = maxHealth * (1f + (1f / 3f) * healthIncreaseLevel);
     }
     public void Die()
     {

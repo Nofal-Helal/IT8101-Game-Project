@@ -121,5 +121,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2a446f94095322b459e6ae09efb65c1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwStrength: 500
+  throwStrength: 15
   objectToThrow: {fileID: 5321001453380468173, guid: 676e839df2f92634d9377ed7fd2af039, type: 3}

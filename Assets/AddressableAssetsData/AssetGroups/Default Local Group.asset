@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: Default Local Group
+  m_EditorClassIdentifier: 
+  m_GroupName: Default Local Group
+  m_Data:
+    m_SerializedData: []
+  m_GUID: d485b407cead32c43a92b32e113ce956
+  m_SerializeEntries:
+  - m_GUID: 813f83ee3334d72439c3e9d80dbd188f
+    m_Address: Assets/Prefabs/Weapons
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+    <IsFolder>k__BackingField: 1
+    <BundleFileId>k__BackingField: 
+    <IsInResources>k__BackingField: 0
+    <IsInSceneList>k__BackingField: 0
+    <IsSubAsset>k__BackingField: 0
+    m_CheckedIsScene: 0
+    m_IsScene: 0
+    m_CurrentHash:
+      bytes[0]: 99
+      bytes[1]: 243
+      bytes[2]: 221
+      bytes[3]: 196
+      bytes[4]: 246
+      bytes[5]: 208
+      bytes[6]: 217
+      bytes[7]: 1
+      bytes[8]: 81
+      bytes[9]: 155
+      bytes[10]: 6
+      bytes[11]: 167
+      bytes[12]: 208
+      bytes[13]: 133
+      bytes[14]: 230
+      bytes[15]: 235
+    m_cachedAssetPath: Assets/Prefabs/Weapons
+    m_MainAsset: {fileID: 102900000, guid: 813f83ee3334d72439c3e9d80dbd188f, type: 3}
+    m_TargetAsset: {fileID: 102900000, guid: 813f83ee3334d72439c3e9d80dbd188f, type: 3}
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: d0bdea1cfbfc90a41b542cf33747b6ec, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: 216d37f53e211d04692b6c33e31d6ac2, type: 2}
+    - {fileID: 11400000, guid: 5904e4f9931f9db4bb1447d1dc9e7f73, type: 2}
+  m_FolderEntryCache:
+  - m_GUID: 813f83ee3334d72439c3e9d80dbd188f
+    m_Address: Assets/Prefabs/Weapons
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+    <IsFolder>k__BackingField: 1
+    <BundleFileId>k__BackingField: 
+    <IsInResources>k__BackingField: 0
+    <IsInSceneList>k__BackingField: 0
+    <IsSubAsset>k__BackingField: 0
+    m_CheckedIsScene: 0
+    m_IsScene: 0
+    m_CurrentHash:
+      bytes[0]: 99
+      bytes[1]: 243
+      bytes[2]: 221
+      bytes[3]: 196
+      bytes[4]: 246
+      bytes[5]: 208
+      bytes[6]: 217
+      bytes[7]: 1
+      bytes[8]: 81
+      bytes[9]: 155
+      bytes[10]: 6
+      bytes[11]: 167
+      bytes[12]: 208
+      bytes[13]: 133
+      bytes[14]: 230
+      bytes[15]: 235
+    m_cachedAssetPath: Assets/Prefabs/Weapons
+    m_MainAsset: {fileID: 102900000, guid: 813f83ee3334d72439c3e9d80dbd188f, type: 3}
+    m_TargetAsset: {fileID: 102900000, guid: 813f83ee3334d72439c3e9d80dbd188f, type: 3}
+  m_AssetCollectionEntryCache: []
+  <FlaggedDuringContentUpdateRestriction>k__BackingField: 0
+  m_CurrentHash:
+    bytes[0]: 38
+    bytes[1]: 123
+    bytes[2]: 160
+    bytes[3]: 151
+    bytes[4]: 123
+    bytes[5]: 58
+    bytes[6]: 243
+    bytes[7]: 66
+    bytes[8]: 52
+    bytes[9]: 210
+    bytes[10]: 92
+    bytes[11]: 23
+    bytes[12]: 25
+    bytes[13]: 243
+    bytes[14]: 208
+    bytes[15]: 158

@@ -8,7 +8,7 @@ using UnityEngine.Animations;
 
 public class CameraRaycast : MonoBehaviour
 {
-    private new Camera camera;
+    private Camera playerCamera;
     private LayerMask layerMask;
     private Gun gunController;
     private Player player;
@@ -26,7 +26,7 @@ public class CameraRaycast : MonoBehaviour
         gunController = GetComponent<Gun>();
         gunController.OnShoot += ShootRay;
         aimedAtTag = "";
-        camera = GameObject.FindGameObjectWithTag("MainCamera").GetComponent<Camera>();
+        playerCamera = GameObject.Find("Player Camera").GetComponent<Camera>();
     }
 
     void OnDestroy()
@@ -36,29 +36,12 @@ public class CameraRaycast : MonoBehaviour
 
     void Update()
     {
-        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
-        if (Physics.Raycast(ray, out raycastHit, distance, layerMask))
-        {
-            distanceToRay = Vector3.Distance(ray.origin, raycastHit.point);
-            aimedAtTag = raycastHit.collider.gameObject.tag;
-            Debug.Log(raycastHit.collider.gameObject.name);
-        }
-        // if (Physics.Raycast(ray, out hitInfo, distance, layerMask))
-        // {
-        //     // Please make sure that the GameObject that has the collider has the tag Enemy
-        //     if (hitInfo.collider.gameObject.transform.tag == "Enemy")
-        //     {
-        //         BaseUniversal enemy = hitInfo.collider.gameObject.GetComponent<BaseUniversal>();
-        //         var distanceToEnemy = Vector3.Distance(ray.origin, hitInfo.point);
-        //         enemy.TakeDamage(gunController.GetDamageValue(distanceToEnemy));
-        //     }
-        // };
     }
 
     void ShootRay()
     {
         RaycastHit hitInfo;
-        Ray ray = new Ray(camera.transform.position, camera.transform.forward);
+        Ray ray = new Ray(playerCamera.transform.position, playerCamera.transform.forward);
         if (Physics.Raycast(ray, out hitInfo, distance, layerMask))
         {
             // Please make sure that the GameObject that has the collider has the tag Enemy
@@ -68,8 +51,11 @@ public class CameraRaycast : MonoBehaviour
                 BaseUniversal enemy = hitInfo.collider.gameObject.GetComponent<BaseUniversal>();
                 var distanceToEnemy = Vector3.Distance(ray.origin, hitInfo.point);
                 // The 1/3 value here is arbitrary, but I chose it so it when the player reaches the highest level it doubles his damage output
-                Debug.Log(gunController.GetDamageValue(distanceToEnemy) * (1 + ((1 / 3) * player.damageBoostLevel)));
-                enemy.TakeDamage(gunController.GetDamageValue(distanceToEnemy) * (1 + ((1 / 3) * player.damageBoostLevel)));
+                float damageBoostMultiplier = 1f + (1f / 3f * player.damageBoostLevel);
+
+                Debug.Log(gunController.GetDamageValue(distanceToEnemy));
+                Debug.Log(gunController.GetDamageValue(distanceToEnemy) * damageBoostMultiplier);
+                enemy.TakeDamage(gunController.GetDamageValue(distanceToEnemy) * damageBoostMultiplier);
             }
         };
     }

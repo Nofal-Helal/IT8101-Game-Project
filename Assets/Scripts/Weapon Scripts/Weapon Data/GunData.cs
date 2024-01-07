@@ -9,6 +9,7 @@ public class GunData : ScriptableObject
   public new string name;
   public WeaponType weaponType;
   public int maxAmmo;
+  public int cost;
   public float reloadTime;
   public float fireRate;
   [Header("Range Info")]
@@ -27,7 +28,6 @@ public class GunData : ScriptableObject
   [HideInInspector]
   public int magazine;
 }
-
 public enum WeaponType
 {
   PRIMARY,

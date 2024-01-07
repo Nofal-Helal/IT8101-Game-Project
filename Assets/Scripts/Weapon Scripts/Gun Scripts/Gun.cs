@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class Gun : MonoBehaviour, IGun
 {
+    private FirstPersonCamera firstPersonCamera;
     public GunData gunData;
     public event Action OnShoot;
     public event Action OnReload;
@@ -15,11 +16,17 @@ public class Gun : MonoBehaviour, IGun
     {
         gunData.reloading = false;
         gunData.shooting = false;
+        firstPersonCamera = FindObjectOfType<FirstPersonCamera>();
         inputActions = Global.inputActions.gameplay;
     }
     // Update is called once per frame
     void Update()
     {
+        if (!firstPersonCamera.acceptingInput)
+        {
+            return;
+        }
+
         if (inputActions.Shoot.IsPressed() && !gunData.shooting && !gunData.reloading)
         {
             StartCoroutine(Shoot());

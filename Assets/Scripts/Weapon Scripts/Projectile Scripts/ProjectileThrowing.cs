@@ -21,6 +21,6 @@ public class ProjectileThrowing : MonoBehaviour
     void ThrowGrenade()
     {
         GameObject thrownObject = Instantiate(objectToThrow, transform.position, transform.rotation);
-        thrownObject.GetComponent<Rigidbody>().AddForce(transform.forward * 100);
+        thrownObject.GetComponent<Rigidbody>().AddForce(transform.forward * throwStrength);
     }
 }

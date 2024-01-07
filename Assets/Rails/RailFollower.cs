@@ -14,6 +14,7 @@ public class RailFollower : MonoBehaviour
     private SplineData<float> speedData;
     private SplineData<Object> obstacles;
     private SplineData<Object> waves;
+    private SplineData<Object> dialogues;
 
     /// <summary>
     /// Current speed
@@ -31,6 +32,7 @@ public class RailFollower : MonoBehaviour
     /// </summary>
     public float obstacleStopDistance = 1f;
     public Obstacle nextObstacle;
+    private Dialogue nextDialogue;
     private bool bump = false;
     public float bumpBack = -2f;
 
@@ -48,8 +50,10 @@ public class RailFollower : MonoBehaviour
         Debug.Assert(spline.TryGetFloatData("speed", out speedData));
         Debug.Assert(spline.TryGetObjectData("obstacles", out obstacles));
         Debug.Assert(spline.TryGetObjectData("waves", out waves));
+        Debug.Assert(spline.TryGetObjectData("dialogues", out dialogues));
 
         nextObstacle = nextObstacle != null ? nextObstacle : NextObstacle();
+        nextDialogue = nextDialogue != null ? nextDialogue : NextDialogue();
     }
 
     // Update is called once per frame
@@ -65,7 +69,13 @@ public class RailFollower : MonoBehaviour
 
         transform.SetPositionAndRotation(position, rotation);
 
+        if (nextDialogue && (nextDialogue.Distance - distance) < nextDialogue.dialogStartDistance && !nextDialogue.inProgress)
+        {
+            nextDialogue.StartDialogue();
+        }
+
         // if there is an obstacle and the cart is within obstacleStopDistance
+
         if (nextObstacle && (nextObstacle.Distance - distance) < obstacleStopDistance)
         {
             if (speed >= 0 && speed <= -bumpBack / 2f && !bump)
@@ -88,7 +98,6 @@ public class RailFollower : MonoBehaviour
             // Get speed from spline data
             speed = speedData.Evaluate(spline, distance, new LerpFloat { });
         }
-
         distance += speed * Time.deltaTime;
     }
 
@@ -119,6 +128,13 @@ public class RailFollower : MonoBehaviour
         waves.Count <= 0
             ? null
             : (Wave)waves.Evaluate(spline, distance, new NextObjectInterpolator());
+
+    public Dialogue NextDialogue()
+    {
+        return dialogues.Count <= 0
+            ? null
+            : (Dialogue)dialogues.Evaluate(spline, distance, new NextObjectInterpolator());
+    }
 
     public class NextObjectInterpolator : IInterpolator<Object>
     {
