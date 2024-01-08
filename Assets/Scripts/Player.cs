@@ -34,6 +34,7 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log(nextWave);
         // if (Input.GetKeyDown(KeyCode.A)) { playableDirector.Play(); }
         if (!inWave && nextWave)
         {
@@ -49,7 +50,6 @@ public class Player : MonoBehaviour
 
         if (removingObstacle)
         {
-            Debug.Log("yuh breaking shit");
             obstacleProgress += Time.deltaTime;
             circularBar.progress = obstacleProgress / secondsToRemoveObstacle;
 
@@ -67,7 +67,6 @@ public class Player : MonoBehaviour
     // hold o to remove obstacle
     public void OnRemoveObstacle(InputAction.CallbackContext ctx)
     {
-        Debug.Log("am i even here?");
         // button is pressed while cart is stopped
         if (
             ctx.performed

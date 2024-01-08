@@ -4,12 +4,12 @@ using UnityEngine;
 public class BaseUniversal : MonoBehaviour
 {
     // Basic attributes
-    protected bool isAlive = true;
+    public bool isAlive = true;
+    public bool isActivated = false;
     public float health = 100f;
     public float speed = 1f;
     public float damage;
     public float attackRange = 1f;
-    public float AttackRange => attackRange;
     public float attackSpeed = 1f;
     public float attackCooldown = 1f;
     public float timeSinceLastAttack;
@@ -41,6 +41,12 @@ public class BaseUniversal : MonoBehaviour
     // Update logic
     protected virtual void Update()
     {
+        if (!isActivated)
+        {
+            Debug.Log("we aint active");
+            return;
+        }
+        Debug.Log("WE ARE ACTIVE");
         if (isAttacking)
         {
             // Check if the player is close and is in attack range

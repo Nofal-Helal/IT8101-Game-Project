@@ -88,8 +88,8 @@ public class Wave : MonoBehaviour
     private new BoxCollider collider;
     private DataPoint<UnityEngine.Object> dataPoint;
     public float Distance => dataPoint.Index;
-
     private Vector3 _spline_position;
+    private bool inWave = false;
 
     // Start is called before the first frame update
     private void Start()
@@ -98,19 +98,9 @@ public class Wave : MonoBehaviour
         {
             Debug.LogError("Wave has no Obstacle attached");
         }
-
         collider = GetComponent<BoxCollider>();
 
         AttachToRailTrack();
-        /* obstacle.OnStopAtObstacle = () => SpawnWave(); */
-
-        foreach (SubWave subWave in subWaves)
-        {
-            if (subWave.type == WaveType.EnemyActivator)
-            {
-                ActivateEnemies(subWave.activator, false);
-            }
-        }
     }
 
     private void AttachToRailTrack()
@@ -123,6 +113,12 @@ public class Wave : MonoBehaviour
 
     public void SpawnNextSubWave()
     {
+        if (inWave)
+        {
+            Debug.Log("Wave in progress");
+            return;
+        }
+
         if (HasNextSubWave)
         {
             SubWave subWave = subWaves[currentSubWave];
@@ -159,6 +155,7 @@ public class Wave : MonoBehaviour
             if (waitTime <= 0f)
             {
                 isCountingDown = false;
+                inWave = true;
                 SpawnNextSubWave();
             }
         }
@@ -192,7 +189,8 @@ public class Wave : MonoBehaviour
         {
             if (enemy)
             {
-                enemy.SetActive(active);
+                BaseUniversal enemyData = enemy.GetComponent<BaseUniversal>();
+                enemyData.isActivated = true;
             }
         }
     }
@@ -200,7 +198,8 @@ public class Wave : MonoBehaviour
     private void RandomSpawnEnemies(EnemySpawner spawner)
     {
         int spawned = 0;
-        while (spawned < spawner.count)
+        var enemyData = spawner.enemies[spawned].GetComponent<BaseUniversal>();
+        while (spawned < spawner.count && enemyData.isAlive)
         {
             Vector3 initialPosition =
                 new(
