@@ -6,7 +6,7 @@ using UnityEngine;
 public class SkeletonScript : BaseUniversal
 {
     // Public variables exposed in the Unity Editor
-    public float playerProximityDistance;
+    // public float playerProximityDistance;
     public float attackDelay = 2f;
     public float attackAnimationLength = 1.5f;
     private bool isCollidingWithPlayer = false;
@@ -103,11 +103,9 @@ public class SkeletonScript : BaseUniversal
         TriggerRunAnimation("WalkTrigger");
     }
 
-    // Method to handle taking damage
-    public override void TakeDamage(float damage)
-    {
-        base.TakeDamage(damage);
-    }
+    // Take damage
+    // implemented in base
+    // void IDamageTaker.TakeDamage(float damage) { }
 
     // Method to handle death
     protected override void Die()

@@ -3,7 +3,7 @@ using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
 using UnityEngine.Playables;
 
-public class Player : MonoBehaviour
+public class Player : MonoBehaviour, IDamageTaker
 {
     public float health = 20f;
     public int score = 0;
@@ -34,19 +34,18 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(nextWave);
         // if (Input.GetKeyDown(KeyCode.A)) { playableDirector.Play(); }
-        if (!inWave && nextWave)
-        {
-            if (cartObject.distance >= nextWave.Distance)
-            {
-                inWave = true;
-                nextWave.SpawnNextSubWave();
-                _ = cartObject.railTrack.Spline.TryGetObjectData("waves", out var waves);
-                _ = waves.RemoveDataPoint(nextWave.Distance);
-                nextWave = cartObject.NextWave;
-            }
-        }
+        // if (!inWave && nextWave)
+        // {
+        //     if (cartObject.distance >= nextWave.Distance)
+        //     {
+        //         inWave = true;
+        //         nextWave.SpawnNextSubWave();
+        //         _ = cartObject.railTrack.Spline.TryGetObjectData("waves", out var waves);
+        //         _ = waves.RemoveDataPoint(nextWave.Distance);
+        //         nextWave = cartObject.NextWave;
+        //     }
+        // }
 
         if (removingObstacle)
         {
@@ -67,12 +66,13 @@ public class Player : MonoBehaviour
     // hold o to remove obstacle
     public void OnRemoveObstacle(InputAction.CallbackContext ctx)
     {
+        Debug.Log("am i even here?");
         // button is pressed while cart is stopped
         if (
             ctx.performed
             && cartObject.speed == 0
             && cartObject.nextObstacle != null
-            && cartObject.nextObstacle.IsVisible
+        && cartObject.nextObstacle.IsVisible
         )
         {
             removingObstacle = true;

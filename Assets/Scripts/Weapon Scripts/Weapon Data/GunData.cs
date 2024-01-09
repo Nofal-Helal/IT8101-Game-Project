@@ -1,7 +1,5 @@
 using UnityEngine;
-using System;
-using System.Collections;
-using UnityEditor.Presets;
+// using UnityEditor.Presets;
 
 [CreateAssetMenu(fileName = "Gun", menuName = "Weapon/Gun")]
 public class GunData : ScriptableObject
@@ -20,7 +18,7 @@ public class GunData : ScriptableObject
   public int longRangeDistance;
   public int longRangeDamage;
   [Header("In Game Data")]
-  public Preset gunIdlePosition;
+  // public Preset gunIdlePosition;
   [HideInInspector]
   public bool reloading;
   [HideInInspector]

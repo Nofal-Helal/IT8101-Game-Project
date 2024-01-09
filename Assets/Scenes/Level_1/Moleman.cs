@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.Assertions;
 
-public class Moleman : MonoBehaviour
+public class Moleman : MonoBehaviour, IDamageTaker
 {
     public enum State
     {
@@ -56,6 +56,7 @@ public class Moleman : MonoBehaviour
 
         // Debug only
         animator.Play("Idle");
+        // Global.inputActions.gameplay.RemoveObstacle.Disable(); // disable removing the obstacle in the boss fight
     }
 
     void Update()
@@ -139,7 +140,7 @@ public class Moleman : MonoBehaviour
         {
             navMeshAgent.isStopped = true;
             animator.SetTrigger("Punch");
-            player.TakeDamage(1f);
+            ((IDamageTaker)player).TakeDamage(1f);
             ChangeState(State.Retreat);
         }
     }
@@ -218,14 +219,18 @@ public class Moleman : MonoBehaviour
         }
     }
 
-    public void TakeDamage(float damage)
+    void IDamageTaker.TakeDamage(float damage)
     {
         health -= damage;
         damageCounter += damage;
         if (health <= 0)
         {
-            /// TODO: DIE
+            Die();
         }
+    }
+
+    void Die() {
+        cart.GetComponent<RailFollower>().OnRemoveObstacle();
     }
 
 }

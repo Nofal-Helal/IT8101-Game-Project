@@ -80,9 +80,9 @@ public class Wave : MonoBehaviour
     public float offset = -10f;
 
     public SubWave[] subWaves;
+    public float waitTime = 0f;
     private int currentSubWave = 0;
-    private bool isCountingDown;
-    private float waitTime;
+    private bool isCountingDown = true;
     private bool HasNextSubWave => subWaves != null && currentSubWave < subWaves.Length;
 
     private new BoxCollider collider;
@@ -99,7 +99,7 @@ public class Wave : MonoBehaviour
             Debug.LogError("Wave has no Obstacle attached");
         }
         collider = GetComponent<BoxCollider>();
-
+        isCountingDown = waitTime == 0f ? false : true;
         AttachToRailTrack();
     }
 
@@ -113,12 +113,6 @@ public class Wave : MonoBehaviour
 
     public void SpawnNextSubWave()
     {
-        if (inWave)
-        {
-            Debug.Log("Wave in progress");
-            return;
-        }
-
         if (HasNextSubWave)
         {
             SubWave subWave = subWaves[currentSubWave];
@@ -155,8 +149,8 @@ public class Wave : MonoBehaviour
             if (waitTime <= 0f)
             {
                 isCountingDown = false;
-                inWave = true;
                 SpawnNextSubWave();
+                inWave = true;
             }
         }
         else if (currentSubWave != 0 && HasNextSubWave)
@@ -169,17 +163,6 @@ public class Wave : MonoBehaviour
                     : nextSubwave.type == WaveType.EnemySpawner
                         ? nextSubwave.spawner.enemies
                         : null;
-
-            /* if (Input.GetKeyDown(KeyCode.A)) */
-            /* { */
-            /*     var t = enemies.First(e => e != null); */
-            /*     Destroy(t); */
-            /* } */
-
-            if (enemies.All(e => e == null))
-            {
-                SpawnNextSubWave();
-            }
         }
     }
 
@@ -194,12 +177,11 @@ public class Wave : MonoBehaviour
             }
         }
     }
-
     private void RandomSpawnEnemies(EnemySpawner spawner)
     {
         int spawned = 0;
-        var enemyData = spawner.enemies[spawned].GetComponent<BaseUniversal>();
-        while (spawned < spawner.count && enemyData.isAlive)
+        spawner.enemies = new List<GameObject>();
+        while (spawned < spawner.count)
         {
             Vector3 initialPosition =
                 new(
@@ -207,13 +189,20 @@ public class Wave : MonoBehaviour
                     Random.Range(collider.bounds.min.y, collider.bounds.max.y),
                     Random.Range(collider.bounds.min.z, collider.bounds.max.z)
                 );
-
+            Debug.Log(initialPosition.x);
+            Debug.Log(initialPosition.y);
+            Debug.Log(initialPosition.z);
             Vector3? position = PlaceEnemy(initialPosition);
             if (position.HasValue)
             {
+                Debug.Log("am i even here?");
                 GameObject enemy = Instantiate(spawner.enemy, position.Value, Quaternion.identity);
                 spawner.enemies.Add(enemy);
                 spawned += 1;
+            }
+            else
+            {
+                Debug.Log("no position :(");
             }
         }
     }
@@ -233,7 +222,7 @@ public class Wave : MonoBehaviour
             initialPosition,
             Vector3.down,
             out RaycastHit raycastHit,
-            10f,
+            100f,
             layerMask
         )
             ? raycastHit.point

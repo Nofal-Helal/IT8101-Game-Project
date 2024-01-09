@@ -2,10 +2,10 @@ using NaughtyAttributes;
 using System.Collections;
 using UnityEngine;
 
-public class Rat_Script : BaseUniversal
+public class Rat_Script : BaseUniversal, IDamageTaker
 {
     // Proximity distance to detect the player
-    public float playerProximityDistance;
+    // public float playerProximityDistance;
 
     // Delay before attacking after detecting the player
     public float attackDelay = 2f;
@@ -105,10 +105,8 @@ public class Rat_Script : BaseUniversal
     }
 
     // Take damage
-    public override void TakeDamage(float damage)
-    {
-        base.TakeDamage(damage);
-    }
+    // implemented in base
+    // void IDamageTaker.TakeDamage(float damage) { }
 
     // Handle death
     protected override void Die()

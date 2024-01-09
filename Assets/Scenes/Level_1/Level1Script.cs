@@ -17,12 +17,14 @@ public class Level1Script : MonoBehaviour
         playerCamera = GameObject.Find("Player Camera").GetComponent<Camera>();
         firstPersonCamera = FindFirstObjectByType<FirstPersonCamera>();
         cutsceneCamera = GameObject.Find("CutsceneCamera").GetComponent<Camera>();
-        cutsceneCamera.gameObject.SetActive(false);
         gunView = GameObject.Find("Gun View");
         moleman = FindObjectOfType<Moleman>();
         player = FindObjectOfType<Player>();
         cartObject = player.transform.GetChild(0).GetComponent<RailFollower>();
-        molemanObstacle = GameObject.Find("Obstacle_Moleman").GetComponent<Obstacle>();
+        // molemanObstacle = GameObject.Find("Obstacle_Moleman").GetComponent<Obstacle>();
+
+        cutsceneCamera.gameObject.SetActive(false);
+        cartObject.ReachedEndOfTrack += TransitionToNextLevel;
     }
 
     public void CutsceneStart()
@@ -46,6 +48,7 @@ public class Level1Script : MonoBehaviour
         cutsceneCamera.gameObject.SetActive(false);
         firstPersonCamera.EnableInput();
         Global.inputActions.Enable();
+        // Global.inputActions.gameplay.RemoveObstacle.Disable(); // disable removing the obstacle in the boss fight
         moleman.animator.Play("Idle");
     }
 
@@ -67,6 +70,11 @@ public class Level1Script : MonoBehaviour
         cutsceneCamera.gameObject.SetActive(true);
     }
 
+    private void TransitionToNextLevel()
+    {
+        TransitionSceneScript.nextScene = "Scenes/Level_2/Level 2";
+        SceneTransition.Fade("Scenes/Transition1to2");
+    }
 
 }
 

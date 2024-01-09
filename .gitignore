@@ -73,3 +73,6 @@ crashlytics-build.properties
 
 *.blend1.meta
 *.blend1
+
+# Stupid Microsoft and their telemetry
+.mono/

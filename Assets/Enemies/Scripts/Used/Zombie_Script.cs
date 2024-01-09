@@ -5,7 +5,8 @@ using UnityEngine;
 public class ZombieScript : BaseUniversal
 {
     // Proximity distance to detect the player
-    public float playerProximityDistance = 5f;
+    // in base
+    // public float playerProximityDistance = 5f;
 
     // Duration of the attack animation
     public float attackAnimationLength = 1.5f;
@@ -14,7 +15,8 @@ public class ZombieScript : BaseUniversal
     public float attackDelay = 2f;
 
     // Original attack range to reset after an attack
-    private float originalAttackRange;
+    // in base
+    // private float originalAttackRange;
 
     // Initialization at the start of the script
     private new void Start()
@@ -128,12 +130,9 @@ public class ZombieScript : BaseUniversal
         Invoke("ResetAttack", 0.5f);
     }
 
-    // Method to handle taking damage
-    public override void TakeDamage(float damage)
-    {
-        // Call the base class TakeDamage method
-        base.TakeDamage(damage);
-    }
+    // Take damage
+    // implemented in base
+    // void IDamageTaker.TakeDamage(float damage) { }
 
     // Method called when the zombie dies
     protected override void Die()

@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Shopkeeper : MonoBehaviour
 {
-    private Camera camera;
+    private new Camera camera;
     public float distanceToInteract = 10f;
     [HideInInspector]
     public bool isInteractable;

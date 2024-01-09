@@ -1,7 +1,9 @@
+using System;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.Splines;
 using UnityEngine.Splines.Interpolators;
+using Object = UnityEngine.Object;
 
 /// <summary>
 /// Component for following a rail track with varied speed
@@ -35,6 +37,7 @@ public class RailFollower : MonoBehaviour
     private Dialogue nextDialogue;
     private bool bump = false;
     public float bumpBack = -2f;
+    public event Action ReachedEndOfTrack;
 
     private void Awake()
     {
@@ -99,6 +102,12 @@ public class RailFollower : MonoBehaviour
             speed = speedData.Evaluate(spline, distance, new LerpFloat { });
         }
         distance += speed * Time.deltaTime;
+
+        if (t == 1f)
+        {
+            ReachedEndOfTrack.Invoke();
+            enabled = false;
+        }
     }
 
     // press o to remove obstacle
