@@ -1,10 +1,4 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using JetBrains.Annotations;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Animations;
 
 public class CameraRaycast : MonoBehaviour
 {
@@ -21,7 +15,7 @@ public class CameraRaycast : MonoBehaviour
     {
         // This makes it ignore the cart collider
         // the collidor is right infront of the camera, so it hits it when it shouldn't.
-        layerMask = ~(1 << 8);
+        layerMask = ~(1 << 8 | 1 << 2);
         player = FindObjectOfType<Player>();
         gunController = GetComponent<Gun>();
         gunController.OnShoot += ShootRay;
