@@ -202,8 +202,8 @@ public class SkeletonScript : BaseUniversal
         GameObject player = FindPlayer();
         if (player != null)
         {
-            test_player_movement_script playerScript = player.GetComponent<test_player_movement_script>();
-            if (playerScript != null && playerScript.IsAlive() && IsPlayerInRange(player.transform.position))
+            Player playerScript = player.GetComponent<Player>();
+            if (playerScript != null && playerScript.isAlive() && IsPlayerInRange(player.transform.position))
             {
                 playerScript.TakeDamage(damage);
             }

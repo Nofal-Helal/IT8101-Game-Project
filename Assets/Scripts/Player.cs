@@ -35,21 +35,20 @@ public class Player : MonoBehaviour, IDamageTaker
     private void Update()
     {
         // if (Input.GetKeyDown(KeyCode.A)) { playableDirector.Play(); }
-        if (!inWave && nextWave)
-        {
-            if (cartObject.distance >= nextWave.Distance)
-            {
-                inWave = true;
-                nextWave.SpawnNextSubWave();
-                _ = cartObject.railTrack.Spline.TryGetObjectData("waves", out var waves);
-                _ = waves.RemoveDataPoint(nextWave.Distance);
-                nextWave = cartObject.NextWave;
-            }
-        }
+        // if (!inWave && nextWave)
+        // {
+        //     if (cartObject.distance >= nextWave.Distance)
+        //     {
+        //         inWave = true;
+        //         nextWave.SpawnNextSubWave();
+        //         _ = cartObject.railTrack.Spline.TryGetObjectData("waves", out var waves);
+        //         _ = waves.RemoveDataPoint(nextWave.Distance);
+        //         nextWave = cartObject.NextWave;
+        //     }
+        // }
 
         if (removingObstacle)
         {
-            Debug.Log("yuh breaking shit");
             obstacleProgress += Time.deltaTime;
             circularBar.progress = obstacleProgress / secondsToRemoveObstacle;
 
@@ -67,12 +66,13 @@ public class Player : MonoBehaviour, IDamageTaker
     // hold o to remove obstacle
     public void OnRemoveObstacle(InputAction.CallbackContext ctx)
     {
+        Debug.Log("am i even here?");
         // button is pressed while cart is stopped
         if (
             ctx.performed
             && cartObject.speed == 0
             && cartObject.nextObstacle != null
-            && cartObject.nextObstacle.IsVisible
+        && cartObject.nextObstacle.IsVisible
         )
         {
             removingObstacle = true;
@@ -87,7 +87,7 @@ public class Player : MonoBehaviour, IDamageTaker
             removingObstacle = false;
         }
     }
-    void IDamageTaker.TakeDamage(float damageAmount)
+    public void TakeDamage(float damageAmount)
     {
         health -= damageAmount;
         if (health <= 0)
