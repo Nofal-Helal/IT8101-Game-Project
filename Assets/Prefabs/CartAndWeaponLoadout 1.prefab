@@ -9,7 +9,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 426761643593017195}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: CartAndWeaponLoadout 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -706,19 +706,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1384090705484081786, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.108994305
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1384090705484081786, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 2.286841
+      value: 2.13
       objectReference: {fileID: 0}
     - target: {fileID: 1384090705484081786, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -1.4660649
+      value: -0.51
       objectReference: {fileID: 0}
     - target: {fileID: 1384090705484081786, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9999997
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1384090705484081786, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
       propertyPath: m_LocalRotation.y
@@ -726,7 +726,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1384090705484081786, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0.0008411426
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1576644878131526351, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
       propertyPath: m_NotificationBehavior
@@ -815,10 +815,6 @@ PrefabInstance:
     - target: {fileID: 1890740364927588912, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
       propertyPath: m_Name
       value: Cart
-      objectReference: {fileID: 0}
-    - target: {fileID: 1890740364927588912, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
-      propertyPath: m_TagString
-      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 5160767631746329184, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
       propertyPath: m_RootOrder
