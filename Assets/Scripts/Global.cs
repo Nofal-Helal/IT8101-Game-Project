@@ -4,8 +4,8 @@ public static class Global
 {
     public static GameInputActions inputActions = new();
 
-    public static SettingsData settingsData;
-    public static PlayerData playerData;
+    public static SettingsData settingsData = (SettingsData)Resources.Load("SettingsData");
+    public static PlayerData playerData = (PlayerData)Resources.Load("PlayerData");
 
     public static float masterVolume => settingsData.masterVolume;
     public static float cartVolume => settingsData.cartVolume;
