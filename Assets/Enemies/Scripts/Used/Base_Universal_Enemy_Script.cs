@@ -4,12 +4,12 @@ using UnityEngine;
 public class BaseUniversal : MonoBehaviour, IDamageTaker
 {
     // Basic attributes
-    protected bool isAlive = true;
+    public bool isAlive = true;
+    public bool isActivated = false;
     public float health = 100f;
     public float speed = 1f;
     public float damage;
     public float attackRange = 1f;
-    public float AttackRange => attackRange;
     public float attackSpeed = 1f;
     public float attackCooldown = 1f;
     public float timeSinceLastAttack;
@@ -41,6 +41,10 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     // Update logic
     protected virtual void Update()
     {
+        if (!isActivated)
+        {
+            return;
+        }
         if (isAttacking)
         {
             // Check if the player is close and is in attack range
@@ -140,7 +144,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     {
         if (isAlive && playerScript != null && CanAttack())
         {
-            if (playerScript.isAlive())
+            if (playerScript.isAlive)
             {
                 timeSinceLastAttack = 0f;
                 isPlayerCloseLogSent = true;
@@ -172,6 +176,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     public void TakeDamage(float damage)
     {
         health -= damage;
+        Debug.Log(health);
         player.score += scoreAmount;
         Debug.Log(health);
         if (health <= 0)
@@ -265,7 +270,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
         if (player != null)
         {
             Player playerScript = player.GetComponent<Player>();
-            if (playerScript != null && playerScript.isAlive() && IsPlayerInRange(player.transform.position))
+            if (playerScript != null && playerScript.isAlive && IsPlayerInRange(player.transform.position))
             {
                 ((IDamageTaker)playerScript).TakeDamage(damage);
             }
@@ -277,7 +282,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
         if (collision.gameObject.CompareTag("Player"))
         {
             Player playerScript = collision.gameObject.GetComponent<Player>();
-            if (playerScript != null && playerScript.isAlive())
+            if (playerScript != null && playerScript.isAlive)
             {
                 // Call TakeDamage method of the player
                 ((IDamageTaker)playerScript).TakeDamage(damage);

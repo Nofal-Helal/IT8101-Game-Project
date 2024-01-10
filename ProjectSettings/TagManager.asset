@@ -4,16 +4,11 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - Gun
   - Loadout
-  - Effect
+  - Gun
   - FxTemporaire
-  - Ground
-  - Zombie
   - Enemy
-  - player
-  - ShopMenu
-  - Shopkeeper
+  - Boss
   layers:
   - Default
   - TransparentFX

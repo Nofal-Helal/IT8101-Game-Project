@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
@@ -6,6 +7,7 @@ using UnityEngine.Playables;
 public class Player : MonoBehaviour, IDamageTaker
 {
     public float health = 20f;
+    public bool isAlive = true;
     public int score = 0;
     public int gold = 0;
     public int healthIncreaseLevel = 0;
@@ -19,6 +21,7 @@ public class Player : MonoBehaviour, IDamageTaker
     private float obstacleProgress = 0f;
     private CircularBar circularBar;
     private PlayableDirector playableDirector;
+    public event Action OnDeath;
 
     private void Start()
     {
@@ -35,21 +38,20 @@ public class Player : MonoBehaviour, IDamageTaker
     private void Update()
     {
         // if (Input.GetKeyDown(KeyCode.A)) { playableDirector.Play(); }
-        if (!inWave && nextWave)
-        {
-            if (cartObject.distance >= nextWave.Distance)
-            {
-                inWave = true;
-                nextWave.SpawnNextSubWave();
-                _ = cartObject.railTrack.Spline.TryGetObjectData("waves", out var waves);
-                _ = waves.RemoveDataPoint(nextWave.Distance);
-                nextWave = cartObject.NextWave;
-            }
-        }
+        // if (!inWave && nextWave)
+        // {
+        //     if (cartObject.distance >= nextWave.Distance)
+        //     {
+        //         inWave = true;
+        //         nextWave.SpawnNextSubWave();
+        //         _ = cartObject.railTrack.Spline.TryGetObjectData("waves", out var waves);
+        //         _ = waves.RemoveDataPoint(nextWave.Distance);
+        //         nextWave = cartObject.NextWave;
+        //     }
+        // }
 
         if (removingObstacle)
         {
-            Debug.Log("yuh breaking shit");
             obstacleProgress += Time.deltaTime;
             circularBar.progress = obstacleProgress / secondsToRemoveObstacle;
 
@@ -67,12 +69,13 @@ public class Player : MonoBehaviour, IDamageTaker
     // hold o to remove obstacle
     public void OnRemoveObstacle(InputAction.CallbackContext ctx)
     {
+        Debug.Log("am i even here?");
         // button is pressed while cart is stopped
         if (
             ctx.performed
             && cartObject.speed == 0
             && cartObject.nextObstacle != null
-            && cartObject.nextObstacle.IsVisible
+        && cartObject.nextObstacle.IsVisible
         )
         {
             removingObstacle = true;
@@ -87,7 +90,7 @@ public class Player : MonoBehaviour, IDamageTaker
             removingObstacle = false;
         }
     }
-    void IDamageTaker.TakeDamage(float damageAmount)
+    public void TakeDamage(float damageAmount)
     {
         health -= damageAmount;
         if (health <= 0)
@@ -104,10 +107,11 @@ public class Player : MonoBehaviour, IDamageTaker
     public void Die()
     {
         Debug.Log("You've died. Unlucky.");
-        Destroy(gameObject);
+        isAlive = false;
+
     }
 
-    public bool isAlive()
+    public bool IsAlive()
     {
         return health > 0f;
     }
