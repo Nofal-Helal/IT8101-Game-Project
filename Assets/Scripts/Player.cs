@@ -16,7 +16,6 @@ public class Player : MonoBehaviour, IDamageTaker
     private bool removingObstacle;
     private float obstacleProgress = 0f;
     private CircularBar circularBar;
-    private PlayableDirector playableDirector;
     public event Action OnDeath;
 
     private void Start()
@@ -26,13 +25,11 @@ public class Player : MonoBehaviour, IDamageTaker
         cartObject = GetComponentInChildren<RailFollower>();
         nextWave ??= cartObject.NextWave;
         circularBar = FindObjectOfType<CircularBar>();
-        // playableDirector = GameObject.Find("MolemanCutscene").GetComponent<PlayableDirector>();
         GetComponent<PlayerInput>().actions = Global.inputActions.asset;
     }
 
     private void Update()
     {
-        // if (Input.GetKeyDown(KeyCode.A)) { playableDirector.Play(); }
         // if (!inWave && nextWave)
         // {
         //     if (cartObject.distance >= nextWave.Distance)
@@ -69,7 +66,7 @@ public class Player : MonoBehaviour, IDamageTaker
             ctx.performed
             && cartObject.speed == 0
             && cartObject.nextObstacle != null
-        && cartObject.nextObstacle.IsVisible
+            && cartObject.nextObstacle.IsVisible
         )
         {
             removingObstacle = true;
@@ -100,7 +97,11 @@ public class Player : MonoBehaviour, IDamageTaker
     }
     public void Die()
     {
-        Debug.Log("You've died. Unlucky.");
+        if (isAlive)
+        {
+            Debug.Log("You've died. Unlucky.");
+            SceneTransition.Fade("Scenes/GameOver");
+        }
         isAlive = false;
     }
 

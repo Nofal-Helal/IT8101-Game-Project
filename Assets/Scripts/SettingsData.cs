@@ -9,4 +9,6 @@ public class SettingsData : ScriptableObject
         cartVolume = 0.5f,
         weaponsVolume = 0.5f,
         monstersVolume = 0.5f;
+
+    public string inputBindingsJson = "";
 }

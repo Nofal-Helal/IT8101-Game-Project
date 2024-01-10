@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -5,9 +6,6 @@ using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
 {
-    // TODO: store and load settings (persistence)
-    // TODO: update unity inputsystem input asset
-
     public SettingsData settingsData;
     private Button lastSelected;
     private Canvas InputPanelMenu;
@@ -21,11 +19,17 @@ public class SettingsMenu : MonoBehaviour
 
     void Start()
     {
-        var buttons = ComponentUtils.GetComponentByName<RectTransform>("Input Settings") .GetComponentsInChildren<Button>();
+        var buttons = ComponentUtils.GetComponentByName<RectTransform>("Input Settings").GetComponentsInChildren<Button>();
         foreach (var button in buttons)
         {
             updateInputButton(button);
         }
+
+        _generalSlider.SetValueWithoutNotify(settingsData.masterVolume);
+        _cartSlider.SetValueWithoutNotify(settingsData.cartVolume);
+        _monstersSlider.SetValueWithoutNotify(settingsData.monstersVolume);
+        _weaponsSlider.SetValueWithoutNotify(settingsData.weaponsVolume);
+
     }
 
     public void updateInputButton(Button button)
@@ -75,12 +79,14 @@ public class SettingsMenu : MonoBehaviour
                 updateInputKeys();
                 Debug.Log("rebound: " + rebind.selectedControl);
                 rebind.Dispose();
+                SaveInputBindings();
             })
             .Start();
     }
 
-    void Update()
+    private void SaveInputBindings()
     {
+        Global.settingsData.inputBindingsJson = Global.inputActions.SaveBindingOverridesAsJson();
     }
 
     public void GeneralVolume()

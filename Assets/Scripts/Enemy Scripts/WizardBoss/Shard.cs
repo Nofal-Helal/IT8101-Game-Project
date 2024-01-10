@@ -1,6 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
-using Palmmedia.ReportGenerator.Core.CodeAnalysis;
 using UnityEngine;
 
 public class Shard : MonoBehaviour, IDamageTaker

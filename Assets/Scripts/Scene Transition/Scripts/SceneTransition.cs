@@ -22,6 +22,7 @@ public static class SceneTransition
         init.name = "Fader";
         Canvas myCanvas = init.AddComponent<Canvas>();
         myCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
+        myCanvas.sortingOrder = 10;
         init.AddComponent<Fader>();
         init.AddComponent<CanvasGroup>();
         init.AddComponent<Image>();
