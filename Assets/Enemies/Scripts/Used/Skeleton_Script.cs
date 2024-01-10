@@ -37,7 +37,7 @@ public class SkeletonScript : BaseUniversal
             if (player != null)
             {
                 // Check and handle player proximity
-                HandlePlayerProximity(player);
+                HandlePlayerProximity();
             }
         }
     }
@@ -126,7 +126,7 @@ public class SkeletonScript : BaseUniversal
     }
 
     // Method to handle player proximity
-    public override void HandlePlayerProximity(GameObject player)
+    public override void HandlePlayerProximity()
     {
         if (player.gameObject.tag == "Player")
         {

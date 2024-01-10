@@ -72,7 +72,7 @@ public class RailFollower : MonoBehaviour
 
         transform.SetPositionAndRotation(position, rotation);
 
-        if (nextDialogue && (nextDialogue.Distance - distance) < nextDialogue.dialogStartDistance && !nextDialogue.inProgress)
+        if (nextDialogue && (nextDialogue.Distance - distance) < Mathf.Epsilon && !nextDialogue.inProgress)
         {
             nextDialogue.StartDialogue();
         }

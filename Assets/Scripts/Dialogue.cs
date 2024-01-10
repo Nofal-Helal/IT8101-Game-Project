@@ -88,6 +88,7 @@ public class Dialogue : MonoBehaviour
     {
         Nearest(out _, out float t);
         float t_dist = SplineUtility.ConvertIndexUnit(spline, t, PathIndexUnit.Distance);
+        t_dist += dialogStartDistance;
         dataPoint = new DataPoint<Object>(t_dist, this);
         _ = splineData.Add(dataPoint);
     }
@@ -99,7 +100,10 @@ public class Dialogue : MonoBehaviour
             spline ??= railTrack.Spline;
             Nearest(out _, out float t);
             float t_dist = spline.ConvertIndexUnit(t, PathIndexUnit.Normalized, PathIndexUnit.Distance);
+            t_dist += dialogStartDistance;
             float3 position = spline.EvaluatePosition(spline.ConvertIndexUnit(t_dist, PathIndexUnit.Distance, PathIndexUnit.Normalized));
+            Gizmos.color = Color.blue;
+            Gizmos.DrawSphere(transform.position, 0.3f);
             Gizmos.color = Color.yellow;
             Gizmos.DrawLine(transform.position, (Vector3)position + railTrack.transform.position);
             Gizmos.DrawSphere((Vector3)position + railTrack.transform.position, 0.1f);
@@ -116,7 +120,7 @@ public class Dialogue : MonoBehaviour
         dialogueBox.SetActive(true);
         foreach (DialogueItem dialogue in dialogueList)
         {
-            yield return StartCoroutine(DisplayDialogue(dialogue));
+            yield return DisplayDialogue(dialogue);
         }
         inProgress = false;
         Destroy(gameObject.transform.parent.gameObject);
