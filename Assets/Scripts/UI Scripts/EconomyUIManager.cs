@@ -2,10 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 public class EconomyUIManager : MonoBehaviour
 {
     public TextMeshProUGUI goldAmount;
     public TextMeshProUGUI scoreAmount;
+    public Image healthFill;
     private Player player;
     // Start is called before the first frame update
     void Start()
@@ -35,5 +37,6 @@ public class EconomyUIManager : MonoBehaviour
     {
         goldAmount.text = "Gold: " + player.gold;
         scoreAmount.text = "Score: " + player.score;
+        healthFill.fillAmount = player.health / player.maxHealth;
     }
 }
