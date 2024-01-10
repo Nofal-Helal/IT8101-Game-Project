@@ -5,7 +5,6 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
 {
     // Basic attributes
     public bool isAlive = true;
-    public bool isActivated = false;
     public float health = 100f;
     public float speed = 1f;
     public float damage;
@@ -13,14 +12,15 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     public float attackSpeed = 1f;
     public float attackCooldown = 1f;
     public float timeSinceLastAttack;
-    public bool isAttacking = false;
+    public bool isActivated = false;
+    public bool isAttacking = true;
     // Gold is the currency you get when you kill an enemy.
     public int goldDropAmount = 20;
     // A "score" is a value you get when you hit an enemy.
     public int scoreAmount = 5;
-
     // References
-    private Player player;
+    protected Player player;
+    protected FirstPersonCamera playerCamera;
     protected Animator animator;
     public bool isPlayerCloseLogSent = false;
     public float playerProximityDistance;
@@ -36,6 +36,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
         }
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         originalAttackRange = attackRange;
+        playerCamera = FindObjectOfType<FirstPersonCamera>();
     }
 
     // Update logic
@@ -43,38 +44,41 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     {
         if (!isActivated)
         {
+            Debug.Log("Not Activated");
             return;
         }
+
         if (isAttacking)
         {
             // Check if the player is close and is in attack range
-            if (isPlayerCloseLogSent && IsPlayerInRange(player.transform.position))
+            HandlePlayerProximity();
+
+            if (IsPlayerInRange(playerCamera.transform.position))
             {
+                Debug.Log("Hello, I'm supposed to kill ya!");
                 // Apply damage to the player
                 ((IDamageTaker)player).TakeDamage(damage * Time.deltaTime);
             }
+
+            if (animator != null)
+            {
+                animator.Play("Zombie|ZombieBite");
+            }
         }
 
-        if (animator != null)
-        {
-            animator.SetBool("isAttacking", isAttacking);
-        }
     }
-
-
     // Handle player proximity
-    public virtual void HandlePlayerProximity(GameObject player)
+    public virtual void HandlePlayerProximity()
     {
         if (player.CompareTag("Player"))
         {
-            float distanceToPlayer = Vector3.Distance(transform.position, player.transform.position);
-
+            float distanceToPlayer = Vector3.Distance(transform.position, playerCamera.transform.position);
             if (distanceToPlayer <= playerProximityDistance)
             {
                 if (!isPlayerCloseLogSent)
                 {
                     // Check if the player is in front of the enemy
-                    Vector3 directionToPlayer = player.transform.position - transform.position;
+                    Vector3 directionToPlayer = playerCamera.transform.position - transform.position;
                     float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
 
                     if (angleToPlayer < 45f)  // Adjust the angle threshold as needed
@@ -107,8 +111,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
                         attackRange = originalAttackRange;
                     }
                 }
-
-                MoveTowardsPlayer(player.transform.position);
+                MoveTowardsPlayer(playerCamera.transform.position);
             }
             else
             {

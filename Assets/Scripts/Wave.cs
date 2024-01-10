@@ -173,7 +173,7 @@ public class Wave : MonoBehaviour
             if (enemy)
             {
                 BaseUniversal enemyData = enemy.GetComponent<BaseUniversal>();
-                enemyData.isActivated = true;
+                enemyData.isAttacking = true;
             }
         }
     }

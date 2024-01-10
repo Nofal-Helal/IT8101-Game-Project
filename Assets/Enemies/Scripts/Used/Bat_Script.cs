@@ -60,7 +60,7 @@ public class BatEnemyScript : BaseUniversal
             GameObject player = FindPlayer();
             if (player != null)
             {
-                HandlePlayerProximity(player);
+                HandlePlayerProximity();
             }
         }
         if (isAlive)
@@ -170,7 +170,7 @@ public class BatEnemyScript : BaseUniversal
     }
 
     // Handle player proximity and initiate actions accordingly
-    public override void HandlePlayerProximity(GameObject player)
+    public override void HandlePlayerProximity()
     {
         if (player.gameObject.tag == "Player")
         {

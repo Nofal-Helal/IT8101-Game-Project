@@ -40,7 +40,6 @@ public class SpiderBoss : MonoBehaviour, IDamageTaker
         if (state == SpiderState.Idle)
         {
             float distance = Vector3.Distance(playerCamera.gameObject.transform.position, transform.position);
-            Debug.Log(distance);
             if (distance <= threshold)
             {
                 state = SpiderState.Switching;
@@ -71,7 +70,6 @@ public class SpiderBoss : MonoBehaviour, IDamageTaker
     }
     public void TakeDamage(float damage)
     {
-        Debug.Log("I should be taking Damage");
         health -= damage;
         if (health <= 0)
         {
