@@ -320,7 +320,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86d7ab0137fc8db99818c75b519bc58a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  plankMesh: {fileID: -3481501719365375840, guid: 37f90235b2adf58d188339d16136b3ad, type: 3}
+  plankMesh: {fileID: 0}
   rail2D: {fileID: 11400000, guid: 1532e1895b8f0fcc3a812d337715d75f, type: 2}
   plankSpacing: 1
   railWidth: 1.32
