@@ -18,8 +18,9 @@ public class Moleman : MonoBehaviour, IDamageTaker
     public float health = 800;
     public float runSpeed = 3;
     public float meleeAttackRange = 5.7f;
-    public float jumpTime = 0.95f;
-    public float jumpExtraUpTime = 0.75f;
+    public float jumpSpeed = 20f;
+    [Range(0, 1)]
+    public float arc = 0.0f;
     public float cooldown = 2;
     public float attackCooldown = 2.2f;
     public float dodgeCooldown = 2;
@@ -37,6 +38,10 @@ public class Moleman : MonoBehaviour, IDamageTaker
     public Transform spot3;
     public int inSpot = 1;
 
+    [NaughtyAttributes.Button] void ChangeStateRanged() { ChangeState(State.RangedAttack); }
+    [NaughtyAttributes.Button] void ChangeStateMelee() { ChangeState(State.MeleeAttack); }
+    [NaughtyAttributes.Button] void ChangeStateDodge() { ChangeState(State.Dodging); }
+
     void Start()
     {
         if (player == null)
@@ -52,10 +57,10 @@ public class Moleman : MonoBehaviour, IDamageTaker
         navMeshAgent.speed = runSpeed;
         navMeshAgent.stoppingDistance = meleeAttackRange;
         // start in sleeping animation
-        // animator.Play("Sleeping");
+        animator.Play("Sleeping");
 
         // Debug only
-        animator.Play("Idle");
+        // animator.Play("Idle");
         // Global.inputActions.gameplay.RemoveObstacle.Disable(); // disable removing the obstacle in the boss fight
     }
 
@@ -114,10 +119,10 @@ public class Moleman : MonoBehaviour, IDamageTaker
         }
         cooldown -= Time.deltaTime;
 
-        if (timeInState >= 3 * (2.2f + attackCooldown + 0.01f) && cooldown > 0)
+        if (timeInState >= 3 * attackCooldown && cooldown > 0)
         {
             animator.ResetTrigger("Throw");
-            if (Random.Range(0, 2) == 0)
+            if (Random.Range(0,1f) < 0.5f)
             {
                 ChangeState(State.MeleeAttack);
             }
@@ -138,10 +143,12 @@ public class Moleman : MonoBehaviour, IDamageTaker
         }
         if (distanceToPlayer <= meleeAttackRange)
         {
-            navMeshAgent.isStopped = true;
-            animator.SetTrigger("Punch");
-            ((IDamageTaker)player).TakeDamage(1f);
-            ChangeState(State.Retreat);
+            if (cooldown <= 0)
+            {
+                navMeshAgent.isStopped = true;
+                StartCoroutine(PunchAndRetreat());
+                cooldown = 10000; // start the coroutine once
+            }
         }
     }
 
@@ -149,7 +156,7 @@ public class Moleman : MonoBehaviour, IDamageTaker
     /// Performs transitions to states, e.g. changing animation
     /// </summary>
     /// <param name="toState">state to change to</param>
-    void ChangeState(State toState)
+    public void ChangeState(State toState)
     {
         switch (toState)
         {
@@ -165,10 +172,11 @@ public class Moleman : MonoBehaviour, IDamageTaker
                 navMeshAgent.isStopped = false;
                 navMeshAgent.destination = cart.position;
                 animator.SetTrigger("Run");
+                cooldown = 0f;
                 damageCounter = 0;
                 break;
             case State.Retreat:
-                StartCoroutine(JumpBack());
+                StartCoroutine(RetreatJump());
                 break;
         }
 
@@ -176,13 +184,21 @@ public class Moleman : MonoBehaviour, IDamageTaker
         state = toState;
     }
 
-    IEnumerator JumpBack()
+    IEnumerator PunchAndRetreat()
+    {
+        animator.SetTrigger("Punch");
+        yield return new WaitForSeconds(9 / 30f);
+        ((IDamageTaker)player).TakeDamage(1f);
+        yield return new WaitForSeconds((32 - 9) / 30f);
+        ChangeState(State.Retreat);
+    }
+    IEnumerator RetreatJump()
     {
         rigidbody.drag = 0; // set drag to 0 to not resist the force
-        yield return new WaitForSeconds(1.9f); // wait for jump in animation
+        yield return new WaitForSeconds(0.84444444f); // wait for jump in animation
         navMeshAgent.enabled = false; // disable nav agent to not interfere with physics
-        rigidbody.LaunchTo(spot1, jumpTime, jumpExtraUpTime); // apply force
-        yield return new WaitForSeconds(jumpTime - 0.01f); // wait before jump ends 
+        float time = rigidbody.ApplyTargetedForce(spot1.position, jumpSpeed*3f/2f, arc);
+        yield return new WaitForSeconds(time); // wait until jump ends 
         rigidbody.drag = 5f; // apply drag for friction
         navMeshAgent.enabled = true;
         ChangeState(State.RangedAttack);
@@ -194,8 +210,8 @@ public class Moleman : MonoBehaviour, IDamageTaker
         rigidbody.drag = 0; // set drag to 0 to not resist the force
         yield return new WaitForSeconds(0.8444444f); // wait for jump in animation
         navMeshAgent.enabled = false; // disable nav agent to not interfere with physics
-        rigidbody.LaunchTo(spot, jumpTime * 0.8f, jumpExtraUpTime * 0.8f); // apply force
-        yield return new WaitForSeconds(jumpTime - 0.01f); // wait before jump ends 
+        float time = rigidbody.ApplyTargetedForce(spot.position, jumpSpeed, arc);
+        yield return new WaitForSeconds(time); // wait until jump ends 
         rigidbody.drag = 8f; // apply drag for friction
         navMeshAgent.enabled = true;
         yield return LookAtPlayer();
@@ -213,7 +229,7 @@ public class Moleman : MonoBehaviour, IDamageTaker
             yield return 0;
         }
 
-        if (timeInState >= 4 * (jumpTime + 0.84444444f + dodgeCooldown) && inSpot == 1)
+        if (timeInState >= 4 * dodgeCooldown && inSpot == 1)
         {
             ChangeState(State.MeleeAttack);
         }
@@ -229,7 +245,8 @@ public class Moleman : MonoBehaviour, IDamageTaker
         }
     }
 
-    void Die() {
+    void Die()
+    {
         cart.GetComponent<RailFollower>().OnRemoveObstacle();
     }
 
@@ -238,13 +255,46 @@ public class Moleman : MonoBehaviour, IDamageTaker
 
 static class RigidbodyExtension
 {
-    public static void LaunchTo(this Rigidbody rigidbody, Transform target, float t, float up_t = 0)
+    /// <summary>
+    /// Applies an impulse that will have the rigidbody land at the specified target. The arch is the percent 
+    /// of arch to provide between the min/max (0 to 1).  
+    /// </summary>
+    public static float ApplyTargetedForce(this Rigidbody rRigidBody, Vector3 rTarget, float rSpeed, float rArc = 0.5f, bool rUseMinSpeed = true)
     {
-        Vector3 toTarget = target.position - rigidbody.position;
-        // Convert from time-to-hit to a launch velocity:
-        Vector3 velocity = toTarget / t - Physics.gravity * (t + up_t) / 2f;
-        rigidbody.AddForce(velocity, ForceMode.Impulse);
+        float lGravity = Physics.gravity.magnitude;
+        Vector3 lObjectPosition = rRigidBody.position;
+        Vector3 lToTarget = rTarget - lObjectPosition;
+
+        // Find the minimum speed to hit the target
+        float lDiscriminantSqrRt = Mathf.Sqrt((lGravity * lGravity) * lToTarget.sqrMagnitude);
+        float lMinSpeed = Mathf.Sqrt(lDiscriminantSqrRt) - Vector3.Dot(lToTarget, Physics.gravity);
+        if (rSpeed == 0f || (rUseMinSpeed && rSpeed < lMinSpeed)) { rSpeed = lMinSpeed + 0.5f; }
+
+        // Using the speed, our factor for reaching the target
+        float b = (rSpeed * rSpeed) + Vector3.Dot(lToTarget, Physics.gravity);
+        float lDiscriminant = (b * b) - (lGravity * lGravity) * lToTarget.sqrMagnitude;
+        if (lDiscriminant < 0)
+        {
+            Debug.Log("Not enough force to reach target");
+            return 0;
+        }
+
+        // Determine the min and max time it will take to reach the object.
+        lDiscriminantSqrRt = Mathf.Sqrt(lDiscriminant);
+        float lMinTime = Mathf.Sqrt((b - lDiscriminantSqrRt) * 2f) / lGravity;
+        float lMaxTime = Mathf.Sqrt((b + lDiscriminantSqrRt) * 2f) / lGravity;
+
+        // Determine the force based on our arc value
+        Mathf.Clamp(rArc, 0f, 1f);
+        float lTime = lMinTime + ((lMaxTime - lMinTime) * rArc);
+        Vector3 lForce = new Vector3(lToTarget.x / lTime, (lToTarget.y / lTime) + (lTime * lGravity / 2f), lToTarget.z / lTime);
+
+        // Apply the force
+        rRigidBody.AddForce(lForce, ForceMode.Impulse);
+
+        return lTime;
     }
+
 
 
 }
