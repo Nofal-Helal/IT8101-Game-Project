@@ -11,8 +11,6 @@ public class ProjectileThrown : MonoBehaviour
     public GameObject explosionEffect;
     public GunData projectileData;
     private bool blowingUp;
-    private CanvasRenderer canvasRenderer;
-    private SphereCollider impactSphere;
     public AudioClip explosionClip;
     private AudioSource audioSource;
     public List<GameObject> detectedEnemies = new List<GameObject>();
@@ -20,16 +18,15 @@ public class ProjectileThrown : MonoBehaviour
     void Start()
     {
         timeExisted = 0f;
-        impactSphere = GetComponentInChildren<SphereCollider>();
         blowingUp = false;
         player = FindObjectOfType<Player>();
+        audioSource = GetComponent<AudioSource>();
     }
     void Update()
     {
         timeExisted += Time.deltaTime;
         if (timeExisted >= timeTillExplosion && !blowingUp)
         {
-
             Explode();
         }
     }
@@ -52,16 +49,24 @@ public class ProjectileThrown : MonoBehaviour
     {
         blowingUp = true;
         audioSource.clip = explosionClip;
-        audioSource.Play();
-        Instantiate(explosionEffect, gameObject.transform.position, gameObject.transform.rotation);
-        foreach (GameObject enemy in detectedEnemies)
+        if (explosionClip.loadState == AudioDataLoadState.Loaded)
         {
-            BaseUniversal enemyValue = enemy.GetComponent<BaseUniversal>();
-            var distanceToEnemy = Vector3.Distance(gameObject.transform.position, enemyValue.gameObject.transform.position);
-            float damageBoostMultiplier = 1f + (1f / 3f * player.damageBoostLevel);
-            enemyValue.TakeDamage(Projectile.GetDamageValue(distanceToEnemy, projectileData) * damageBoostMultiplier);
+            audioSource.Play();
+        }
+        Instantiate(explosionEffect, gameObject.transform.position, gameObject.transform.rotation);
+        if (detectedEnemies != null)
+        {
+            foreach (GameObject enemy in detectedEnemies)
+            {
+                var distanceToEnemy = Vector3.Distance(gameObject.transform.position, enemy.transform.position);
+                float damageBoostMultiplier = 1f + (1f / 3f * player.damageBoostLevel);
+
+                if (enemy.gameObject.TryGetComponent(out IDamageTaker enemyData))
+                {
+                    enemyData.TakeDamage(Projectile.GetDamageValue(distanceToEnemy, projectileData) * damageBoostMultiplier);
+                }
+            }
         }
         Destroy(gameObject);
     }
-
 }

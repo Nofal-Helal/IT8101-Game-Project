@@ -186,7 +186,7 @@ public class SkeletonScript : BaseUniversal
         if (collision.gameObject.CompareTag("Player"))
         {
             Player playerScript = collision.gameObject.GetComponent<Player>();
-            if (playerScript != null && playerScript.isAlive())
+            if (playerScript != null && playerScript.isAlive)
             {
                 // Player collided with the skeleton, initiate attack
                 isAttacking = true;
@@ -203,7 +203,7 @@ public class SkeletonScript : BaseUniversal
         if (player != null)
         {
             Player playerScript = player.GetComponent<Player>();
-            if (playerScript != null && playerScript.isAlive() && IsPlayerInRange(player.transform.position))
+            if (playerScript != null && playerScript.isAlive && IsPlayerInRange(player.transform.position))
             {
                 playerScript.TakeDamage(damage);
             }

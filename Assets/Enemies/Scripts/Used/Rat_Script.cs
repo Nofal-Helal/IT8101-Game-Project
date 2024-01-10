@@ -194,7 +194,7 @@ public class Rat_Script : BaseUniversal, IDamageTaker
         if (collision.gameObject.CompareTag("Player"))
         {
             Player playerScript = collision.gameObject.GetComponent<Player>();
-            if (playerScript != null && playerScript.isAlive())
+            if (playerScript != null && playerScript.isAlive)
             {
                 // Player collided with the rat, initiate attack
                 isAttacking = true;

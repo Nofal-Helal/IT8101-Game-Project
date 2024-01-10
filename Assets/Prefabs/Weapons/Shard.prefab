@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8046334585146778212, guid: c1045a883a9da214f91867fbe124c2f0, type: 3}
+      propertyPath: m_Convex
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -98,8 +102,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 15
   threshold: 1
-  speed: 50
-  explosionEffect: {fileID: 100014, guid: a57a6829db3568c4d9bdc37e9e63c017, type: 3}
+  explosionEffect: {fileID: 100014, guid: 5332791ebce075d4a9e56f4581e7fb47, type: 3}
   explosionClip: {fileID: 8300000, guid: 7159759be8bab914bbe48609de62f01c, type: 3}
 --- !u!82 &336197040466157028
 AudioSource:
