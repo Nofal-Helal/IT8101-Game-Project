@@ -6,13 +6,9 @@ using UnityEngine.Playables;
 
 public class Player : MonoBehaviour, IDamageTaker
 {
+    public PlayerData playerData;
     public float health = 20f;
     public bool isAlive = true;
-    public int score = 0;
-    public int gold = 0;
-    public int healthIncreaseLevel = 0;
-    public int damageBoostLevel = 0;
-    public float maxHealth = 100f;
     private bool inWave;
     private RailFollower cartObject;
     public Wave nextWave;
@@ -26,8 +22,7 @@ public class Player : MonoBehaviour, IDamageTaker
     private void Start()
     {
         Assert.AreEqual("CartObject", transform.GetChild(0).name);
-        // The 1/3 value here is arbitrary, but I chose it so it when the player reaches the highest level it doubles his health
-        maxHealth = maxHealth * (1f + (1f / 3f) * healthIncreaseLevel);
+        health = playerData.maxHealth;
         cartObject = GetComponentInChildren<RailFollower>();
         nextWave ??= cartObject.NextWave;
         circularBar = FindObjectOfType<CircularBar>();
@@ -69,7 +64,6 @@ public class Player : MonoBehaviour, IDamageTaker
     // hold o to remove obstacle
     public void OnRemoveObstacle(InputAction.CallbackContext ctx)
     {
-        Debug.Log("am i even here?");
         // button is pressed while cart is stopped
         if (
             ctx.performed
@@ -102,13 +96,12 @@ public class Player : MonoBehaviour, IDamageTaker
     // the health increase upgrade is bought.
     public void IncreaseMaxHealth()
     {
-        maxHealth = maxHealth * (1f + (1f / 3f) * healthIncreaseLevel);
+        playerData.maxHealth = playerData.maxHealth * (1f + (1f / 3f) * playerData.healthIncreaseLevel);
     }
     public void Die()
     {
         Debug.Log("You've died. Unlucky.");
         isAlive = false;
-
     }
 
     public bool IsAlive()

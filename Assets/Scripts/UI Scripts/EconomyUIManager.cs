@@ -33,7 +33,7 @@ public class EconomyUIManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        goldAmount.text = "Gold: " + player.gold;
-        scoreAmount.text = "Score: " + player.score;
+        goldAmount.text = "Gold: " + player.playerData.gold;
+        scoreAmount.text = "Score: " + player.playerData.score;
     }
 }

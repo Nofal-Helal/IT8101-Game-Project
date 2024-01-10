@@ -59,7 +59,7 @@ public class ProjectileThrown : MonoBehaviour
             foreach (GameObject enemy in detectedEnemies)
             {
                 var distanceToEnemy = Vector3.Distance(gameObject.transform.position, enemy.transform.position);
-                float damageBoostMultiplier = 1f + (1f / 3f * player.damageBoostLevel);
+                float damageBoostMultiplier = 1f + (1f / 3f * player.playerData.damageBoostLevel);
 
                 if (enemy.gameObject.TryGetComponent(out IDamageTaker enemyData))
                 {

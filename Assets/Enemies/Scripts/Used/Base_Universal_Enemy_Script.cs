@@ -177,7 +177,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     {
         health -= damage;
         Debug.Log(health);
-        player.score += scoreAmount;
+        player.playerData.score += scoreAmount;
         Debug.Log(health);
         if (health <= 0)
         {
@@ -241,8 +241,8 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     protected virtual void Die()
     {
         isAlive = false;
-        player.gold += goldDropAmount;
-        Debug.Log(player.gold);
+        player.playerData.gold += goldDropAmount;
+        Debug.Log(player.playerData.gold);
         UpdateAnimatorParameters();
         TriggerDeathAnimation("DeathTrigger");
         HandleDeathAnimationEnd();
