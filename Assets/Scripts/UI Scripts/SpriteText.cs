@@ -3,6 +3,13 @@ using UnityEngine.InputSystem;
 
 public static class SpriteText
 {
+    public static string SpritedText(string formatString, InputBinding binding, string spriteAssetName = "SpritesheetKeyboard")
+    {
+        string spriteName = RenameInput(binding.ToString());
+        string spriteText = $"<sprite=\"{spriteAssetName}\" name=\"{spriteName}\">";
+        return string.Format(formatString, spriteText);
+    }
+
     public static void SetText(this TextMeshProUGUI tmp, string formatString, InputBinding binding, TMP_SpriteAsset spriteAsset)
     {
         string spriteName = RenameInput(binding.ToString());
