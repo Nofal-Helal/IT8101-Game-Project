@@ -27,10 +27,11 @@ public class MenuNavigation : MonoBehaviour
 
     public void NewGame()
     {
+        Global.playerData = ScriptableObject.CreateInstance<PlayerData>();
         SceneTransition.Fade("Scenes/Level_1/Level_1");
     }
 
-    public void LoadGame()
+    public static void LoadGame()
     {
         string scene = Global.playerData.lastCompletedLevel switch
         {

@@ -85,6 +85,7 @@ public class Level1Script : MonoBehaviour
 
     private void TransitionToNextLevel()
     {
+        Global.playerData.lastCompletedLevel = 0;
         TransitionSceneScript.nextScene = "Scenes/Level_2/Level 2";
         SceneTransition.Fade("Scenes/Transition1to2");
     }
