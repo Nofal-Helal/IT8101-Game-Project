@@ -230,7 +230,7 @@ public class BatEnemyScript : BaseUniversal
         if (collision.gameObject.CompareTag("Player"))
         {
             Player playerScript = collision.gameObject.GetComponent<Player>();
-            if (playerScript != null && playerScript.isAlive())
+            if (playerScript != null && playerScript.isAlive)
             {
                 // Player collided with the bat, initiate attack
                 isAttacking = true;

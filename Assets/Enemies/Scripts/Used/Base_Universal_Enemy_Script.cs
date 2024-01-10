@@ -144,7 +144,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     {
         if (isAlive && playerScript != null && CanAttack())
         {
-            if (playerScript.isAlive())
+            if (playerScript.isAlive)
             {
                 timeSinceLastAttack = 0f;
                 isPlayerCloseLogSent = true;
@@ -177,7 +177,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     {
         health -= damage;
         Debug.Log(health);
-        player.score += scoreAmount;
+        player.playerData.score += scoreAmount;
         Debug.Log(health);
         if (health <= 0)
         {
@@ -241,8 +241,8 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     protected virtual void Die()
     {
         isAlive = false;
-        player.gold += goldDropAmount;
-        Debug.Log(player.gold);
+        player.playerData.gold += goldDropAmount;
+        Debug.Log(player.playerData.gold);
         UpdateAnimatorParameters();
         TriggerDeathAnimation("DeathTrigger");
         HandleDeathAnimationEnd();
@@ -270,7 +270,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
         if (player != null)
         {
             Player playerScript = player.GetComponent<Player>();
-            if (playerScript != null && playerScript.isAlive() && IsPlayerInRange(player.transform.position))
+            if (playerScript != null && playerScript.isAlive && IsPlayerInRange(player.transform.position))
             {
                 ((IDamageTaker)playerScript).TakeDamage(damage);
             }
@@ -282,7 +282,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
         if (collision.gameObject.CompareTag("Player"))
         {
             Player playerScript = collision.gameObject.GetComponent<Player>();
-            if (playerScript != null && playerScript.isAlive())
+            if (playerScript != null && playerScript.isAlive)
             {
                 // Call TakeDamage method of the player
                 ((IDamageTaker)playerScript).TakeDamage(damage);

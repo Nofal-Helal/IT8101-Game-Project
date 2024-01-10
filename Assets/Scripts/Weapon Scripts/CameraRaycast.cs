@@ -41,7 +41,7 @@ public class CameraRaycast : MonoBehaviour
             // Please make sure that the GameObject that has the collider has the tag Enemy
             var distanceToEnemy = Vector3.Distance(ray.origin, hitInfo.point);
             // The 1/3 value here is arbitrary, but I chose it so it when the player reaches the highest level it doubles his damage output
-            float damageBoostMultiplier = 1f + (1f / 3f * player.damageBoostLevel);
+            float damageBoostMultiplier = 1f + (1f / 3f * player.playerData.damageBoostLevel);
 
             float damage = gunController.GetDamageValue(distanceToEnemy) * damageBoostMultiplier;
 

@@ -1,3 +1,5 @@
+using System.Dynamic;
+using Palmmedia.ReportGenerator.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -7,6 +9,7 @@ public class SettingsMenu : MonoBehaviour
     // TODO: store and load settings (persistence)
     // TODO: update unity inputsystem input asset
 
+    public SettingsData settingsData;
     private Button lastSelected;
     private Button shootInputButton;
     private Button reloadInputButton;
@@ -87,25 +90,25 @@ public class SettingsMenu : MonoBehaviour
 
     public void GeneralVolume()
     {
-        Global.masterVolume = Mathf.Clamp01(_generalSlider.value);
-        _cartSlider.value = Global.masterVolume;
-        _monstersSlider.value = Global.masterVolume;
-        _weaponsSlider.value = Global.masterVolume;
+        settingsData.masterVolume = Mathf.Clamp01(_generalSlider.value);
+        _cartSlider.value = settingsData.masterVolume;
+        _monstersSlider.value = settingsData.masterVolume;
+        _weaponsSlider.value = settingsData.masterVolume;
     }
 
     public void CartVolume()
     {
-        Global.cartVolume = Mathf.Clamp01(_cartSlider.value);
+        settingsData.cartVolume = Mathf.Clamp01(_cartSlider.value);
     }
 
     public void MonstersVolume()
     {
-        Global.monstersVolume = Mathf.Clamp01(_monstersSlider.value);
+        settingsData.monstersVolume = Mathf.Clamp01(_monstersSlider.value);
     }
 
     public void WeaponsVolume()
     {
-        Global.weaponsVolume = Mathf.Clamp01(_weaponsSlider.value);
+        settingsData.weaponsVolume = Mathf.Clamp01(_weaponsSlider.value);
     }
 }
 

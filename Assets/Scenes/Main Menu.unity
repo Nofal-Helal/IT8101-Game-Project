@@ -4606,6 +4606,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 154981d895ee8e040ae32740ae1b8046, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settingsData: {fileID: 11400000, guid: ff35121cdc3148c438e6831a58771230, type: 2}
   _generalSlider: {fileID: 1439764316}
   _cartSlider: {fileID: 1163078066}
   _monstersSlider: {fileID: 289480772}
@@ -5827,6 +5828,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 154981d895ee8e040ae32740ae1b8046, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  settingsData: {fileID: 0}
   _generalSlider: {fileID: 0}
   _cartSlider: {fileID: 0}
   _monstersSlider: {fileID: 0}

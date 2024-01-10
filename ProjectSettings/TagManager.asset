@@ -8,6 +8,7 @@ TagManager:
   - Gun
   - FxTemporaire
   - Enemy
+  - Boss
   layers:
   - Default
   - TransparentFX
