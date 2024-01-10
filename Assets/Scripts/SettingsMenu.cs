@@ -1,7 +1,6 @@
-using System.Dynamic;
-using Palmmedia.ReportGenerator.Core;
 using TMPro;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class SettingsMenu : MonoBehaviour
@@ -11,11 +10,10 @@ public class SettingsMenu : MonoBehaviour
 
     public SettingsData settingsData;
     private Button lastSelected;
-    private Button shootInputButton;
-    private Button reloadInputButton;
     private Canvas InputPanelMenu;
     private TextMeshProUGUI InputPanelTitle;
     private bool panelOpened = false;
+    private InputAction rebindingAction;
     public Slider _generalSlider,
         _cartSlider,
         _monstersSlider,
@@ -23,38 +21,30 @@ public class SettingsMenu : MonoBehaviour
 
     void Start()
     {
-        shootInputButton = ComponentUtils.GetComponentByName<Button>("Shoot");
-        reloadInputButton = ComponentUtils.GetComponentByName<Button>("Reload");
-
-        updateInputButton(shootInputButton);
-        updateInputButton(reloadInputButton);
+        var buttons = ComponentUtils.GetComponentByName<RectTransform>("Input Settings") .GetComponentsInChildren<Button>();
+        foreach (var button in buttons)
+        {
+            updateInputButton(button);
+        }
     }
 
     public void updateInputButton(Button button)
     {
         TextMeshProUGUI buttonText = button.GetComponentInChildren<TextMeshProUGUI>();
-        if (button.gameObject.name == "Shoot")
+        buttonText.text = button.gameObject.name switch
         {
-            buttonText.text = "Shoot: " + Global.shootInput;
-            shootInputButton = button;
-        }
-        else if (button.gameObject.name == "Reload")
-        {
-            buttonText.text = "Reload: " + Global.reloadInput;
-            reloadInputButton = button;
-        }
+            "Shoot" => SpriteText.SpritedText("{0}", Global.inputActions.gameplay.Shoot.bindings[0]),
+            "Reload" => SpriteText.SpritedText("{0}", Global.inputActions.gameplay.Reload.bindings[0]),
+            "Remove Obstacle" => SpriteText.SpritedText("{0}", Global.inputActions.gameplay.RemoveObstacle.bindings[0]),
+            "Interact" => SpriteText.SpritedText("{0}", Global.inputActions.gameplay.Interact.bindings[0]),
+            "Close Menu" => SpriteText.SpritedText("{0}", Global.inputActions.gameplay.CloseMenu.bindings[0]),
+            _ => throw new System.Exception("Attempt to bind unknown action.")
+        };
+
     }
 
-    public void updateInputKeys(KeyCode selectedInput)
+    public void updateInputKeys()
     {
-        if (lastSelected.gameObject.name == "Shoot")
-        {
-            Global.shootInput = selectedInput;
-        }
-        else if (lastSelected.gameObject.name == "Reload")
-        {
-            Global.reloadInput = selectedInput;
-        }
         updateInputButton(lastSelected);
         InputPanelMenu.gameObject.SetActive(false);
     }
@@ -65,27 +55,32 @@ public class SettingsMenu : MonoBehaviour
         InputPanelTitle = ComponentUtils.GetComponentByName<TextMeshProUGUI>("InputPanelTitle");
         lastSelected = clickedButton;
         InputPanelTitle.text = clickedButton.gameObject.name + " Input";
+        rebindingAction = clickedButton.gameObject.name switch
+        {
+            "Shoot" => Global.inputActions.gameplay.Shoot,
+            "Reload" => Global.inputActions.gameplay.Reload,
+            "Remove Obstacle" => Global.inputActions.gameplay.RemoveObstacle,
+            "Interact" => Global.inputActions.gameplay.Interact,
+            "Close Menu" => Global.inputActions.gameplay.CloseMenu,
+            _ => throw new System.Exception("Attempt to bind unknown action.")
+        };
         panelOpened = true;
+        rebindingAction.PerformInteractiveRebinding()
+            .WithControlsExcluding("/position")
+            .WithControlsExcluding("/delta")
+            .OnMatchWaitForAnother(0.1f)
+            .OnComplete(rebind =>
+            {
+                panelOpened = false;
+                updateInputKeys();
+                Debug.Log("rebound: " + rebind.selectedControl);
+                rebind.Dispose();
+            })
+            .Start();
     }
 
     void Update()
     {
-        // Check if the defined input key is pressed
-        if (Input.anyKeyDown) // "MyKey" should match the name in the Input Manager
-        {
-            if (panelOpened)
-            {
-                foreach (KeyCode keyCode in System.Enum.GetValues(typeof(KeyCode)))
-                {
-                    if (Input.GetKeyDown(keyCode))
-                    {
-                        updateInputKeys(keyCode);
-                        panelOpened = false;
-                        break;
-                    }
-                }
-            }
-        }
     }
 
     public void GeneralVolume()
