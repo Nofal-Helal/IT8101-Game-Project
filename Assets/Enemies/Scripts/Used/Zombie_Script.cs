@@ -193,9 +193,9 @@ public class ZombieScript : BaseUniversal
                     isPlayerCloseLogSent = true;
                     UpdateAnimatorParameters();
                     TriggerRunAnimation("RunTrigger");
+                    MoveTowardsPlayer(player.transform.position);
                 }
                 // Move towards the player's position
-                MoveTowardsPlayer(player.transform.position);
             }
             else
             {

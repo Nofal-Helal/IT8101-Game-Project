@@ -22,7 +22,6 @@ public class WizardBoss : MonoBehaviour
   private Vector3 initialPosition;
   public GameObject shardObject;
   private AudioSource audioSource;
-  public AudioClip yellClip;
   public GameObject wizardHealthUI;
 
   // Start is called before the first frame update
@@ -95,8 +94,6 @@ public class WizardBoss : MonoBehaviour
   {
     isShooting = true;
     wizardAnimator.Play("attack_short_001");
-    audioSource.clip = yellClip;
-    audioSource.Play();
     Instantiate(shardObject, gameObject.transform.position + Vector3.up * 7, gameObject.transform.rotation);
     yield return new WaitForSeconds(1f);
     isShooting = false;
