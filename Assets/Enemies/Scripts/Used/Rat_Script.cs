@@ -35,7 +35,10 @@ public class Rat_Script : BaseUniversal, IDamageTaker
         base.Update();
         if (isAlive)
         {
-            GameObject player = FindPlayer();
+            if (player == null)
+            {
+                player = FindPlayer().GetComponent<Player>();
+            }
             if (player != null)
             {
                 HandlePlayerProximity();
@@ -143,7 +146,7 @@ public class Rat_Script : BaseUniversal, IDamageTaker
                 }
 
                 // Move towards the player
-                MoveTowardsPlayer(player.transform.position);
+                base.MoveTowardsPlayer(playerCamera.transform.position);
 
                 // Check if the player is within the attack range
                 if (IsPlayerInRange(player.transform.position) && !isAttacking)

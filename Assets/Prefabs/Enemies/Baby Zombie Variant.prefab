@@ -14,7 +14,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2115624482070570060, guid: 6f5288d433657134fa3999317d5f4e9c, type: 3}
       propertyPath: m_RootOrder
-      value: 19
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 2115624482070570060, guid: 6f5288d433657134fa3999317d5f4e9c, type: 3}
       propertyPath: m_LocalScale.x
@@ -78,7 +78,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4650400555084537292, guid: 6f5288d433657134fa3999317d5f4e9c, type: 3}
       propertyPath: attackRange
-      value: 8
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 4650400555084537292, guid: 6f5288d433657134fa3999317d5f4e9c, type: 3}
       propertyPath: isActivated
@@ -90,7 +90,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4650400555084537292, guid: 6f5288d433657134fa3999317d5f4e9c, type: 3}
       propertyPath: playerProximityDistance
-      value: 50
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 6005755608417029313, guid: 6f5288d433657134fa3999317d5f4e9c, type: 3}
       propertyPath: m_LocalPosition.x

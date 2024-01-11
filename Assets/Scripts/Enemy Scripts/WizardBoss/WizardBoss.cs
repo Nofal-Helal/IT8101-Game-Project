@@ -94,6 +94,7 @@ public class WizardBoss : MonoBehaviour
   {
     isShooting = true;
     wizardAnimator.Play("attack_short_001");
+    audioSource.Play();
     Instantiate(shardObject, gameObject.transform.position + Vector3.up * 7, gameObject.transform.rotation);
     yield return new WaitForSeconds(1f);
     isShooting = false;
