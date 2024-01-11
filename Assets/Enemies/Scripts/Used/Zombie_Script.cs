@@ -42,10 +42,7 @@ public class ZombieScript : BaseUniversal
     {
         // Call the base class Update method
         base.Update();
-        if (!isActivated)
-        {
-            return;
-        }
+        // Debug.Log(Vector3.Distance(base.playerCamera.transform.position, gameObject.transform.position));
         // Check if the zombie is alive
         if (isAlive)
         {
@@ -169,7 +166,7 @@ public class ZombieScript : BaseUniversal
         {
             // Calculate the distance to the player
             float distanceToPlayer = Vector3.Distance(transform.position, playerCamera.transform.position);
-            Debug.Log(distanceToPlayer);
+            // Debug.Log(distanceToPlayer);
 
             // Check if the player is within proximity
             if (distanceToPlayer <= playerProximityDistance)

@@ -35,6 +35,10 @@ public class FirstPersonCamera : MonoBehaviour
 
     public void EnableInput()
     {
+        // apply transformations during input disconnection
+        rotX = -transform.eulerAngles.x;
+        rotY = transform.eulerAngles.y;
+
         acceptingInput = true;
     }
 

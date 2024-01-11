@@ -44,7 +44,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     {
         if (!isActivated)
         {
-            Debug.Log("Not Activated");
+            // Debug.Log("Not Activated");
             return;
         }
 
