@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.Assertions;
 using UnityEngine.InputSystem;
-using UnityEngine.Playables;
+using Random = UnityEngine.Random;
 
 public class Player : MonoBehaviour, IDamageTaker
 {
@@ -16,6 +16,8 @@ public class Player : MonoBehaviour, IDamageTaker
     private bool removingObstacle;
     private float obstacleProgress = 0f;
     private CircularBar circularBar;
+    private AudioSource audioSource;
+    public AudioClip hurtClip;
     public event Action OnDeath;
 
     private void Start()
@@ -25,6 +27,7 @@ public class Player : MonoBehaviour, IDamageTaker
         cartObject = GetComponentInChildren<RailFollower>();
         nextWave ??= cartObject.NextWave;
         circularBar = FindObjectOfType<CircularBar>();
+        audioSource = GameObject.Find("player_audio").GetComponent<AudioSource>();
         GetComponent<PlayerInput>().actions = Global.inputActions.asset;
     }
 
@@ -81,14 +84,18 @@ public class Player : MonoBehaviour, IDamageTaker
             removingObstacle = false;
         }
     }
+
     public void TakeDamage(float damageAmount)
     {
+        audioSource.pitch = 1f + Random.Range(-0.3f, 0.3f);
+        audioSource.PlayOneShot(hurtClip);
         health -= damageAmount;
         if (health <= 0)
         {
             Die();
         }
     }
+
     // This function is used to set the new value of the maxHealth after
     // the health increase upgrade is bought.
     public void IncreaseMaxHealth()
