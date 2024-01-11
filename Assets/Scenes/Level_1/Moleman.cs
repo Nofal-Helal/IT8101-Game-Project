@@ -13,6 +13,7 @@ public class Moleman : MonoBehaviour, IDamageTaker
         RangedAttack,
         MeleeAttack,
         Retreat,
+        Dead,
     }
     public State state = State.RangedAttack;
     public float maxHealth = 1000;
@@ -34,7 +35,7 @@ public class Moleman : MonoBehaviour, IDamageTaker
     private Transform cart;
     public BossBar bossBar;
     public Animator animator;
-    private NavMeshAgent navMeshAgent;
+    public NavMeshAgent navMeshAgent;
     private new Rigidbody rigidbody;
     public Transform spot1;
     public Transform spot2;
@@ -42,6 +43,9 @@ public class Moleman : MonoBehaviour, IDamageTaker
     public int inSpot = 1;
     public Transform hand;
     public GameObject projectilePrefab;
+    private AudioSource audioSource;
+    public AudioClip hurtClip;
+    public AudioClip deathClip;
 
     [NaughtyAttributes.Button] void ChangeStateRanged() { ChangeState(State.RangedAttack); }
     [NaughtyAttributes.Button] void ChangeStateMelee() { ChangeState(State.MeleeAttack); }
@@ -58,15 +62,12 @@ public class Moleman : MonoBehaviour, IDamageTaker
         GetComponent<AudioSource>().volume *= Global.monstersVolume;
         animator = GetComponent<Animator>();
         rigidbody = GetComponent<Rigidbody>();
+        audioSource = GetComponent<AudioSource>();
         navMeshAgent = GetComponent<NavMeshAgent>();
         navMeshAgent.speed = runSpeed;
         navMeshAgent.stoppingDistance = meleeAttackRange;
         // start in sleeping animation
         animator.Play("Sleeping");
-
-        // Debug only
-        // animator.Play("Idle");
-        // Global.inputActions.gameplay.RemoveObstacle.Disable(); // disable removing the obstacle in the boss fight
     }
 
     void Update()
@@ -79,6 +80,7 @@ public class Moleman : MonoBehaviour, IDamageTaker
             case State.RangedAttack: RangedAttackUpdate(); break;
             case State.MeleeAttack: MeleeAttackUpdate(); break;
             case State.Retreat: break;
+            case State.Dead: break;
             default: throw new System.NotImplementedException();
         };
 
@@ -182,6 +184,9 @@ public class Moleman : MonoBehaviour, IDamageTaker
             case State.Retreat:
                 StartCoroutine(RetreatJump());
                 break;
+            case State.Dead:
+                StartCoroutine(Die());
+                break;
         }
 
         timeInState = 0;
@@ -254,17 +259,33 @@ public class Moleman : MonoBehaviour, IDamageTaker
     {
         health -= damage;
         damageCounter += damage;
-        if (health <= 0)
+        audioSource.PlayOneShot(hurtClip);
+        if (health <= 0 && state != State.Dead)
         {
-            Die();
+            ChangeState(State.Dead);
         }
     }
 
-    void Die()
+    IEnumerator Die()
     {
+        animator.SetTrigger("Death");
+        audioSource.PlayOneShot(deathClip);
+        yield return new WaitForSeconds(4);
         cart.GetComponent<RailFollower>().OnRemoveObstacle();
+        yield return TweenRemoveBossBar();
     }
 
+    private IEnumerator TweenRemoveBossBar()
+    {
+        float duration = 0.5f;
+        Vector3 initial = bossBar.transform.position;
+        Vector3 target = initial + new Vector3(70f, 70f, 0);
+        for (float t = 0; t <= duration; t += Time.deltaTime)
+        {
+            bossBar.transform.position = Vector3.Lerp(initial, target, t / duration);
+            yield return 0;
+        }
+    }
 }
 
 

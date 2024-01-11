@@ -61,9 +61,11 @@ public class Level1Script : MonoBehaviour
     {
         gunView.SetActive(true);
         cutsceneCamera.gameObject.SetActive(false);
-        firstPersonCamera.EnableInput();
         Global.inputActions.Enable();
-        // Global.inputActions.gameplay.RemoveObstacle.Disable(); // disable removing the obstacle in the boss fight
+        firstPersonCamera.EnableInput();
+        Global.inputActions.gameplay.RemoveObstacle.Disable(); // disable removing the obstacle in the boss fight
+        moleman.navMeshAgent.enabled = true;
+        moleman.navMeshAgent.destination = moleman.spot1.position;
         moleman.ChangeState(Moleman.State.RangedAttack);
     }
 

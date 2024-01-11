@@ -26,5 +26,11 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Transition3to4.unity
     guid: 5bc3ed3ef78a55b0c802970e028f6a1a
+  - enabled: 1
+    path: Assets/Scenes/Level 4/Level 4.unity
+    guid: a038990fe2a1d5a47a76bb8a8bfa7929
+  - enabled: 1
+    path: Assets/Scenes/GameOver.unity
+    guid: 05eeff1601e19c9aeb4af1f6b4fff680
   m_configObjects:
     com.unity.addressableassets: {fileID: 11400000, guid: c38cf2e3c0af76b42b26c1aace346ba3, type: 2}

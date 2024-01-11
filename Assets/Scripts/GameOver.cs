@@ -11,6 +11,7 @@ public class GameOver : MonoBehaviour
         // lose score and gold gained during the failed attempt
         Global.playerData.score = Global.lastScore;
         Global.playerData.gold = Global.lastGold;
+        Cursor.lockState = CursorLockMode.None;
     }
     public void OnPressRetry()
     {
