@@ -7,6 +7,8 @@ using UnityEditor.Splines;
 using UnityEngine;
 using UnityEngine.Splines;
 
+#if UNITY_EDITOR
+
 [Icon("Packages/com.unity.splines/Editor/Resources/Icons/ToolHandleParent.png")]
 [EditorTool("Track Speed Tool", typeof(SplineContainer))]
 public class SpeedHandles : EditorTool
@@ -59,3 +61,5 @@ public class SpeedHandles : EditorTool
         }
     }
 }
+
+#endif

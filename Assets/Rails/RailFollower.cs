@@ -39,14 +39,6 @@ public class RailFollower : MonoBehaviour
     public float bumpBack = -2f;
     public event Action ReachedEndOfTrack;
 
-    private void Awake()
-    {
-        if (railTrack == null)
-        {
-            Debug.LogError(name + " is missing a reference to rail track");
-        }
-    }
-
     private void Start()
     {
         spline = railTrack.Spline;
