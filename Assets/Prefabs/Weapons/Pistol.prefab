@@ -217,6 +217,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootSound: {fileID: 8300000, guid: be64544bade297e4d872dd74c66256d2, type: 3}
   reloadSound: {fileID: 8300000, guid: 406c929b7299afb469c82778f8d15d5b, type: 3}
+  settingsData: {fileID: 11400000, guid: ff35121cdc3148c438e6831a58771230, type: 2}
 --- !u!114 &-1272483596349590858
 MonoBehaviour:
   m_ObjectHideFlags: 0

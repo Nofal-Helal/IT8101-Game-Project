@@ -22,6 +22,7 @@ public class SpiderBoss : MonoBehaviour, IDamageTaker
     private float threshold = 40f;
     private float wizardSpeed = 2f;
     private float coolDown = 5f;
+    public GameObject spiderHealthUI;
 
 
     // Start is called before the first frame update
@@ -33,6 +34,7 @@ public class SpiderBoss : MonoBehaviour, IDamageTaker
         initialPosition = transform.position;
         spiderAnimation = GetComponent<Animation>();
         spiderAnimation.Play("Idle");
+        spiderHealthUI.SetActive(false);
     }
     // Update is called once per frame
     void Update()
@@ -42,6 +44,7 @@ public class SpiderBoss : MonoBehaviour, IDamageTaker
             float distance = Vector3.Distance(playerCamera.gameObject.transform.position, transform.position);
             if (distance <= threshold)
             {
+                spiderHealthUI.SetActive(true);
                 state = SpiderState.Switching;
             }
         }
@@ -100,6 +103,7 @@ public class SpiderBoss : MonoBehaviour, IDamageTaker
     {
         spiderAnimation.Play("Death");
         yield return new WaitForSeconds(5f);
+        spiderHealthUI.SetActive(false);
         Destroy(gameObject);
     }
     public IEnumerator SpawnMinion()

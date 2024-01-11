@@ -24,12 +24,13 @@ public class CartSoundPlayer : MonoBehaviour
     public CartSound[] sounds;
     public AudioSource crashAudioSource;
     private bool playedCrashSound;
+    public SettingsData settingsData;
 
     void Start()
     {
         Assert.AreEqual("CartObject", transform.GetChild(0).name);
         railFollower = transform.GetChild(0).GetComponent<RailFollower>();
-        crashAudioSource.volume *= Global.cartVolume;
+        crashAudioSource.volume *= settingsData.masterVolume;
     }
 
     // Update is called once per frame
@@ -55,7 +56,7 @@ public class CartSoundPlayer : MonoBehaviour
                 volume = Mathf.InverseLerp(sound.endSpeed + soundFade, sound.endSpeed, speed);
 
             // limit volume from the value set in AudioManager
-            sound.source.volume = Global.cartVolume * volume;
+            sound.source.volume = settingsData.cartVolume * volume;
         }
 
         // Play crash sound on impact
