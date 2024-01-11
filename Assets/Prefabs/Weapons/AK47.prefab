@@ -251,6 +251,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   shootSound: {fileID: 8300000, guid: 1b145bcffd767854fb0c71c37678ebaa, type: 3}
   reloadSound: {fileID: 8300000, guid: e1d79f4a0c7873742babc5f6e9ff800e, type: 3}
+  settingsData: {fileID: 11400000, guid: ff35121cdc3148c438e6831a58771230, type: 2}
 --- !u!82 &5517526665415971702
 AudioSource:
   m_ObjectHideFlags: 0
@@ -360,6 +361,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: 1000
+  distanceToRay: 0
+  aimedAtTag: 
 --- !u!1 &5985953990292501847
 GameObject:
   m_ObjectHideFlags: 0

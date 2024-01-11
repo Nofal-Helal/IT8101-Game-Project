@@ -81,7 +81,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
                     Vector3 directionToPlayer = playerCamera.transform.position - transform.position;
                     float angleToPlayer = Vector3.Angle(transform.forward, directionToPlayer);
 
-                    if (angleToPlayer < 45f)  // Adjust the angle threshold as needed
+                    if (angleToPlayer < 180f)  // Adjust the angle threshold as needed
                     {
                         // Player is in front of the enemy
                         if (distanceToPlayer <= attackRange)
@@ -169,7 +169,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
         TriggerRunAnimation("");
     }
 
-    // Check if the enemy can attack
+    // Check if thisAttackinge enemy can attack
     public bool CanAttack()
     {
         return timeSinceLastAttack >= attackCooldown;
@@ -178,6 +178,10 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     // Take damage from an external source
     public void TakeDamage(float damage)
     {
+        if (!isActivated)
+        {
+            return;
+        }
         health -= damage;
         Debug.Log(health);
         player.playerData.score += scoreAmount;

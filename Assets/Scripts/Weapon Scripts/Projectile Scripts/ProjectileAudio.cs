@@ -8,10 +8,12 @@ public class ProjectileAudio : MonoBehaviour
     private Projectile projectile;
     public AudioClip throwClip;
     private AudioSource audioSource;
+    public SettingsData settingsData;
     // Start is called before the first frame update
     void Start()
     {
         audioSource = GetComponent<AudioSource>();
+        audioSource.volume *= settingsData.weaponsVolume;
         projectile = GetComponent<Projectile>();
         projectile.OnThrow += PlayThrowAudio;
     }

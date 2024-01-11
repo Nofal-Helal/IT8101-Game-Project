@@ -42,7 +42,10 @@ public class ZombieScript : BaseUniversal
     {
         // Call the base class Update method
         base.Update();
-        Debug.Log(Vector3.Distance(base.playerCamera.transform.position, gameObject.transform.position));
+        if (!isActivated)
+        {
+            return;
+        }
         // Check if the zombie is alive
         if (isAlive)
         {
@@ -141,7 +144,6 @@ public class ZombieScript : BaseUniversal
         {
             // Trigger the death animation
             TriggerDeathAnimation("DeathTrigger");
-            Debug.Log("OOF");
 
             // Set the zombie as dead
             isAlive = false;
@@ -172,12 +174,10 @@ public class ZombieScript : BaseUniversal
             // Check if the player is within proximity
             if (distanceToPlayer <= playerProximityDistance)
             {
-                Debug.Log("Oh we're so close");
                 // Check if the player close log hasn't been sent
                 // If the player is within attack range, log an attack message
                 if (distanceToPlayer <= attackRange)
                 {
-                    Debug.Log("I'm gonna bite ya!");
                     isPlayerCloseLogSent = true;
                     UpdateAnimatorParameters();
                     TriggerAttackAnimation("BiteTrigger");
@@ -193,8 +193,6 @@ public class ZombieScript : BaseUniversal
                 // If the player is close but not within attack range, log a chase message
                 else
                 {
-                    Debug.Log("HELLO");
-                    Debug.Log("Player is close to the zombie! Attacking...");
                     isPlayerCloseLogSent = true;
                     UpdateAnimatorParameters();
                     TriggerRunAnimation("RunTrigger");

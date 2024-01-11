@@ -173,7 +173,7 @@ public class Wave : MonoBehaviour
             if (enemy)
             {
                 BaseUniversal enemyData = enemy.GetComponent<BaseUniversal>();
-                enemyData.isAttacking = true;
+                enemyData.isActivated = true;
             }
         }
     }
@@ -189,9 +189,6 @@ public class Wave : MonoBehaviour
                     Random.Range(collider.bounds.min.y, collider.bounds.max.y),
                     Random.Range(collider.bounds.min.z, collider.bounds.max.z)
                 );
-            Debug.Log(initialPosition.x);
-            Debug.Log(initialPosition.y);
-            Debug.Log(initialPosition.z);
             Vector3? position = PlaceEnemy(initialPosition);
             if (position.HasValue)
             {

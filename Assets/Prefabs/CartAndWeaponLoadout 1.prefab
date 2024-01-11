@@ -31,7 +31,7 @@ Transform:
   - {fileID: 7581306897762552288}
   - {fileID: 8514255711412601628}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &956691939138992542
 GameObject:
@@ -844,6 +844,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cart
       objectReference: {fileID: 0}
+    - target: {fileID: 4249642462507028465, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
+      propertyPath: settingsData
+      value: 
+      objectReference: {fileID: 11400000, guid: ff35121cdc3148c438e6831a58771230, type: 2}
     - target: {fileID: 5160767631746329184, guid: a1fa5fc1cff2ef96fb72709a41981579, type: 3}
       propertyPath: m_RootOrder
       value: -1

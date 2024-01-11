@@ -142,6 +142,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   throwClip: {fileID: 8300000, guid: 7b38b1b758f207b48a4a78cd0b7b94fa, type: 3}
+  settingsData: {fileID: 11400000, guid: ff35121cdc3148c438e6831a58771230, type: 2}
 --- !u!82 &1642600088337177713
 AudioSource:
   m_ObjectHideFlags: 0
