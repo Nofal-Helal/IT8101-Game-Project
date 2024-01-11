@@ -23,6 +23,7 @@ public class WizardBoss : MonoBehaviour
   public GameObject shardObject;
   private AudioSource audioSource;
   public AudioClip yellClip;
+  public GameObject wizardHealthUI;
 
   // Start is called before the first frame update
   void Start()
@@ -32,6 +33,7 @@ public class WizardBoss : MonoBehaviour
     audioSource = GetComponent<AudioSource>();
     state = WizardState.Idle;
     initialPosition = transform.position;
+    wizardHealthUI.SetActive(false);
   }
   // Update is called once per frame
   void Update()
@@ -42,6 +44,7 @@ public class WizardBoss : MonoBehaviour
       Debug.Log(distance);
       if (distance <= threshold)
       {
+        wizardHealthUI.SetActive(true);
         state = WizardState.GoBack;
       }
     }
@@ -134,6 +137,7 @@ public class WizardBoss : MonoBehaviour
   {
     wizardAnimator.Play("dead");
     yield return new WaitForSeconds(5f);
+    wizardHealthUI.SetActive(false);
     Destroy(gameObject);
   }
 }

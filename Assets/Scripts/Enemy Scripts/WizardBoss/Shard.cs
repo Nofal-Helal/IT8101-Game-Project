@@ -6,7 +6,7 @@ public class Shard : MonoBehaviour, IDamageTaker
     private Player player;
     private float maxHealth = 15;
     private float health = 15;
-    public float damage = 15f;
+    public float damage = 30f;
     public float threshold = 5f;
     private float speed = 10f;
     public GameObject explosionEffect;
