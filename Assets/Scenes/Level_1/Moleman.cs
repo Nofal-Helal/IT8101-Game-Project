@@ -197,7 +197,7 @@ public class Moleman : MonoBehaviour, IDamageTaker
     {
         animator.SetTrigger("Punch");
         yield return new WaitForSeconds(9 / 30f);
-        ((IDamageTaker)player).TakeDamage(1f);
+        ((IDamageTaker)player).TakeDamage(20f);
         yield return new WaitForSeconds((32 - 9) / 30f);
         ChangeState(State.Retreat);
     }
