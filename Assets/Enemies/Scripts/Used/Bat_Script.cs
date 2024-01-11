@@ -57,7 +57,10 @@ public class BatEnemyScript : BaseUniversal
         base.Update();
         if (isAlive)
         {
-            GameObject player = FindPlayer();
+            if (player == null)
+            {
+                player = FindPlayer().GetComponent<Player>();
+            }
             if (player != null)
             {
                 HandlePlayerProximity();
@@ -186,7 +189,7 @@ public class BatEnemyScript : BaseUniversal
                 }
 
                 // Move towards the player
-                MoveTowardsPlayer(player.transform.position);
+                base.MoveTowardsPlayer(playerCamera.transform.position);
 
                 if (IsPlayerInRange(player.transform.position) && !isAttacking)
                 {

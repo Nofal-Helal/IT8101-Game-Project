@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 public class BaseUniversal : MonoBehaviour, IDamageTaker
 {
@@ -23,8 +24,10 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     protected FirstPersonCamera playerCamera;
     protected Animator animator;
     public bool isPlayerCloseLogSent = false;
-    public float playerProximityDistance;
+    public float playerProximityDistance = 15;
+    public float playerStopDistance = 4;
     protected float originalAttackRange;
+    private NavMeshAgent navMeshAgent;
 
     // Initialization
     protected virtual void Start()
@@ -37,6 +40,8 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
         player = GameObject.FindGameObjectWithTag("Player").GetComponent<Player>();
         originalAttackRange = attackRange;
         playerCamera = FindObjectOfType<FirstPersonCamera>();
+        navMeshAgent = GetComponent<NavMeshAgent>();
+        navMeshAgent.stoppingDistance = playerStopDistance;
     }
 
     // Update logic
@@ -137,9 +142,10 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     // Move towards the player
     public virtual void MoveTowardsPlayer(Vector3 playerPosition)
     {
-        transform.position = Vector3.MoveTowards(transform.position, playerPosition, speed * Time.deltaTime);
-        transform.LookAt(playerPosition);
-        transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+        // transform.position = Vector3.MoveTowards(transform.position, playerPosition, speed * Time.deltaTime);
+        // transform.LookAt(playerPosition);
+        // transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
+        navMeshAgent.destination = playerPosition;
     }
 
     // Attack the player
@@ -149,6 +155,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
         {
             if (playerScript.isAlive)
             {
+                LookAtPlayer();
                 timeSinceLastAttack = 0f;
                 isPlayerCloseLogSent = true;
                 UpdateAnimatorParameters();
@@ -167,6 +174,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
         isPlayerCloseLogSent = false;
         UpdateAnimatorParameters();
         TriggerRunAnimation("");
+        navMeshAgent.destination = transform.position;
     }
 
     // Check if thisAttackinge enemy can attack
@@ -178,10 +186,10 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     // Take damage from an external source
     public void TakeDamage(float damage)
     {
-        if (!isActivated)
-        {
-            return;
-        }
+        // if (!isActivated)
+        // {
+        //     return;
+        // }
         health -= damage;
         Debug.Log(health);
         player.playerData.score += scoreAmount;
@@ -215,6 +223,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
         {
             isAttacking = true;
             animator.SetTrigger("AttackTrigger"); // Replace with your actual trigger name
+            LookAtPlayer();
         }
     }
 
@@ -234,6 +243,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
         {
             animator.SetTrigger(IdleTrigger);
         }
+        navMeshAgent.destination = transform.position;
     }
     //Trigger the death animation
     public virtual void TriggerDeathAnimation(string DeathTrigger)
@@ -273,7 +283,7 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     // Animation event function called when the attack animation deals damage
     public virtual void DealDamage(float damage)
     {
-        GameObject player = FindPlayer();
+            
         if (player != null)
         {
             Player playerScript = player.GetComponent<Player>();
@@ -308,5 +318,11 @@ public class BaseUniversal : MonoBehaviour, IDamageTaker
     private GameObject FindPlayer()
     {
         return GameObject.FindGameObjectWithTag("Player");
+    }
+
+    public void LookAtPlayer() {
+        var pos = playerCamera.transform.position;
+        pos.y = transform.position.y;
+        transform.LookAt(pos);
     }
 }

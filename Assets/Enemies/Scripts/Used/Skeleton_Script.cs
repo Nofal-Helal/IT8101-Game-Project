@@ -33,7 +33,10 @@ public class SkeletonScript : BaseUniversal
         base.Update();
         if (isAlive)
         {
-            GameObject player = FindPlayer();
+            if (player == null)
+            {
+                player = FindPlayer().GetComponent<Player>();
+            }
             if (player != null)
             {
                 // Check and handle player proximity
@@ -142,7 +145,7 @@ public class SkeletonScript : BaseUniversal
                 }
 
                 // Move towards the player
-                MoveTowardsPlayer(player.transform.position);
+                base.MoveTowardsPlayer(playerCamera.transform.position);
 
                 if (IsPlayerInRange(player.transform.position) && !isAttacking)
                 {

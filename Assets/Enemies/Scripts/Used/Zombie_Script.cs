@@ -1,8 +1,7 @@
-using NaughtyAttributes;  // Importing NaughtyAttributes for inspector attributes
 using System.Collections;
 using UnityEngine;
 
-public class ZombieScript : BaseUniversal
+public class ZombieScript : BaseUniversal, IDamageTaker
 {
     // Proximity distance to detect the player
     // in base
@@ -195,7 +194,7 @@ public class ZombieScript : BaseUniversal
                     TriggerRunAnimation("RunTrigger");
                 }
                 // Move towards the player's position
-                MoveTowardsPlayer(player.transform.position);
+                base.MoveTowardsPlayer(playerCamera.transform.position);
             }
             else
             {
@@ -241,6 +240,7 @@ public class ZombieScript : BaseUniversal
         // Check if the zombie is alive and the animator component is not null
         if (isAlive && animator != null)
         {
+            LookAtPlayer();
             // Set the trigger parameter to initiate the attack animation
             animator.SetTrigger(attackTrigger);
         }
